@@ -36,9 +36,11 @@
 		</Compiler>
 		<Unit filename="include/Artista.h" />
 		<Unit filename="include/Fecha.h" />
+		<Unit filename="include/Suscriptor.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="src/Artista.cpp" />
 		<Unit filename="src/Fecha.cpp" />
+		<Unit filename="src/Suscriptor.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
