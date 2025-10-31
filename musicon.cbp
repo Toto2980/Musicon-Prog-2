@@ -34,13 +34,21 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="include/Accesos.h" />
+		<Unit filename="include/Album.h" />
 		<Unit filename="include/Artista.h" />
+		<Unit filename="include/Canciones.h" />
 		<Unit filename="include/Fecha.h" />
 		<Unit filename="include/Suscriptor.h" />
+		<Unit filename="include/musicon.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src/Accesos.cpp" />
+		<Unit filename="src/Album.cpp" />
 		<Unit filename="src/Artista.cpp" />
+		<Unit filename="src/Canciones.cpp" />
 		<Unit filename="src/Fecha.cpp" />
 		<Unit filename="src/Suscriptor.cpp" />
+		<Unit filename="src/musicon.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

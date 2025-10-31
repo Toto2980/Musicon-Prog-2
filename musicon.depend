@@ -1,0 +1,46 @@
+# depslib dependency file v1.0
+1761937395 source:c:\users\locas\onedrive\escritorio\utn toto\introduccion a la programacion\programacion 2\tp integradir\musicon-prog-2-main\src\album.cpp
+	"Album.h"
+	<cstring>
+
+1761928566 c:\users\locas\onedrive\escritorio\utn toto\introduccion a la programacion\programacion 2\tp integradir\musicon-prog-2-main\include\album.h
+
+1761783980 source:c:\users\locas\onedrive\escritorio\utn toto\introduccion a la programacion\programacion 2\tp integradir\musicon-prog-2-main\src\artista.cpp
+	"Artista.h"
+	<iostream>
+	<cstring>
+
+1761783980 c:\users\locas\onedrive\escritorio\utn toto\introduccion a la programacion\programacion 2\tp integradir\musicon-prog-2-main\include\artista.h
+
+1761783980 source:c:\users\locas\onedrive\escritorio\utn toto\introduccion a la programacion\programacion 2\tp integradir\musicon-prog-2-main\src\fecha.cpp
+	"Fecha.h"
+
+1761783980 c:\users\locas\onedrive\escritorio\utn toto\introduccion a la programacion\programacion 2\tp integradir\musicon-prog-2-main\include\fecha.h
+	<string>
+
+1761937407 source:c:\users\locas\onedrive\escritorio\utn toto\introduccion a la programacion\programacion 2\tp integradir\musicon-prog-2-main\src\suscriptor.cpp
+	<iostream>
+	<cstring>
+	"Suscriptor.h"
+
+1761783980 c:\users\locas\onedrive\escritorio\utn toto\introduccion a la programacion\programacion 2\tp integradir\musicon-prog-2-main\src\suscriptor.h
+	"Fecha.h"
+
+1761929198 source:c:\users\locas\onedrive\escritorio\utn toto\introduccion a la programacion\programacion 2\tp integradir\musicon-prog-2-main\main.cpp
+	<iostream>
+	"musicon.h"
+
+1761400554 c:\users\locas\onedrive\escritorio\utn toto\introduccion a la programacion\programacion 2\tp integradir\musicon-prog-2-main\include\musicon.h
+	<iostream>
+	<cstring>
+
+1761399832 source:c:\users\locas\onedrive\escritorio\utn toto\introduccion a la programacion\programacion 2\tp integradir\musicon-prog-2-main\src\musicon.cpp
+	"musicon.h"
+	<iostream>
+
+1761941312 source:c:\users\locas\onedrive\escritorio\utn toto\introduccion a la programacion\programacion 2\tp integradir\musicon-prog-2-main\src\accesos.cpp
+	"Accesos.h"
+
+1761941256 c:\users\locas\onedrive\escritorio\utn toto\introduccion a la programacion\programacion 2\tp integradir\musicon-prog-2-main\include\accesos.h
+	"musicon.h"
+

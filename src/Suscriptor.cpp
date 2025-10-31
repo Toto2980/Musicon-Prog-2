@@ -125,3 +125,8 @@ void Suscriptor::Mostrar() {
     std::cout << "ID Suscripcion: " << _idSuscripcion << std::endl;
     std::cout << "Estado: " << (_estado ? "Activo" : "Baja") << std::endl;
 }
+
+Suscriptor::~Suscriptor()
+{
+    // dtor
+}
