@@ -15,29 +15,22 @@ private:
     int idCancion;
 
 public:
+    Playlist();
+    virtual ~Playlist();
 
-    Playlist(int idL = 0, const char* n = "", int idCreador = 0, bool est = true, int idP = 0, int idCan = 0) {
-        idLista = idL;
-        strcpy(nombre, n);
-        idSuscriptorCreador = idCreador;
-        _estado = est;
-        idPlaylist = idP;
-        idCancion = idCan;
-    }
+    void setIdLista(int id);
+    void setNombre(const char* n);
+    void setIdSuscriptorCreador(int id);
+    void setEstado(bool estado);
+    void setIdPlaylist(int id);
+    void setIdCancion(int id);
 
-    void setIdLista(int id) { idLista = id; }
-    void setNombre(const char* n) { strcpy(nombre, n); }
-    void setIdSuscriptorCreador(int id) { idSuscriptorCreador = id; }
-    void setEstado(bool e) { _estado = e; }
-    void setIdPlaylist(int id) { idPlaylist = id; }
-    void setIdCancion(int id) { idCancion = id; }
-
-    int getIdLista() { return idLista; }
-    const char* getNombre() { return nombre; }
-    int getIdSuscriptorCreador() { return idSuscriptorCreador; }
-    bool getEstado() { return _estado; }
-    int getIdPlaylist() { return idPlaylist; }
-    int getIdCancion() { return idCancion; }
+    int getIdLista();
+    const char* getNombre();
+    int getIdSuscriptorCreador();
+    bool getEstado();
+    int getIdPlaylist();
+    int getIdCancion();
 
 
     void mostrar() {
