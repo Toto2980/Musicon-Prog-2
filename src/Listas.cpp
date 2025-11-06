@@ -1,59 +1,99 @@
 #include "Listas.h"
 
+Playlist::Playlist() {
+    idLista = 0;
+    nombre[0] = '\0';
+    idSuscriptorCreador = 0;
+    _estado = true;
+    idPlaylist = 0;
+    idCancion = 0;
+}
+
+Playlist::~Playlist() { }
+
+void Playlist::setIdLista(int id) {
+    idLista = id;
+}
+
+void Playlist::setNombre(const char* n) {
+    strcpy(nombre, n);
+}
+
+void Playlist::setIdSuscriptorCreador(int id) {
+    idSuscriptorCreador = id;
+}
+
+void Playlist::setEstado(bool estado) {
+    _estado = estado;
+}
+
+void Playlist::setIdPlaylist(int id) {
+    idPlaylist = id;
+}
+
+void Playlist::setIdCancion(int id) {
+    idCancion = id;
+}
+
+int Playlist::getIdLista() { return idLista; }
+const char* Playlist::getNombre() { return nombre; }
+int Playlist::getIdSuscriptorCreador() { return idSuscriptorCreador; }
+bool Playlist::getEstado() { return _estado; }
+int Playlist::getIdPlaylist() { return idPlaylist; }
+int Playlist::getIdCancion() { return idCancion; }
+
 
 Listas::Listas() {
     cantidad = 0;
 }
 
-void Listas::agregarPlaylist(const char* nombre, const char* creador) {
+void Listas::agregarPlaylist(const char* nombre, int idCreador) {
     if (cantidad >= 100) {
-        cout << "No se pueden agregar más playlists (límite alcanzado)." << endl;
+        cout << "No se pueden agregar más playlists." << endl;
         return;
     }
 
-    strcpy(listas[cantidad].nombre, nombre);
-    strcpy(listas[cantidad].creador, creador);
+    Playlist nueva;
+    nueva.setIdLista(cantidad + 1);
+    nueva.setNombre(nombre);
+    nueva.setIdSuscriptorCreador(idCreador);
+    nueva.setEstado(true);
+
+    listas[cantidad] = nueva;
     cantidad++;
 
-    cout << "Playlist fue agregada correctamente." << endl;
+    cout << "Playlist agregada con éxito." << endl;
 }
 
-
-void Listas::mostrarPlaylists() const {
+void Listas::mostrarPlaylists() {
     if (cantidad == 0) {
         cout << "No hay playlists cargadas." << endl;
         return;
     }
 
-    cout << "\n--- LISTA DE PLAYLISTS ---" << endl;
     for (int i = 0; i < cantidad; i++) {
-        cout << "Nombre: " << listas[i].nombre << endl;
-        cout << "Creador: " << listas[i].creador << endl;
-        cout << "-------------------------" << endl;
+        listas[i].mostrar();
     }
 }
 
-
-int Listas::buscarPlaylist(const char* nombre) const {
+int Listas::buscarPlaylist(const char* nombre) {
     for (int i = 0; i < cantidad; i++) {
-        if (strcmp(listas[i].nombre, nombre) == 0) {
-            return i; 
+        if (strcmp(listas[i].getNombre(), nombre) == 0) {
+            return i;
         }
     }
     return -1;
 }
 
-
 bool Listas::eliminarPlaylist(const char* nombre) {
     int pos = buscarPlaylist(nombre);
-    if (pos == -1) return false;
-
-
-    for (int i = pos; i < cantidad - 1; i++) {
-        listas[i] = listas[i + 1];
+    if (pos == -1) {
+        cout << "Playlist no encontrada." << endl;
+        return false;
     }
-    cantidad--;
 
-    cout << "Playlist eliminada correctamente." << endl;
+    listas[pos].setEstado(false);
+
+    cout << "Playlist eliminada (baja lógica)." << endl;
     return true;
 }
