@@ -5,14 +5,15 @@
 #include <string>
 
 #include "Artista.h"
-#include "Album.h"S
+#include "Album.h"
 #include "Suscriptor.h"
 #include "Listas.h"
 #include "Accesos.h"
 #include "Fecha.h"
-#include "Hora.h"
 
-class Cancion;
+
+
+class Canciones;
 class Artista;
 class Album;
 class Genero;
@@ -24,7 +25,17 @@ class musicon
         musicon();
         virtual ~musicon();
 
+        // --- MENÚS PÚBLICOS (Para que main.cpp los pueda llamar) ---
         void mostrarMenuPrincipal();
+        void mostrarMenuReportes(); // Renombrado y hecho público
+
+        // --- REPORTES PÚBLICOS ---
+        void reporteReproduccionesAnuales();
+        void reporteReproduccionesPorSuscriptor();
+        void reporteReproduccionesPorGenero();
+        void reporteReproduccionesPorCancion();
+        void reporteListarCancionesPorGenero();
+        void reporteCantidadCancionesPorArtista();
 
     protected:
         // --- FUNCIONES DE VALIDACIÓN ---
@@ -37,27 +48,20 @@ class musicon
 
         // --- FUNCIONES DE BÚSQUEDA ---
         std::string buscarNombreGenero(int idGeneroBuscado);
-        bool buscarCancion(int idCancionBuscada, Cancion& regCancion);
+
+        bool buscarCancion(int idCancionBuscada, Canciones& regCancion);
+
         bool buscarArtista(int idArtistaBuscada, Artista& regArtista);
         bool buscarAlbum(int idAlbumBuscado, Album& regAlbum);
 
         int contarRegistros(const char* nombreArchivo, int tamanioRegistro);
 
     private:
-        // --- MENÚS ---
-        void menuReportes();
+        // --- MENÚS INTERNOS ---
         void menuCargas();
         void menuConfiguracion();
 
-        // --- REPORTES ---
-        void reporteReproduccionesAnuales();
-        void reporteReproduccionesPorSuscriptor();
-        void reporteReproduccionesPorGenero();
-        void reporteReproduccionesPorCancion();
-        void reporteListarCancionesPorGenero();
-        void reporteCantidadCancionesPorArtista();
-
-        // --- CARGAS  ---
+        // --- CARGAS ---
         void cargarNuevaCancionEnLista();
         void cargarNuevaSuscripcion();
 };

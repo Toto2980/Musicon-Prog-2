@@ -5,15 +5,15 @@
 #include <cstring>
 using namespace std;
 
-class Generos {
+class Genero { // La clase es Singular
 private:
     int _idGeneros;
     char _nombre[50];
     bool _estado;
 
 public:
-
-    Generos(int id = 0, const char* nombre = "", bool estado = true);
+    // CORRECCIÓN AQUÍ: El constructor debe llamarse Genero (igual que la clase)
+    Genero(int id = 0, const char* nombre = "", bool estado = true);
 
     void setIdGeneros(int id);
     void setNombre(const char* nombre);
@@ -27,5 +27,4 @@ public:
     void mostrar() const;
 };
 
-
-#endif // GENERO_H_INCLUDED
+#endif // GENEROS_H_INCLUDED

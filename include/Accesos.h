@@ -1,14 +1,13 @@
 #ifndef ACCESOS_H
 #define ACCESOS_H
 
-
-#include "musicon.h"
+#include "Fecha.h"
 
 class Accesos {
 private:
     int _idSuscriptor;
     int _idCancion;
-    DateTime _fechaHora;
+    Fecha _fechaHora;
 
 public:
     // Constructor
@@ -18,12 +17,12 @@ public:
     // Setters
     void setIdSuscriptor(int id);
     void setIdCancion(int id);
-    void setFechaHora(DateTime fecha); // Recibe la struct entera
+    void setFechaHora(Fecha fecha); // Recibe un objeto Fecha (que ya trae hora)
 
     // Getters
     int getIdSuscriptor();
     int getIdCancion();
-    DateTime getFechaHora(); // Devuelve la struct entera
+    Fecha getFechaHora(); // Devuelve un objeto Fecha
 };
 
 #endif // ACCESOS_H
