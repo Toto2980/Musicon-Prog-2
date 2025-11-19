@@ -1,50 +1,60 @@
 #include "Generos.h"
 #include <iostream>
-#include <fstream>
+#include <cstring>
 
 using namespace std;
 
 
-Generos::Generos() {
-    _idGeneros = 0;
-    _setNombre(_nombre; "");
-    _estado = false;
+Genero::Genero(int id, const char* nombre, bool estado) {
+    _idGeneros = id;
+
+
+    setNombre(nombre);
+
+    _estado = estado;
 }
 
+void Genero::setIdGeneros(int id) {
+    _idGeneros = id;
+}
 
-void Generos::setIdGeneros(int id) {
-     _idGeneros = id; 
-     }
-void Generos::setNombre(const char* n) {
-     strncpy(_nombre, nombre, 49); _nombre[49] = '\0'; 
-     }
-void Generos::setEstado(bool estado) { 
+void Genero::setNombre(const char* n) {
+
+    strncpy(_nombre, n, 49);
+    _nombre[49] = '\0';
+}
+
+void Genero::setEstado(bool estado) {
     _estado = estado;
-    }
+}
 
-int Generos::getIdGeneros() { 
+int Genero::getIdGeneros() {
     return _idGeneros;
-    }
-const char* Generos::getNombre() {
-    return _nombre; 
-    }
-bool Generos::getEstado() { 
-    return _estado; 
-    }
+}
+
+const char* Genero::getNombre() {
+    return _nombre;
+}
+
+bool Genero::getEstado() {
+    return _estado;
+}
+
+void Genero::cargar() {
+    cout << "ID de genero: ";
+    cin >> _idGeneros;
 
 
-void Generos::cargar() {
-        cout << "ID de genero: ";
-        cin >> _idGeneros;
-        cin.ignore();
-        cout << "Nombre del genero: ";
-        cin.getline(_nombre, 50);
-        _estado = true;
-    }
+    cin.ignore();
 
+    cout << "Nombre del genero: ";
+    cin.getline(_nombre, 50);
 
-void Generos::mostrar() {
-       std::cout << "ID de Genero: " << _idGeneros << std::endl; 
-       std::cout << " | Nombre: " << _nombre << std::endl;
-       std::cout << "Estado: " << _estado << std::endl;
-    }
+    _estado = true;
+}
+
+void Genero::mostrar() const {
+    cout << "ID de Genero: " << _idGeneros << endl;
+    cout << " | Nombre: " << _nombre << endl;
+    cout << "Estado: " << (_estado ? "Activo" : "Inactivo") << endl;
+}

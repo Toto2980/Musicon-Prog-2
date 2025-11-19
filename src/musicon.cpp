@@ -1,27 +1,29 @@
-// musicon.cpp
-
 #include "musicon.h"
 
-
 #include <iostream>
+#include <cstring>
+#include <cstdio>
+
+
+#include "Canciones.h"
+#include "Suscriptor.h"
+#include "Artista.h"
+#include "Album.h"
+#include "Generos.h"
+
 using namespace std;
 
+// --- CONSTRUCTOR Y DESTRUCTOR ---
 
-// Constructor y Destructor
-
-musicon::musicon()
-{
+musicon::musicon() {
     //ctor
 }
 
-musicon::~musicon()
-{
+musicon::~musicon() {
     //dtor
 }
 
-
-// --- DEFINICIONES DE FUNCIONES DE REPORTES ---
-
+// --- MENÚS ---
 
 void musicon::mostrarMenuReportes() {
     cout << "--- SISTEMA DE INFORMES MUSICON (Modo Clase) ---" << endl;
@@ -38,53 +40,141 @@ void musicon::mostrarMenuReportes() {
     cout << "Ingrese su opcion: ";
 }
 
-// Por ahora, todas las funciones solo avisan que no están hechas.
+
+
+bool musicon::existeCancion(int idCancion) {
+    Canciones obj;
+
+    FILE *p = fopen("canciones.dat", "rb");
+    if (p == NULL) return false;
+
+    while(fread(&obj, sizeof(Canciones), 1, p) == 1){
+        if(obj.getIdCancion() == idCancion && obj.getEstado() == true){
+            fclose(p);
+            return true;
+        }
+    }
+    fclose(p);
+    return false;
+}
+
+bool musicon::existeSuscriptor(int idSuscriptor) {
+    Suscriptor obj;
+    FILE *p = fopen("suscriptores.dat", "rb");
+    if (p == NULL) return false;
+
+    while(fread(&obj, sizeof(Suscriptor), 1, p) == 1){
+        if(obj.getIdSuscriptor() == idSuscriptor && obj.getEstado() == true){
+            fclose(p);
+            return true;
+        }
+    }
+    fclose(p);
+    return false;
+}
+
+bool musicon::existeArtista(int idArtista) {
+    Artista obj;
+    FILE *p = fopen("artistas.dat", "rb");
+    if (p == NULL) return false;
+
+    while(fread(&obj, sizeof(Artista), 1, p) == 1){
+        if(obj.getIdArtista() == idArtista && obj.getEstado() == true){
+            fclose(p);
+            return true;
+        }
+    }
+    fclose(p);
+    return false;
+}
+
+bool musicon::existeAlbum(int idAlbum) {
+    Album obj;
+    FILE *p = fopen("albumes.dat", "rb");
+    if (p == NULL) return false;
+
+    while(fread(&obj, sizeof(Album), 1, p) == 1){
+        if(obj.getIdAlbum() == idAlbum && obj.getEstado() == true){
+            fclose(p);
+            return true;
+        }
+    }
+    fclose(p);
+    return false;
+}
+
+bool musicon::existeGenero(int idGenero) {
+    Genero obj;
+    FILE *p = fopen("generos.dat", "rb");
+    if (p == NULL) return false;
+
+    while(fread(&obj, sizeof(Genero), 1, p) == 1){
+        if(obj.getIdGeneros() == idGenero && obj.getEstado() == true){
+            fclose(p);
+            return true;
+        }
+    }
+    fclose(p);
+    return false;
+}
+
+bool musicon::existeLista(int idLista) {
+    return false;
+}
+
+
+int musicon::contarRegistros(const char* nombreArchivo, int tamanioRegistro) {
+    FILE *p = fopen(nombreArchivo, "rb");
+    if (p == NULL) return 0;
+
+    fseek(p, 0, SEEK_END);
+    int bytes = ftell(p);
+    fclose(p);
+
+    return bytes / tamanioRegistro;
+}
+
+
+// --- FUNCIONES DE REPORTES (Placeholders) ---
 
 void musicon::reporteReproduccionesAnuales() {
-    cout << endl;
-    cout << "***********************************" << endl;
-    cout << "INFORME 1: REPRODUCCIONES ANUALES" << endl;
-    cout << "[!] Funcion no implementada." << endl;
-    cout << "***********************************" << endl;
+    cout << "\n[!] Funcion no implementada: Reproducciones Anuales" << endl;
 }
 
 void musicon::reporteReproduccionesPorSuscriptor() {
-    cout << endl;
-    cout << "***********************************" << endl;
-    cout << "INFORME 2: REPRODUCCIONES POR SUSCRIPTOR" << endl;
-    cout << "[!] Funcion no implementada." << endl;
-    cout << "***********************************" << endl;
+    cout << "\n[!] Funcion no implementada: Por Suscriptor" << endl;
 }
 
 void musicon::reporteReproduccionesPorGenero() {
-    cout << endl;
-    cout << "***********************************" << endl;
-    cout << "INFORME 3: REPRODUCCIONES POR GENERO" << endl;
-    cout << "[!] Funcion no implementada." << endl;
-    cout << "***********************************" << endl;
+    cout << "\n[!] Funcion no implementada: Por Genero" << endl;
 }
 
 void musicon::reporteReproduccionesPorCancion() {
-    cout << endl;
-    cout << "***********************************" << endl;
-    cout << "INFORME 4: REPRODUCCIONES POR CANCION" << endl;
-    cout << "[!] Funcion no implementada." << endl;
-    cout << "***********************************" << endl;
+    cout << "\n[!] Funcion no implementada: Por Cancion" << endl;
 }
 
 void musicon::reporteListarCancionesPorGenero() {
-    cout << endl;
-    cout << "***********************************" << endl;
-    cout << "INFORME 5: LISTAR CANCIONES DE UN GENERO" << endl;
-    cout << "[!] Funcion no implementada." << endl;
-    cout << "***********************************" << endl;
+    cout << "\n[!] Funcion no implementada: Listar Canciones" << endl;
 }
 
 void musicon::reporteCantidadCancionesPorArtista() {
-    cout << endl;
-    cout << "***********************************" << endl;
-    cout << "INFORME 6: CANTIDAD DE CANCIONES POR ARTISTA" << endl;
-    cout << "[!] Funcion no implementada." << endl;
-    cout << "***********************************" << endl;
+    cout << "\n[!] Funcion no implementada: Cantidad por Artista" << endl;
 }
 
+// --- FUNCIONES DE BÚSQUEDA ---
+
+std::string musicon::buscarNombreGenero(int idGeneroBuscado) {
+    return "Desconocido"; // Placeholder
+}
+
+bool musicon::buscarCancion(int idCancionBuscada, Canciones& regCancion) {
+    return false; // Placeholder
+}
+
+bool musicon::buscarArtista(int idArtistaBuscada, Artista& regArtista) {
+    return false; // Placeholder
+}
+
+bool musicon::buscarAlbum(int idAlbumBuscado, Album& regAlbum) {
+    return false; // Placeholder
+}

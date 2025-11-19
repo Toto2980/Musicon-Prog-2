@@ -5,13 +5,6 @@ Accesos::Accesos() {
     _idSuscriptor = 0;
     _idCancion = 0;
 
-    // Inicializo todos los campos de la struct
-    _fechaHora.dia = 0;
-    _fechaHora.mes = 0;
-    _fechaHora.anio = 0;
-    _fechaHora.hora = 0;
-    _fechaHora.minuto = 0;
-    _fechaHora.segundo = 0;
 }
 
 // --- Definición del Destructor ---
@@ -38,7 +31,7 @@ void Accesos::setIdCancion(int id) {
     }
 }
 
-void Accesos::setFechaHora(DateTime fecha) {
+void Accesos::setFechaHora(Fecha fecha) {
     _fechaHora = fecha;
 }
 
@@ -53,6 +46,6 @@ int Accesos::getIdCancion() {
     return _idCancion;
 }
 
-DateTime Accesos::getFechaHora() {
+Fecha Accesos::getFechaHora() {
     return _fechaHora;
 }

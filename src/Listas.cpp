@@ -1,47 +1,39 @@
 #include "Listas.h"
 
+// --- CLASE PLAYLIST ---
+
 Playlist::Playlist() {
-    idLista = 0;
-    nombre[0] = '\0';
-    idSuscriptorCreador = 0;
+    _idPlaylist = 0;
+    _nombre[0] = '\0';
+    _idSuscriptorCreador = 0;
     _estado = true;
-    idPlaylist = 0;
-    idCancion = 0;
 }
 
 Playlist::~Playlist() { }
 
-void Playlist::setIdLista(int id) {
-    idLista = id;
-}
+void Playlist::setIdPlaylist(int id) { _idPlaylist = id; }
 
 void Playlist::setNombre(const char* n) {
-    strcpy(nombre, n);
+    strcpy(_nombre, n);
 }
 
-void Playlist::setIdSuscriptorCreador(int id) {
-    idSuscriptorCreador = id;
-}
+void Playlist::setIdSuscriptorCreador(int id) { _idSuscriptorCreador = id; }
+void Playlist::setEstado(bool estado) { _estado = estado; }
 
-void Playlist::setEstado(bool estado) {
-    _estado = estado;
-}
-
-void Playlist::setIdPlaylist(int id) {
-    idPlaylist = id;
-}
-
-void Playlist::setIdCancion(int id) {
-    idCancion = id;
-}
-
-int Playlist::getIdLista() { return idLista; }
-const char* Playlist::getNombre() { return nombre; }
-int Playlist::getIdSuscriptorCreador() { return idSuscriptorCreador; }
+int Playlist::getIdPlaylist() { return _idPlaylist; }
+const char* Playlist::getNombre() { return _nombre; }
+int Playlist::getIdSuscriptorCreador() { return _idSuscriptorCreador; }
 bool Playlist::getEstado() { return _estado; }
-int Playlist::getIdPlaylist() { return idPlaylist; }
-int Playlist::getIdCancion() { return idCancion; }
 
+void Playlist::mostrar() {
+    cout << "ID Playlist: " << _idPlaylist
+         << " | Nombre: " << _nombre
+         << " | ID Creador: " << _idSuscriptorCreador
+         << " | Estado: " << (_estado ? "Activo" : "Inactivo")
+         << endl;
+}
+
+// --- CLASE GESTORA (Listas) ---
 
 Listas::Listas() {
     cantidad = 0;
@@ -54,7 +46,7 @@ void Listas::agregarPlaylist(const char* nombre, int idCreador) {
     }
 
     Playlist nueva;
-    nueva.setIdLista(cantidad + 1);
+    nueva.setIdPlaylist(cantidad + 1);
     nueva.setNombre(nombre);
     nueva.setIdSuscriptorCreador(idCreador);
     nueva.setEstado(true);
@@ -62,7 +54,7 @@ void Listas::agregarPlaylist(const char* nombre, int idCreador) {
     listas[cantidad] = nueva;
     cantidad++;
 
-    cout << "Playlist agregada con éxito." << endl;
+    cout << "Playlist creada con exito (ID: " << cantidad << ")." << endl;
 }
 
 void Listas::mostrarPlaylists() {
@@ -93,7 +85,6 @@ bool Listas::eliminarPlaylist(const char* nombre) {
     }
 
     listas[pos].setEstado(false);
-
-    cout << "Playlist eliminada (baja lógica)." << endl;
+    cout << "Playlist eliminada (baja logica)." << endl;
     return true;
 }
