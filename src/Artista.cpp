@@ -57,10 +57,13 @@ void Artista::Cargar() {
 }
 
 void Artista::Mostrar() {
-    std::cout << "ID Artista: " << _idArtista << std::endl;
-    std::cout << "Nombre: " << _nombre << std::endl;
-    std::cout << "Nacionalidad: " << _nacionalidad << std::endl;
-    std::cout << "Estado: " << (_estado ? "Activo" : "Baja") << std::endl;
+    if (_estado == true) { // Solo mostramos si está activo
+        std::cout << "------------------------------" << std::endl;
+        std::cout << "ID Artista    : " << _idArtista << std::endl;
+        std::cout << "Nombre        : " << _nombre << std::endl;
+        std::cout << "Nacionalidad  : " << _nacionalidad << std::endl;
+        std::cout << "------------------------------" << std::endl;
+    }
 }
 
 
@@ -68,3 +71,4 @@ Artista::~Artista()
 {
     //dtor
 }
+
