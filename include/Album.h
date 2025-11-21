@@ -30,6 +30,8 @@ public:
     bool getEstado();
 
     // Falta Cargar() y Mostrar()
+    void Cargar();
+    void Mostrar();
 };
 
 #endif // ALBUM_H
