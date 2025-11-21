@@ -1,7 +1,9 @@
 #include "Album.h"
 #include <cstring>
+#include <iostream>
+using namespace std;
 
-// --- DefiniciÛn del Constructor ---
+// --- Definici√≥n del Constructor ---
 Album::Album() {
     _idAlbum = 0;
     strcpy(_titulo, "");
@@ -28,12 +30,12 @@ void Album::setIdArtista(int idAr) {
 void Album::setAnioPublicacion(int anio) {
 
     if (anio > 0) {
-        // Si el aÒo es positivo, lo guardamos
+        // Si el a√±o es positivo, lo guardamos
         _anioPublicacion = anio;
     }
     else {
         // Si es cero o negativo, guardamos 0
-        // para saber que es un error o no est· cargado.
+        // para saber que es un error o no est√° cargado.
         _anioPublicacion = 0;
     }
 }
@@ -64,8 +66,38 @@ bool Album::getEstado() {
     return _estado;
 }
 
+void Album::Cargar() {
+    cout << "Ingrese ID de Album: ";
+    cin >> _idAlbum;
+
+    cout << "Ingrese ID del Artista: ";
+    cin >> _idArtista;
+
+    cin.ignore();
+    
+cout << "Ingrese Titulo del Album: ";
+    cin.getline(_titulo, 99); 
+
+    cout << "Ingrese Anio de Publicacion: ";
+    cin >> _anioPublicacion;
+
+    _estado = true; // Por defecto, si lo cargamos, damos por hecho que est√° activo
+}
+
+void Album::Mostrar() {
+    // Solo mostramos si el estado es verdadero
+    if (_estado == true) {
+        cout << "-----------------------------------" << endl;
+        cout << "ID Album       : " << _idAlbum << endl;
+        cout << "Titulo         : " << _titulo << endl;
+        cout << "ID Artista     : " << _idArtista << endl;
+        cout << "Anio           : " << _anioPublicacion << endl;
+        cout << "-----------------------------------" << endl;
+    }
+}
+
 Album::~Album()
 {
     // dtor (Destructor)
-    // Tiene que estar definido, aunque estÈ vacÌo.
+    // Tiene que estar definido, aunque est√© vac√≠o.
 }
