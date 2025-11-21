@@ -1,17 +1,19 @@
     #include "Canciones.h"
 #include <cstring>
+#include <iostream>
+using namespace std;
 
-// --- Definici髇 del Constructor ---
+// --- Definici贸n del Constructor ---
 Canciones::Canciones() {
     _idCancion = 0;
-    strcpy(_nombre, ""); // Lo inicializo vac韔
+    strcpy(_nombre, ""); // Lo inicializo vac铆o
     _idAlbum = 0;
     _idGenero = 0;
     _duracionSegundos = 0;
     _estado = false;
 }
 
-// --- Definici髇 del Destructor ---
+// --- Definici贸n del Destructor ---
 Canciones::~Canciones()
 {
     // dtor
@@ -74,4 +76,40 @@ int Canciones::getDuracionSegundos() {
 
 bool Canciones::getEstado() {
     return _estado;
+}
+// --- Funci贸n Cargar ---
+void Canciones::Cargar() {
+    cout << "Ingrese ID Cancion: ";
+    cin >> _idCancion;
+
+    cin.ignore(); 
+    
+    cout << "Nombre de la cancion: ";
+    cin.getline(_nombre, 100);
+
+    cout << "ID del Album: ";
+    cin >> _idAlbum;
+
+    cout << "ID del Genero: ";
+    cin >> _idGenero;
+
+    cout << "Duracion (en segundos): ";
+    cin >> _duracionSegundos;
+
+    _estado = true; 
+}
+
+// --- Funci贸n Mostrar ---
+void Canciones::Mostrar() {
+    if (_estado == true) {
+        cout << "-----------------------------------" << endl;
+        cout << "ID Cancion     : " << _idCancion << endl;
+        cout << "Nombre         : " << _nombre << endl;
+        cout << "ID Album       : " << _idAlbum << endl;
+        cout << "ID Genero      : " << _idGenero << endl;
+        
+        cout << "Duracion       : " << _duracionSegundos / 60 << "m " 
+                                    << _duracionSegundos % 60 << "s" << endl;
+        cout << "-----------------------------------" << endl;
+    }
 }
