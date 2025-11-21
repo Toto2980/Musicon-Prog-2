@@ -33,6 +33,9 @@ public:
     int getIdGenero();
     int getDuracionSegundos();
     bool getEstado();
+
+    void Cargar();
+    void Mostrar();
 };
 
 #endif // CANCIONES_H
