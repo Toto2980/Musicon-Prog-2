@@ -22,6 +22,10 @@ public:
     int getIdCancion();
     Fecha getFechaAgregado();
     bool getEstado();
+
+    void Cargar();
+    void Mostrar();
 };
 
 #endif // DETALLEPLAYLIST_H
+
