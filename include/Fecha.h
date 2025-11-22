@@ -24,5 +24,9 @@ class Fecha{
 
     void setHorario(HoraYMinutos horario);
 
+    void Cargar();
+    void Mostrar();
+
     std::string toString();
 };
+
