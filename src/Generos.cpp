@@ -40,20 +40,17 @@ bool Genero::getEstado() {
     return _estado;
 }
 
-void Genero::cargar() {
+void Genero::Cargar() {
     cout << "ID de genero: ";
     cin >> _idGeneros;
-
-
     cin.ignore();
-
     cout << "Nombre del genero: ";
     cin.getline(_nombre, 50);
-
     _estado = true;
 }
 
-void Genero::mostrar() const {
+
+void Genero::Mostrar() const {
     cout << "ID de Genero: " << _idGeneros << endl;
     cout << " | Nombre: " << _nombre << endl;
     cout << "Estado: " << (_estado ? "Activo" : "Inactivo") << endl;

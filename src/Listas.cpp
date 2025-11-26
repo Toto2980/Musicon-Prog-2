@@ -25,12 +25,28 @@ const char* Playlist::getNombre() { return _nombre; }
 int Playlist::getIdSuscriptorCreador() { return _idSuscriptorCreador; }
 bool Playlist::getEstado() { return _estado; }
 
-void Playlist::mostrar() {
-    cout << "ID Playlist: " << _idPlaylist
-         << " | Nombre: " << _nombre
-         << " | ID Creador: " << _idSuscriptorCreador
-         << " | Estado: " << (_estado ? "Activo" : "Inactivo")
-         << endl;
+void Playlist::Cargar() {
+    cout << "ID Playlist: ";
+    cin >> _idPlaylist;
+
+    cout << "Nombre de la Playlist: ";
+    cin.ignore();
+    cin.getline(_nombre, 50);
+
+    cout << "ID del Creador (Suscriptor): ";
+    cin >> _idSuscriptorCreador;
+
+    _estado = true;
+}
+
+void Playlist::Mostrar() {
+    if (_estado) {
+        cout << "ID Playlist: " << _idPlaylist
+             << " | Nombre: " << _nombre
+             << " | ID Creador: " << _idSuscriptorCreador
+             << " | Estado: " << (_estado ? "Activo" : "Inactivo")
+             << endl;
+    }
 }
 
 // --- CLASE GESTORA (Listas) ---
@@ -64,7 +80,7 @@ void Listas::mostrarPlaylists() {
     }
 
     for (int i = 0; i < cantidad; i++) {
-        listas[i].mostrar();
+        listas[i].Mostrar();
     }
 }
 

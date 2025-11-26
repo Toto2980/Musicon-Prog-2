@@ -1,5 +1,8 @@
 #include "Accesos.h"
 
+#include <iostream>
+using namespace std;
+
 // --- Definición del Constructor ---
 Accesos::Accesos() {
     _idSuscriptor = 0;
@@ -48,4 +51,21 @@ int Accesos::getIdCancion() {
 
 Fecha Accesos::getFechaHora() {
     return _fechaHora;
+}
+
+void Accesos::Cargar() {
+    cout << "Ingrese ID del Suscriptor: ";
+    cin >> _idSuscriptor;
+    cout << "Ingrese ID de la Cancion: ";
+    cin >> _idCancion;
+    cout << "Ingrese Fecha del acceso:" << endl;
+    _fechaHora.Cargar();
+}
+
+void Accesos::Mostrar() {
+    cout << "ID Suscriptor: " << _idSuscriptor << endl;
+    cout << "ID Cancion   : " << _idCancion << endl;
+    cout << "Fecha/Hora   : ";
+    _fechaHora.Mostrar();
+    cout << endl;
 }
