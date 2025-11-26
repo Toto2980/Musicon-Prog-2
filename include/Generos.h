@@ -23,8 +23,8 @@ public:
     const char* getNombre();
     bool getEstado();
 
-    void cargar();
-    void mostrar() const;
+    void Cargar();
+    void Mostrar() const;
 };
 
 #endif // GENEROS_H_INCLUDED

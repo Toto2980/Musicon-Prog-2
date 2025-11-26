@@ -28,7 +28,9 @@ public:
     int getIdSuscriptorCreador();
     bool getEstado();
 
-    void mostrar();
+    void Cargar();
+    void Mostrar();
+
 };
 
 class Listas {

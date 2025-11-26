@@ -23,6 +23,9 @@ public:
     int getIdSuscriptor();
     int getIdCancion();
     Fecha getFechaHora(); // Devuelve un objeto Fecha
+
+    void Cargar();
+    void Mostrar();
 };
 
 #endif // ACCESOS_H
