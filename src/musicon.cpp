@@ -74,6 +74,7 @@ void musicon::menuCargas() {
         cout << "--- MENU DE CARGAS ---" << endl;
         cout << "1. Nueva Cancion" << endl;
         cout << "2. Nuevo Suscriptor" << endl;
+        cout << "3. Registrar Acceso (Simular Reproduccion)" << endl;
         cout << "0. Volver al Menu Principal" << endl;
         cout << "----------------------" << endl;
         cout << "Ingrese opcion: ";
@@ -86,6 +87,8 @@ void musicon::menuCargas() {
             case 2:
                 cargarNuevaSuscripcion();
                 break;
+            case 3:
+                cargarNuevoAcceso();
             case 0:
                 break;
             default:
@@ -162,6 +165,30 @@ void musicon::cargarNuevaSuscripcion() {
         cout << "Suscriptor registrado exitosamente!" << endl;
     }
 }
+
+void musicon::cargarNuevoAcceso() {
+    cout << endl << "--- REGISTRAR NUEVO ACCESO ---" << endl;
+    
+    // Usamos la clase Accesos
+    Accesos nuevoAcceso; 
+    
+    // Esta función ya la programe en Accesos.cpp, pedirá ID Suscriptor, ID Canción y Fecha
+    nuevoAcceso.Cargar(); 
+
+    // Guardamos en el archivo accesos.dat
+    FILE *p = fopen("accesos.dat", "ab");
+    if (p == NULL) {
+        cout << "Error al abrir el archivo accesos.dat" << endl;
+        return;
+    }
+    
+    // Escribimos el registro
+    fwrite(&nuevoAcceso, sizeof(Accesos), 1, p);
+    fclose(p);
+    
+    cout << "Reproduccion registrada exitosamente!" << endl;
+}
+
 
 void musicon::menuConfiguracion() {
     cout << endl << "--- CONFIGURACION / BACKUP ---" << endl;
@@ -392,3 +419,6 @@ void musicon::reporteCantidadCancionesPorArtista() {
     if(pCan) { fread(vCan, sizeof(Canciones), cantCan, pCan); fclose(pCan); }
 
     cout << endl << "CANTIDAD DE CANCIONES POR ARTISTA" << endl; }
+
+
+
