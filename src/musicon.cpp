@@ -43,6 +43,8 @@ void musicon::mostrarMenuPrincipal() {
         cout << "Ingrese opcion: ";
         cin >> opcion;
 
+     
+
         switch (opcion) {
             case 1:
                 menuCargas();
@@ -79,6 +81,9 @@ void musicon::menuCargas() {
         cout << "----------------------" << endl;
         cout << "Ingrese opcion: ";
         cin >> opcion;
+
+        cin.ignore(10000, '\n');
+        
 
         switch (opcion) {
             case 1:
@@ -419,6 +424,7 @@ void musicon::reporteCantidadCancionesPorArtista() {
     if(pCan) { fread(vCan, sizeof(Canciones), cantCan, pCan); fclose(pCan); }
 
     cout << endl << "CANTIDAD DE CANCIONES POR ARTISTA" << endl; }
+
 
 
 
