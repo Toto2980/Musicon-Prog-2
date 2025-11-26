@@ -10,6 +10,7 @@
 #include "Artista.h"
 #include "Album.h"
 #include "Generos.h"
+#include "Accesos.h"
 
 using namespace std;
 
@@ -23,7 +24,7 @@ musicon::~musicon() {
     //dtor
 }
 
-// --- MENÚS ---
+// --- MENÃšS ---
 
 void musicon::mostrarMenuReportes() {
     cout << "--- SISTEMA DE INFORMES MUSICON (Modo Clase) ---" << endl;
@@ -161,7 +162,7 @@ void musicon::reporteCantidadCancionesPorArtista() {
     cout << "\n[!] Funcion no implementada: Cantidad por Artista" << endl;
 }
 
-// --- FUNCIONES DE BÚSQUEDA ---
+// --- FUNCIONES DE BÃšSQUEDA ---
 
 std::string musicon::buscarNombreGenero(int idGeneroBuscado) {
     return "Desconocido"; // Placeholder
@@ -178,3 +179,4 @@ bool musicon::buscarArtista(int idArtistaBuscada, Artista& regArtista) {
 bool musicon::buscarAlbum(int idAlbumBuscado, Album& regAlbum) {
     return false; // Placeholder
 }
+
