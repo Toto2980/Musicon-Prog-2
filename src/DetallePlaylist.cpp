@@ -1,4 +1,7 @@
+#include <iostream>
 #include "DetallePlaylist.h"
+
+using namespace std;
 
 DetallePlaylist::DetallePlaylist() {
     _idPlaylist = 0;
@@ -26,7 +29,7 @@ void DetallePlaylist::Cargar() {
 
     cout << "--- Fecha de Agregado ---" << endl;
     _fechaAgregado.Cargar(); //
-    
+
     _estado = true;
 }
 
@@ -35,8 +38,8 @@ void DetallePlaylist::Mostrar() {
         cout << "ID Playlist : " << _idPlaylist << endl;
         cout << "ID Cancion  : " << _idCancion << endl;
         cout << "Agregada el : ";
-        _fechaAgregado.Mostrar(); 
-        cout << endl; 
+        _fechaAgregado.Mostrar();
+        cout << endl;
     }
 }
 

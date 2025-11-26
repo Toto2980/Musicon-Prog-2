@@ -132,8 +132,8 @@ void musicon::mostrarMenuReportes() {
 void musicon::cargarNuevaCancionEnLista() {
     cout << endl << "--- CARGAR NUEVA CANCION ---" << endl;
     Canciones nuevaCancion;
-    nuevaCancion.Cargar(); 
-    
+    nuevaCancion.Cargar();
+
     if (nuevaCancion.getEstado()) {
         FILE *p = fopen("canciones.dat", "ab");
         if (p == NULL) {
@@ -150,7 +150,7 @@ void musicon::cargarNuevaSuscripcion() {
     cout << endl << "--- CARGAR NUEVO SUSCRIPTOR ---" << endl;
     Suscriptor nuevoSus;
     nuevoSus.Cargar();
-    
+
     if (nuevoSus.getEstado()) {
         FILE *p = fopen("suscriptores.dat", "ab");
         if (p == NULL) {
@@ -198,11 +198,11 @@ int obtenerAnioActual() {
 
 void musicon::reporteReproduccionesAnuales() {
     int anio;
-    cout << "INGRESE AÑO: ";
+    cout << "INGRESE ANIO: ";
     cin >> anio;
 
-    int contadores[12] = {0}; 
-    const char* nombresMeses[12] = {"ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", 
+    int contadores[12] = {0};
+    const char* nombresMeses[12] = {"ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO",
                                     "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"};
 
     int cantAccesos = contarRegistros("accesos.dat", sizeof(Accesos));
@@ -218,16 +218,16 @@ void musicon::reporteReproduccionesAnuales() {
             if (mes >= 1 && mes <= 12) contadores[mes - 1]++;
         }
     }
-    delete[] vAccesos; 
+    delete[] vAccesos;
 
-    cout << endl << "REPRODUCCIONES DEL AÑO " << anio << endl;
+    cout << endl << "REPRODUCCIONES DEL AO " << anio << endl;
     cout << "MES\t\tREPRODUCCIONES" << endl;
     for (int i = 0; i < 12; i++) cout << nombresMeses[i] << "\t\t" << contadores[i] << endl;
 }
 
 void musicon::reporteReproduccionesPorSuscriptor() {
     int anio;
-    cout << "INGRESE AÑO (0 para actual): ";
+    cout << "INGRESE ANIO (0 para actual): ";
     cin >> anio;
     if(anio == 0) anio = obtenerAnioActual();
 
@@ -265,7 +265,7 @@ void musicon::reporteReproduccionesPorSuscriptor() {
 
 void musicon::reporteReproduccionesPorGenero() {
     int anio;
-    cout << "INGRESE AÑO (0 para actual): ";
+    cout << "INGRESE ANIO (0 para actual): ";
     cin >> anio;
     if(anio == 0) anio = obtenerAnioActual();
 
@@ -307,7 +307,7 @@ void musicon::reporteReproduccionesPorGenero() {
 
 void musicon::reporteReproduccionesPorCancion() {
     int anio;
-    cout << "INGRESE AÑO (0 para actual): ";
+    cout << "INGRESE ANIO (0 para actual): ";
     cin >> anio;
     if(anio == 0) anio = obtenerAnioActual();
 
@@ -391,4 +391,4 @@ void musicon::reporteCantidadCancionesPorArtista() {
     FILE *pCan = fopen("canciones.dat", "rb");
     if(pCan) { fread(vCan, sizeof(Canciones), cantCan, pCan); fclose(pCan); }
 
-    cout << endl << "CANTIDAD DE CANCIONES POR ARTISTA" << endl;
+    cout << endl << "CANTIDAD DE CANCIONES POR ARTISTA" << endl; }
