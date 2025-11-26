@@ -82,7 +82,12 @@ void Canciones::Cargar() {
     cout << "Ingrese ID Cancion: ";
     cin >> _idCancion;
 
-    cin.ignore(); 
+    if(cin.fail()) {
+    cin.clear(); // Quita el estado de error
+    cin.ignore(10000, '\n'); // Borra la entrada incorrecta
+    } else {
+    cin.ignore(10000, '\n');
+    }
     
     cout << "Nombre de la cancion: ";
     cin.getline(_nombre, 100);
