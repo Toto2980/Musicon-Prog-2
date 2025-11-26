@@ -11,6 +11,8 @@ class Fecha{
     Fecha();
     Fecha(int minutos, int hora, int dia, int mes, int anio);
 
+    Fecha(int dia, int mes, int anio);
+
     int getDia();
     int getMes();
     int getAnio();
