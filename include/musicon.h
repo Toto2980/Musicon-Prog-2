@@ -25,11 +25,11 @@ class musicon
         musicon();
         virtual ~musicon();
 
-        // --- MENÚS PÚBLICOS (Para que main.cpp los pueda llamar) ---
+        // --- MENÃšS PÃšBLICOS (Para que main.cpp los pueda llamar) ---
         void mostrarMenuPrincipal();
-        void mostrarMenuReportes(); // Renombrado y hecho público
+        void mostrarMenuReportes(); // Renombrado y hecho pÃºblico
 
-        // --- REPORTES PÚBLICOS ---
+        // --- REPORTES PÃšBLICOS ---
         void reporteReproduccionesAnuales();
         void reporteReproduccionesPorSuscriptor();
         void reporteReproduccionesPorGenero();
@@ -38,7 +38,7 @@ class musicon
         void reporteCantidadCancionesPorArtista();
 
     protected:
-        // --- FUNCIONES DE VALIDACIÓN ---
+        // --- FUNCIONES DE VALIDACIÃ“N ---
         bool existeCancion(int idCancion);
         bool existeSuscriptor(int idSuscriptor);
         bool existeArtista(int idArtista);
@@ -46,7 +46,7 @@ class musicon
         bool existeGenero(int idGenero);
         bool existeLista(int idLista);
 
-        // --- FUNCIONES DE BÚSQUEDA ---
+        // --- FUNCIONES DE BÃšSQUEDA ---
         std::string buscarNombreGenero(int idGeneroBuscado);
 
         bool buscarCancion(int idCancionBuscada, Canciones& regCancion);
@@ -57,13 +57,15 @@ class musicon
         int contarRegistros(const char* nombreArchivo, int tamanioRegistro);
 
     private:
-        // --- MENÚS INTERNOS ---
+        // --- MENÃšS INTERNOS ---
         void menuCargas();
         void menuConfiguracion();
-
+    
         // --- CARGAS ---
         void cargarNuevaCancionEnLista();
         void cargarNuevaSuscripcion();
+        void cargarNuevoAcceso();
 };
 
 #endif // MUSICON_H
+
