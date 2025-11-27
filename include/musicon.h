@@ -60,11 +60,13 @@ class musicon
         // --- MENÚS INTERNOS ---
         void menuCargas();
         void menuConfiguracion();
-    
+
         // --- CARGAS ---
         void cargarNuevaCancionEnLista();
         void cargarNuevaSuscripcion();
         void cargarNuevoAcceso();
+
+        void registrarAcceso();
 };
 
 #endif // MUSICON_H
