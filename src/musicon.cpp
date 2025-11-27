@@ -43,7 +43,7 @@ void musicon::mostrarMenuPrincipal() {
         cout << "Ingrese opcion: ";
         cin >> opcion;
 
-     
+
 
         switch (opcion) {
             case 1:
@@ -83,7 +83,7 @@ void musicon::menuCargas() {
         cin >> opcion;
 
         cin.ignore(10000, '\n');
-        
+
 
         switch (opcion) {
             case 1:
@@ -93,7 +93,8 @@ void musicon::menuCargas() {
                 cargarNuevaSuscripcion();
                 break;
             case 3:
-                cargarNuevoAcceso();
+                registrarAcceso();
+                break;
             case 0:
                 break;
             default:
@@ -173,12 +174,12 @@ void musicon::cargarNuevaSuscripcion() {
 
 void musicon::cargarNuevoAcceso() {
     cout << endl << "--- REGISTRAR NUEVO ACCESO ---" << endl;
-    
+
     // Usamos la clase Accesos
-    Accesos nuevoAcceso; 
-    
+    Accesos nuevoAcceso;
+
     // Esta función ya la programe en Accesos.cpp, pedirá ID Suscriptor, ID Canción y Fecha
-    nuevoAcceso.Cargar(); 
+    nuevoAcceso.Cargar();
 
     // Guardamos en el archivo accesos.dat
     FILE *p = fopen("accesos.dat", "ab");
@@ -186,11 +187,11 @@ void musicon::cargarNuevoAcceso() {
         cout << "Error al abrir el archivo accesos.dat" << endl;
         return;
     }
-    
+
     // Escribimos el registro
     fwrite(&nuevoAcceso, sizeof(Accesos), 1, p);
     fclose(p);
-    
+
     cout << "Reproduccion registrada exitosamente!" << endl;
 }
 
@@ -423,8 +424,77 @@ void musicon::reporteCantidadCancionesPorArtista() {
     FILE *pCan = fopen("canciones.dat", "rb");
     if(pCan) { fread(vCan, sizeof(Canciones), cantCan, pCan); fclose(pCan); }
 
-    cout << endl << "CANTIDAD DE CANCIONES POR ARTISTA" << endl; }
+    cout << endl << "--- CANTIDAD DE CANCIONES POR ARTISTA ---" << endl;
+    cout << "ARTISTA\t\t\tCANTIDAD" << endl;
+    cout << "-----------------------------------------" << endl;
 
+    for(int i = 0; i < cantArt; i++) {
+        if (vArt[i].getEstado()) {
+            int idArtista = vArt[i].getIdArtista();
+            int contadorCanciones = 0;
+
+            for(int j = 0; j < cantAlb; j++) {
+                if(vAlb[j].getEstado() && vAlb[j].getIdArtista() == idArtista) {
+                    int idAlbum = vAlb[j].getIdAlbum();
+
+                    for(int k = 0; k < cantCan; k++) {
+                        if(vCan[k].getEstado() && vCan[k].getIdAlbum() == idAlbum) {
+                            contadorCanciones++;
+                        }
+                    }
+                }
+            }
+            cout << vArt[i].getNombre() << "\t\t" << contadorCanciones << endl;
+        }
+    }
+
+    cout << "-----------------------------------------" << endl;
+
+    delete[] vArt;
+    delete[] vAlb;
+    delete[] vCan;
+}
+
+
+void musicon::registrarAcceso() {
+    cout << endl << "--- REGISTRAR ACCESO (SIMULACION) ---" << endl;
+
+    int idSuscriptor, idCancion;
+
+    cout << "Ingrese ID del Suscriptor que escucha: ";
+    cin >> idSuscriptor;
+
+
+    cout << "Ingrese ID de la Cancion escuchada: ";
+    cin >> idCancion;
+
+
+    time_t now = time(0);
+    tm *ltm = localtime(&now);
+
+    int anio = 1900 + ltm->tm_year;
+    int mes = 1 + ltm->tm_mon;
+    int dia = ltm->tm_mday;
+    int hora = ltm->tm_hour;
+    int min = ltm->tm_min;
+
+    Fecha fechaActual(min, hora, dia, mes, anio);
+
+    Accesos nuevoAcceso;
+    nuevoAcceso.setIdSuscriptor(idSuscriptor);
+    nuevoAcceso.setIdCancion(idCancion);
+    nuevoAcceso.setFechaHora(fechaActual);
+
+    FILE *p = fopen("accesos.dat", "ab");
+    if (p == NULL) {
+        cout << "Error al abrir accesos.dat" << endl;
+        return;
+    }
+    fwrite(&nuevoAcceso, sizeof(Accesos), 1, p);
+    fclose(p);
+
+    cout << endl << "[OK] Reproduccion registrada con fecha: " << fechaActual.toString() << endl;
+}
 
 
 
