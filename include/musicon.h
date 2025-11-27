@@ -65,8 +65,8 @@ class musicon
         void cargarNuevaCancionEnLista();
         void cargarNuevaSuscripcion();
         void cargarNuevoAcceso();
-
         void registrarAcceso();
+        void cargarNuevaPlaylist();
 };
 
 #endif // MUSICON_H

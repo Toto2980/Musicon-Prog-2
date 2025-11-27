@@ -29,7 +29,7 @@ public:
     int getAnioPublicacion();
     bool getEstado();
 
-    // Falta Cargar() y Mostrar()
+
     void Cargar();
     void Mostrar();
 };
