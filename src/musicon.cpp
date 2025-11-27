@@ -53,7 +53,7 @@ void musicon::mostrarMenuPrincipal() {
                 mostrarMenuReportes();
                 break;
             case 3:
-                menuConfiguracion();
+                menuConfiguracionprotected();
                 break;
             case 0:
                 cout << "Gracias por usar Musicon." << endl;
@@ -77,6 +77,7 @@ void musicon::menuCargas() {
         cout << "1. Nueva Cancion" << endl;
         cout << "2. Nuevo Suscriptor" << endl;
         cout << "3. Registrar Acceso (Simular Reproduccion)" << endl;
+        cout << "4. Nueva Playlist" << endl;
         cout << "0. Volver al Menu Principal" << endl;
         cout << "----------------------" << endl;
         cout << "Ingrese opcion: ";
@@ -94,6 +95,9 @@ void musicon::menuCargas() {
                 break;
             case 3:
                 registrarAcceso();
+                break;
+            case 4:
+                cargarNuevaPlaylist();
                 break;
             case 0:
                 break;
@@ -494,6 +498,28 @@ void musicon::registrarAcceso() {
     fclose(p);
 
     cout << endl << "[OK] Reproduccion registrada con fecha: " << fechaActual.toString() << endl;
+}
+
+void musicon::cargarNuevaPlaylist() {
+    cout << endl << "--- CARGAR NUEVA PLAYLIST ---" << endl;
+
+    // 1. Crear el objeto
+    Playlist nuevaPlaylist;
+
+    // 2. Pedir los datos al usuario (usamos el método Cargar que ya hicimos)
+    nuevaPlaylist.Cargar();
+
+    // 3. Guardar en archivo si el estado es válido
+    if (nuevaPlaylist.getEstado()) {
+        FILE *p = fopen("playlists.dat", "ab"); // "ab" = append binary
+        if (p == NULL) {
+            cout << "Error al abrir el archivo playlists.dat" << endl;
+            return;
+        }
+        fwrite(&nuevaPlaylist, sizeof(Playlist), 1, p);
+        fclose(p);
+        cout << "Playlist guardada exitosamente!" << endl;
+    }
 }
 
 
