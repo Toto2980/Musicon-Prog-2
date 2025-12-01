@@ -56,8 +56,16 @@ class musicon
         void menuCargas();
         void menuConfiguracion();
 
+        // --- SUBMENUCANCIONES 
+        void menuCanciones();
+
+        // --- CARGAS (ABM) ---
+        void cargarNuevaCancionEnLista(); // (Alta)
+        void modificarCancion();          // (Modificación) - NUEVA
+        void eliminarCancion();           // (Baja Lógica) - NUEVA
+
+
         // --- CARGAS ---
-        void cargarNuevaCancionEnLista();
         void cargarNuevaSuscripcion();
         void cargarNuevoAcceso();
         void registrarAcceso();
@@ -65,5 +73,6 @@ class musicon
 };
 
 #endif // MUSICON_H
+
 
 
