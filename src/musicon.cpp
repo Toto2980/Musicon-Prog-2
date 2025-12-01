@@ -668,28 +668,114 @@ void musicon::registrarAcceso() {
     cout << endl << "[OK] Reproduccion registrada con fecha: " << fechaActual.toString() << endl;
 }
 
+
 void musicon::cargarNuevaPlaylist() {
-    cout << endl << "--- CARGAR NUEVA PLAYLIST ---" << endl;
+    cout << endl << "--- CREAR NUEVA PLAYLIST ---" << endl;
+    Playlist nuevaP;
+    nuevaP.Cargar(); // Asegúrate que Playlist::Cargar pida los datos y ponga _estado = true
 
-    // 1. Crear el objeto
-    Playlist nuevaPlaylist;
-
-    // 2. Pedir los datos al usuario (usamos el método Cargar que ya hicimos)
-    nuevaPlaylist.Cargar();
-
-    // 3. Guardar en archivo si el estado es válido
-    if (nuevaPlaylist.getEstado()) {
-        FILE *p = fopen("playlists.dat", "ab"); // "ab" = append binary
+    if (nuevaP.getEstado()) {
+        FILE *p = fopen("playlists.dat", "ab");
         if (p == NULL) {
             cout << "Error al abrir el archivo playlists.dat" << endl;
             return;
         }
-        fwrite(&nuevaPlaylist, sizeof(Playlist), 1, p);
+        fwrite(&nuevaP, sizeof(Playlist), 1, p);
         fclose(p);
-        cout << "Playlist guardada exitosamente!" << endl;
+        cout << "Playlist creada exitosamente!" << endl;
     }
 }
 
+// 2. MODIFICACIÓN
+void musicon::modificarPlaylist() {
+    int idBuscado;
+    cout << "Ingrese el ID de la Playlist a modificar: ";
+    cin >> idBuscado;
+
+    FILE *p = fopen("playlists.dat", "r+b");
+    if (p == NULL) {
+        cout << "Error al abrir playlists.dat (quizas no existe aun)." << endl;
+        return;
+    }
+
+    Playlist reg;
+    bool encontrado = false;
+
+    while (fread(&reg, sizeof(Playlist), 1, p) == 1) {
+        // Buscamos por ID y que esté activa
+        if (reg.getIdPlaylist() == idBuscado && reg.getEstado() == true) {
+            encontrado = true;
+            cout << endl << "--- PLAYLIST ENCONTRADA ---" << endl;
+            reg.Mostrar();
+
+            cout << endl << "--- INGRESE NUEVOS DATOS ---" << endl;
+            
+            char nuevoNombre[50];
+            int nuevoCreador;
+
+            cout << "Nuevo Nombre: ";
+            cin.ignore();
+            cin.getline(nuevoNombre, 50);
+
+            cout << "Nuevo ID Creador: ";
+            cin >> nuevoCreador;
+
+            // Actualizamos el objeto
+            reg.setNombre(nuevoNombre);
+            reg.setIdSuscriptorCreador(nuevoCreador);
+
+            // Retrocedemos y guardamos
+            fseek(p, -sizeof(Playlist), SEEK_CUR);
+            fwrite(&reg, sizeof(Playlist), 1, p);
+
+            cout << "Playlist modificada exitosamente." << endl;
+            break;
+        }
+    }
+
+    if (!encontrado) cout << "No se encontro una playlist activa con ese ID." << endl;
+    fclose(p);
+}
+
+// 3. BAJA LÓGICA
+void musicon::eliminarPlaylist() {
+    int idBuscado;
+    cout << "Ingrese el ID de la Playlist a eliminar: ";
+    cin >> idBuscado;
+
+    FILE *p = fopen("playlists.dat", "r+b");
+    if (p == NULL) {
+        cout << "Error al abrir playlists.dat" << endl;
+        return;
+    }
+
+    Playlist reg;
+    bool encontrado = false;
+
+    while (fread(&reg, sizeof(Playlist), 1, p) == 1) {
+        if (reg.getIdPlaylist() == idBuscado && reg.getEstado() == true) {
+            encontrado = true;
+            reg.Mostrar();
+
+            char confirma;
+            cout << "Confirmar eliminacion? (s/n): ";
+            cin >> confirma;
+
+            if (confirma == 's' || confirma == 'S') {
+                reg.setEstado(false); // Baja lógica
+                fseek(p, -sizeof(Playlist), SEEK_CUR);
+                fwrite(&reg, sizeof(Playlist), 1, p);
+                cout << "Playlist eliminada correctamente." << endl;
+            } else {
+                cout << "Operacion cancelada." << endl;
+            }
+            break;
+        }
+    }
+
+    if (!encontrado) cout << "No se encontro una playlist activa con ese ID." << endl;
+    fclose(p);
+}
 
 
 
