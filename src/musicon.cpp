@@ -1,5 +1,4 @@
 #include "musicon.h"
-
 #include <iostream>
 #include <cstring>
 #include <cstdio>
@@ -77,7 +76,7 @@ void musicon::menuCargas() {
         cout << "1. GESTION DE CANCIONES (ABM)" << endl;
         cout << "2. Nuevo Suscriptor" << endl;
         cout << "3. Registrar Acceso (Simular Reproduccion)" << endl;
-        cout << "4. Nueva Playlist" << endl;
+        cout << "4. GESTION DE PLAYLISTS (ABM)" << endl;
         cout << "0. Volver al Menu Principal" << endl;
         cout << "----------------------" << endl;
         cout << "Ingrese opcion: ";
@@ -97,7 +96,7 @@ void musicon::menuCargas() {
                 registrarAcceso();
                 break;
             case 4:
-                cargarNuevaPlaylist();
+                menuPlaylists();
                 break;
             case 0:
                 break;
@@ -666,6 +665,7 @@ void musicon::cargarNuevaPlaylist() {
         cout << "Playlist guardada exitosamente!" << endl;
     }
 }
+
 
 
 
