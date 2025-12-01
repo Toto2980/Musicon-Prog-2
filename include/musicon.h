@@ -13,11 +13,6 @@
 
 
 
-class Canciones;
-class Artista;
-class Album;
-class Genero;
-class Suscriptor;
 
 class musicon
 {
@@ -70,4 +65,5 @@ class musicon
 };
 
 #endif // MUSICON_H
+
 
