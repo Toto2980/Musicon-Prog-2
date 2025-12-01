@@ -28,9 +28,9 @@ bool Playlist::getEstado() { return _estado; }
 void Playlist::Cargar() {
     cout << "ID Playlist: ";
     cin >> _idPlaylist;
-
+    
     cout << "Nombre de la Playlist: ";
-    cin.ignore();
+    cin.ignore(); 
     cin.getline(_nombre, 50);
 
     cout << "ID del Creador (Suscriptor): ";
@@ -104,3 +104,4 @@ bool Listas::eliminarPlaylist(const char* nombre) {
     cout << "Playlist eliminada (baja logica)." << endl;
     return true;
 }
+
