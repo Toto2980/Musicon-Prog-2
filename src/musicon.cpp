@@ -74,7 +74,7 @@ void musicon::menuCargas() {
     do {
         system("cls");
         cout << "--- MENU DE CARGAS ---" << endl;
-        cout << "1. Nueva Cancion" << endl;
+        cout << "1. GESTION DE CANCIONES (ABM)" << endl;
         cout << "2. Nuevo Suscriptor" << endl;
         cout << "3. Registrar Acceso (Simular Reproduccion)" << endl;
         cout << "4. Nueva Playlist" << endl;
@@ -106,6 +106,151 @@ void musicon::menuCargas() {
         }
         if (opcion != 0) system("pause");
     } while (opcion != 0);
+}
+
+void musicon::menuCanciones() {
+    int opcion;
+    do {
+        system("cls");
+        cout << "--- GESTION DE CANCIONES ---" << endl;
+        cout << "1. Agregar Nueva Cancion" << endl;
+        cout << "2. Modificar Cancion" << endl;
+        cout << "3. Eliminar Cancion (Baja Logica)" << endl;
+        cout << "0. Volver" << endl;
+        cout << "----------------------------" << endl;
+        cout << "Ingrese opcion: ";
+        cin >> opcion;
+
+        switch (opcion) {
+            case 1:
+                cargarNuevaCancionEnLista();
+                break;
+            case 2:
+                modificarCancion();
+                break;
+            case 3:
+                eliminarCancion();
+                break;
+            case 0:
+                break;
+            default:
+                cout << "Opcion incorrecta." << endl;
+        }
+        if (opcion != 0) system("pause");
+    } while (opcion != 0);
+}
+
+void musicon::modificarCancion() {
+    int idBuscado;
+    cout << "Ingrese el ID de la cancion a modificar: ";
+    cin >> idBuscado;
+
+    // Abrimos en modo lectura/escritura binaria ("r+b")
+    // "r+" permite leer y escribir sin borrar el archivo existente
+    FILE *p = fopen("canciones.dat", "r+b");
+    if (p == NULL) {
+        cout << "Error al abrir el archivo canciones.dat" << endl;
+        return;
+    }
+
+    Canciones reg;
+    bool encontrado = false;
+
+    // Leemos registro por registro
+    while (fread(&reg, sizeof(Canciones), 1, p) == 1) {
+        if (reg.getIdCancion() == idBuscado && reg.getEstado() == true) {
+            encontrado = true;
+            cout << endl << "--- CANCION ENCONTRADA ---" << endl;
+            reg.Mostrar(); // Mostramos la info actual
+            
+            cout << endl << "--- INGRESE NUEVOS DATOS ---" << endl;
+            // Aquí podrías hacer setters específicos si no quieres cambiar el ID
+            // Por ejemplo:
+            char nuevoNombre[100];
+            int nuevoAlbum, nuevoGenero, nuevaDuracion;
+            
+            cin.ignore(); 
+            cout << "Nuevo Nombre: ";
+            cin.getline(nuevoNombre, 100);
+            
+            cout << "Nuevo ID Album: ";
+            cin >> nuevoAlbum;
+            
+            cout << "Nuevo ID Genero: ";
+            cin >> nuevoGenero;
+            
+            cout << "Nueva Duracion: ";
+            cin >> nuevaDuracion;
+
+            // Actualizamos el objeto en memoria
+            reg.setNombre(nuevoNombre);
+            reg.setIdAlbum(nuevoAlbum);
+            reg.setIdGenero(nuevoGenero);
+            reg.setDuracionSegundos(nuevaDuracion);
+            
+            // IMPORTANTE: Retroceder el cursor del archivo para sobrescribir
+            // fseek mueve el cursor desde la posición actual (SEEK_CUR) hacia atrás
+            fseek(p, -sizeof(Canciones), SEEK_CUR);
+            
+            // Escribimos el registro modificado
+            fwrite(&reg, sizeof(Canciones), 1, p);
+            
+            cout << "Cancion modificada exitosamente." << endl;
+            break; // Salimos del while
+        }
+    }
+
+    if (!encontrado) {
+        cout << "No se encontro una cancion activa con ese ID." << endl;
+    }
+
+    fclose(p);
+}
+
+void musicon::eliminarCancion() {
+    int idBuscado;
+    cout << "Ingrese el ID de la cancion a eliminar: ";
+    cin >> idBuscado;
+
+    FILE *p = fopen("canciones.dat", "r+b");
+    if (p == NULL) {
+        cout << "Error al abrir el archivo canciones.dat" << endl;
+        return;
+    }
+
+    Canciones reg;
+    bool encontrado = false;
+
+    while (fread(&reg, sizeof(Canciones), 1, p) == 1) {
+        if (reg.getIdCancion() == idBuscado && reg.getEstado() == true) {
+            encontrado = true;
+            reg.Mostrar();
+            
+            char confirma;
+            cout << "Esta seguro de eliminar esta cancion? (s/n): ";
+            cin >> confirma;
+
+            if (confirma == 's' || confirma == 'S') {
+                // BAJA LÓGICA: Solo cambiamos el estado a false
+                reg.setEstado(false);
+
+                // Retrocedemos y sobrescribimos
+                fseek(p, -sizeof(Canciones), SEEK_CUR);
+                fwrite(&reg, sizeof(Canciones), 1, p);
+                
+                cout << "Cancion eliminada (baja logica) correctamente." << endl;
+            } else {
+                cout << "Operacion cancelada." << endl;
+            }
+            break;
+        }
+    }
+
+    if (!encontrado) {
+        cout << "No se encontro una cancion activa con ese ID." << endl;
+    }
+
+    fclose(p);
 }
 
 void musicon::mostrarMenuReportes() {
