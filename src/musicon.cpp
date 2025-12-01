@@ -252,6 +252,30 @@ void musicon::eliminarCancion() {
     fclose(p);
 }
 
+void musicon::menuPlaylists() {
+    int opcion;
+    do {
+        system("cls");
+        cout << "--- GESTION DE PLAYLISTS ---" << endl;
+        cout << "1. Crear Nueva Playlist" << endl;
+        cout << "2. Modificar Playlist" << endl;
+        cout << "3. Eliminar Playlist (Baja Logica)" << endl;
+        cout << "0. Volver" << endl;
+        cout << "---------------------------" << endl;
+        cout << "Ingrese opcion: ";
+        cin >> opcion;
+
+        switch (opcion) {
+            case 1: cargarNuevaPlaylist(); break;
+            case 2: modificarPlaylist(); break;
+            case 3: eliminarPlaylist(); break;
+            case 0: break;
+            default: cout << "Opcion incorrecta." << endl;
+        }
+        if (opcion != 0) system("pause");
+    } while (opcion != 0);
+}
+
 void musicon::mostrarMenuReportes() {
     int opcion;
     do {
@@ -665,6 +689,7 @@ void musicon::cargarNuevaPlaylist() {
         cout << "Playlist guardada exitosamente!" << endl;
     }
 }
+
 
 
 
