@@ -1,4 +1,4 @@
-x#include "Listas.h"
+#include "Listas.h"
 
 // --- CLASE PLAYLIST ---
 
@@ -104,4 +104,5 @@ bool Listas::eliminarPlaylist(const char* nombre) {
     cout << "Playlist eliminada (baja logica)." << endl;
     return true;
 }
+
 
