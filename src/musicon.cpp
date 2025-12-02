@@ -52,7 +52,7 @@ void musicon::mostrarMenuPrincipal() {
                 mostrarMenuReportes();
                 break;
             case 3:
-                menuConfiguracionprotected();
+                menuConfiguracion();
                 break;
             case 0:
                 cout << "Gracias por usar Musicon." << endl;
@@ -776,6 +776,7 @@ void musicon::eliminarPlaylist() {
     if (!encontrado) cout << "No se encontro una playlist activa con ese ID." << endl;
     fclose(p);
 }
+
 
 
 
