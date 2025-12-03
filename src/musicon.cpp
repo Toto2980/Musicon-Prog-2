@@ -87,7 +87,7 @@ void musicon::menuCargas() {
 
         switch (opcion) {
             case 1:
-                cargarNuevaCancionEnLista();
+                menuCanciones();
                 break;
             case 2:
                 cargarNuevaSuscripcion();
@@ -776,6 +776,7 @@ void musicon::eliminarPlaylist() {
     if (!encontrado) cout << "No se encontro una playlist activa con ese ID." << endl;
     fclose(p);
 }
+
 
 
 
