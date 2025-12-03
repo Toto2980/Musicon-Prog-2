@@ -557,7 +557,7 @@ void musicon::reporteListarCancionesPorGenero() {
 
     int idEncontrado = -1;
     for(int i=0; i<cantGen; i++) {
-        if(strcasecmp(vGen[i].getNombre(), nombreGenero) == 0) {
+       if(stricmp(vGen[i].getNombre(), nombreGenero) == 0) {{
             idEncontrado = vGen[i].getIdGeneros();
             break;
         }
@@ -776,6 +776,7 @@ void musicon::eliminarPlaylist() {
     if (!encontrado) cout << "No se encontro una playlist activa con ese ID." << endl;
     fclose(p);
 }
+
 
 
 
