@@ -11,6 +11,7 @@
 #include "Album.h"
 #include "Generos.h"
 #include "Accesos.h"
+#include "DetallePlaylist.h"
 
 using namespace std;
 
@@ -41,8 +42,6 @@ void musicon::mostrarMenuPrincipal() {
         cout << "===========================================" << endl;
         cout << "Ingrese opcion: ";
         cin >> opcion;
-
-
 
         switch (opcion) {
             case 1:
@@ -83,7 +82,6 @@ void musicon::menuCargas() {
         cin >> opcion;
 
         cin.ignore(10000, '\n');
-
 
         switch (opcion) {
             case 1:
@@ -161,23 +159,23 @@ void musicon::modificarCancion() {
             encontrado = true;
             cout << endl << "--- CANCION ENCONTRADA ---" << endl;
             reg.Mostrar(); // Mostramos la info actual
-            
+
             cout << endl << "--- INGRESE NUEVOS DATOS ---" << endl;
             // Aquí podrías hacer setters específicos si no quieres cambiar el ID
             // Por ejemplo:
             char nuevoNombre[100];
             int nuevoAlbum, nuevoGenero, nuevaDuracion;
-            
-            cin.ignore(); 
+
+            cin.ignore();
             cout << "Nuevo Nombre: ";
             cin.getline(nuevoNombre, 100);
-            
+
             cout << "Nuevo ID Album: ";
             cin >> nuevoAlbum;
-            
+
             cout << "Nuevo ID Genero: ";
             cin >> nuevoGenero;
-            
+
             cout << "Nueva Duracion: ";
             cin >> nuevaDuracion;
 
@@ -186,14 +184,14 @@ void musicon::modificarCancion() {
             reg.setIdAlbum(nuevoAlbum);
             reg.setIdGenero(nuevoGenero);
             reg.setDuracionSegundos(nuevaDuracion);
-            
+
             // IMPORTANTE: Retroceder el cursor del archivo para sobrescribir
             // fseek mueve el cursor desde la posición actual (SEEK_CUR) hacia atrás
-            fseek(p, -sizeof(Canciones), SEEK_CUR);
-            
+            fseek(p, -(long)sizeof(Canciones), SEEK_CUR);
+
             // Escribimos el registro modificado
             fwrite(&reg, sizeof(Canciones), 1, p);
-            
+
             cout << "Cancion modificada exitosamente." << endl;
             break; // Salimos del while
         }
@@ -224,7 +222,7 @@ void musicon::eliminarCancion() {
         if (reg.getIdCancion() == idBuscado && reg.getEstado() == true) {
             encontrado = true;
             reg.Mostrar();
-            
+
             char confirma;
             cout << "Esta seguro de eliminar esta cancion? (s/n): ";
             cin >> confirma;
@@ -234,9 +232,9 @@ void musicon::eliminarCancion() {
                 reg.setEstado(false);
 
                 // Retrocedemos y sobrescribimos
-                fseek(p, -sizeof(Canciones), SEEK_CUR);
+                fseek(p, -(long)sizeof(Canciones), SEEK_CUR);
                 fwrite(&reg, sizeof(Canciones), 1, p);
-                
+
                 cout << "Cancion eliminada (baja logica) correctamente." << endl;
             } else {
                 cout << "Operacion cancelada." << endl;
@@ -260,6 +258,7 @@ void musicon::menuPlaylists() {
         cout << "1. Crear Nueva Playlist" << endl;
         cout << "2. Modificar Playlist" << endl;
         cout << "3. Eliminar Playlist (Baja Logica)" << endl;
+        cout << "4. Agregar Cancion a Playlist" << endl;
         cout << "0. Volver" << endl;
         cout << "---------------------------" << endl;
         cout << "Ingrese opcion: ";
@@ -269,6 +268,7 @@ void musicon::menuPlaylists() {
             case 1: cargarNuevaPlaylist(); break;
             case 2: modificarPlaylist(); break;
             case 3: eliminarPlaylist(); break;
+            case 4: agregarCancionAPlaylist(); break;
             case 0: break;
             default: cout << "Opcion incorrecta." << endl;
         }
@@ -557,7 +557,8 @@ void musicon::reporteListarCancionesPorGenero() {
 
     int idEncontrado = -1;
     for(int i=0; i<cantGen; i++) {
-       if(stricmp(vGen[i].getNombre(), nombreGenero) == 0) {{
+       // CORREGIDO AQUÍ: Antes tenías {{ ahora solo {
+       if(stricmp(vGen[i].getNombre(), nombreGenero) == 0) {
             idEncontrado = vGen[i].getIdGeneros();
             break;
         }
@@ -636,10 +637,8 @@ void musicon::registrarAcceso() {
     cout << "Ingrese ID del Suscriptor que escucha: ";
     cin >> idSuscriptor;
 
-
     cout << "Ingrese ID de la Cancion escuchada: ";
     cin >> idCancion;
-
 
     time_t now = time(0);
     tm *ltm = localtime(&now);
@@ -672,7 +671,7 @@ void musicon::registrarAcceso() {
 void musicon::cargarNuevaPlaylist() {
     cout << endl << "--- CREAR NUEVA PLAYLIST ---" << endl;
     Playlist nuevaP;
-    nuevaP.Cargar(); // Asegúrate que Playlist::Cargar pida los datos y ponga _estado = true
+    nuevaP.Cargar();
 
     if (nuevaP.getEstado()) {
         FILE *p = fopen("playlists.dat", "ab");
@@ -709,7 +708,7 @@ void musicon::modificarPlaylist() {
             reg.Mostrar();
 
             cout << endl << "--- INGRESE NUEVOS DATOS ---" << endl;
-            
+
             char nuevoNombre[50];
             int nuevoCreador;
 
@@ -725,7 +724,7 @@ void musicon::modificarPlaylist() {
             reg.setIdSuscriptorCreador(nuevoCreador);
 
             // Retrocedemos y guardamos
-            fseek(p, -sizeof(Playlist), SEEK_CUR);
+            fseek(p, -(long)sizeof(Playlist), SEEK_CUR);
             fwrite(&reg, sizeof(Playlist), 1, p);
 
             cout << "Playlist modificada exitosamente." << endl;
@@ -763,7 +762,7 @@ void musicon::eliminarPlaylist() {
 
             if (confirma == 's' || confirma == 'S') {
                 reg.setEstado(false); // Baja lógica
-                fseek(p, -sizeof(Playlist), SEEK_CUR);
+                fseek(p, -(long)sizeof(Playlist), SEEK_CUR);
                 fwrite(&reg, sizeof(Playlist), 1, p);
                 cout << "Playlist eliminada correctamente." << endl;
             } else {
@@ -777,9 +776,136 @@ void musicon::eliminarPlaylist() {
     fclose(p);
 }
 
+void musicon::agregarCancionAPlaylist() {
+    cout << endl << "--- AGREGAR CANCION A PLAYLIST ---" << endl;
 
+    int idLista;
+    cout << "Ingrese ID de la Playlist destino: ";
+    cin >> idLista;
 
+    if (!existeLista(idLista)) {
+         cout << "[!] Error: La playlist no existe o no esta activa." << endl;
+         return;
+    }
 
+    int idCancion;
+    cout << "Ingrese ID de la Cancion a agregar: ";
+    cin >> idCancion;
 
+    if (!existeCancion(idCancion)) {
+         cout << "[!] Error: La cancion no existe." << endl;
+         return;
+    }
 
+    DetallePlaylist detalle;
+    detalle.setIdPlaylist(idLista);
+    detalle.setIdCancion(idCancion);
 
+    // Fecha hardcodeada (para probar)
+    Fecha fechaHoy(0, 0, 4, 12, 2025);
+    detalle.setFechaAgregado(fechaHoy);
+
+    detalle.setEstado(true);
+
+    FILE *p = fopen("Listas_Canciones.dat", "ab");
+    if (p == NULL) {
+        cout << "Error al guardar en Listas_Canciones.dat" << endl;
+        return;
+    }
+    fwrite(&detalle, sizeof(DetallePlaylist), 1, p);
+    fclose(p);
+
+    cout << "[OK] Cancion agregada a la playlist correctamente." << endl;
+}
+
+// --- FUNCIONES DE VALIDACION (Agregadas al final) ---
+
+bool musicon::existeLista(int idLista) {
+    FILE *p = fopen("playlists.dat", "rb");
+    if (p == NULL) return false;
+    Playlist reg;
+    bool existe = false;
+    while (fread(&reg, sizeof(Playlist), 1, p) == 1) {
+        if (reg.getIdPlaylist() == idLista && reg.getEstado() == true) {
+            existe = true;
+            break;
+        }
+    }
+    fclose(p);
+    return existe;
+}
+
+bool musicon::existeCancion(int idCancion) {
+    FILE *p = fopen("canciones.dat", "rb");
+    if (p == NULL) return false;
+    Canciones reg;
+    bool existe = false;
+    while (fread(&reg, sizeof(Canciones), 1, p) == 1) {
+        if (reg.getIdCancion() == idCancion && reg.getEstado() == true) {
+            existe = true;
+            break;
+        }
+    }
+    fclose(p);
+    return existe;
+}
+
+bool musicon::existeSuscriptor(int idSuscriptor) {
+    FILE *p = fopen("suscriptores.dat", "rb");
+    if (p == NULL) return false;
+    Suscriptor reg;
+    bool existe = false;
+    while (fread(&reg, sizeof(Suscriptor), 1, p)) {
+        if (reg.getIdSuscriptor() == idSuscriptor && reg.getEstado()) {
+            existe = true;
+            break;
+        }
+    }
+    fclose(p);
+    return existe;
+}
+
+bool musicon::existeArtista(int idArtista) {
+    FILE *p = fopen("artistas.dat", "rb");
+    if (p == NULL) return false;
+    Artista reg;
+    bool existe = false;
+    while (fread(&reg, sizeof(Artista), 1, p)) {
+        if (reg.getIdArtista() == idArtista && reg.getEstado()) {
+            existe = true;
+            break;
+        }
+    }
+    fclose(p);
+    return existe;
+}
+
+bool musicon::existeAlbum(int idAlbum) {
+    FILE *p = fopen("albumes.dat", "rb");
+    if (p == NULL) return false;
+    Album reg;
+    bool existe = false;
+    while (fread(&reg, sizeof(Album), 1, p)) {
+        if (reg.getIdAlbum() == idAlbum && reg.getEstado()) {
+            existe = true;
+            break;
+        }
+    }
+    fclose(p);
+    return existe;
+}
+
+bool musicon::existeGenero(int idGenero) {
+    FILE *p = fopen("generos.dat", "rb");
+    if (p == NULL) return false;
+    Genero reg;
+    bool existe = false;
+    while (fread(&reg, sizeof(Genero), 1, p)) {
+        if (reg.getIdGeneros() == idGenero && reg.getEstado()) {
+            existe = true;
+            break;
+        }
+    }
+    fclose(p);
+    return existe;
+}
