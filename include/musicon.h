@@ -10,7 +10,8 @@
 #include "Listas.h"
 #include "Accesos.h"
 #include "Fecha.h"
-
+#include "DetallePlaylist.h"
+#include "Canciones.h"
 
 
 
@@ -56,7 +57,7 @@ class musicon
         void menuCargas();
         void menuConfiguracion();
 
-        // --- SUBMENUCANCIONES 
+        // --- SUBMENUCANCIONES
         void menuCanciones();
         void menuPlaylists();
 
@@ -71,8 +72,10 @@ class musicon
         void cargarNuevoAcceso();
         void registrarAcceso();
         void cargarNuevaPlaylist();
-        void modificarPlaylist();   
-        void eliminarPlaylist();   
+        void modificarPlaylist();
+        void eliminarPlaylist();
+
+        void agregarCancionAPlaylist();
 };
 
 #endif // MUSICON_H
