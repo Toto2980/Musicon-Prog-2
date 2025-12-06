@@ -3,7 +3,6 @@
 
 class Canciones {
 private:
-
     int _idCancion;
     char _nombre[100];
     int _idAlbum;
@@ -12,13 +11,9 @@ private:
     bool _estado;
 
 public:
-    // Constructor
     Canciones();
-    // Destructor
     virtual ~Canciones();
 
-
-    // Setters
     void setIdCancion(int id);
     void setNombre(const char* nombre);
     void setIdAlbum(int idAl);
@@ -26,7 +21,6 @@ public:
     void setDuracionSegundos(int duracion);
     void setEstado(bool e);
 
-    // Getters
     int getIdCancion();
     const char* getNombre();
     int getIdAlbum();

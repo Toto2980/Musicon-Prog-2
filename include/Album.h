@@ -3,7 +3,6 @@
 
 class Album {
 private:
-
     int _idAlbum;
     char _titulo[100];
     int _idArtista;
@@ -11,24 +10,20 @@ private:
     bool _estado;
 
 public:
-    // Constructor
     Album();
     virtual ~Album();
 
-    // Setters
     void setIdAlbum(int id);
     void setTitulo(const char* titulo);
     void setIdArtista(int idAr);
     void setAnioPublicacion(int anio);
     void setEstado(bool e);
 
-    // Getters
     int getIdAlbum();
     const char* getTitulo();
     int getIdArtista();
     int getAnioPublicacion();
     bool getEstado();
-
 
     void Cargar();
     void Mostrar();

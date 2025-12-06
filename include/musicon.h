@@ -13,6 +13,7 @@
 #include "Listas.h"
 #include "Accesos.h"
 #include "Fecha.h"
+#include "Generos.h"
 
 class musicon
 {
@@ -21,6 +22,7 @@ class musicon
         virtual ~musicon();
 
         // --- MENÚS PÚBLICOS ---
+        void iniciarSistema(); // Punto de entrada
         void mostrarMenuPrincipal();
         void mostrarMenuReportes();
 
@@ -31,9 +33,11 @@ class musicon
         void reporteReproduccionesPorCancion();
         void reporteListarCancionesPorGenero();
         void reporteCantidadCancionesPorArtista();
+        void reporteCancionesPorUsuarioEnListas();
+        void reporteBuscarCancionEnListas();
 
     protected:
-        // --- FUNCIONES DE VALIDACIÓN Y BÚSQUEDA ---
+        // --- FUNCIONES DE VALIDACIÓN ---
         bool existeCancion(int idCancion);
         bool existeSuscriptor(int idSuscriptor);
         bool existeArtista(int idArtista);
@@ -41,11 +45,34 @@ class musicon
         bool existeGenero(int idGenero);
         bool existeLista(int idLista);
 
+        // --- AUTOINCREMENTALES ---
+        int obtenerNuevoIdCancion();
+        int obtenerNuevoIdSuscriptor();
+        int obtenerNuevoIdGenero();
+        int obtenerNuevoIdAlbum();
+        int obtenerNuevoIdArtista();
+
+        // --- BUSCADORES (Helpers) ---
+        int buscarIdSuscriptorPorNombre(const char* nombre);
+        int buscarIdAlbumPorTitulo(const char* titulo);
+        int buscarIdGeneroPorNombre(const char* nombre);
+        int buscarIdArtistaPorNombre(const char* nombre);
+
+        // Nuevos buscadores para Playlist ABM
+        int buscarIdPlaylistPorNombre(const char* nombre);
+        int buscarIdCancionPorNombre(const char* nombre);
+
         // Auxiliares
         int contarRegistros(const char* nombreArchivo, int tamanioRegistro);
-        int obtenerNuevoIdCancion();
+
     private:
+        int _idUsuarioLogueado;
+        char _nombreUsuarioLogueado[50];
+
         // --- MENÚS INTERNOS ---
+        void menuBienvenida();
+        void login();
+        void registrarse();
         void menuCargas();
         void menuConfiguracion();
 
@@ -53,18 +80,18 @@ class musicon
         void menuCanciones();
         void menuPlaylists();
 
-        // --- CARGAS Y LISTADOS (ABM) ---
+        // --- ABML CANCIONES ---
         void cargarNuevaCancionEnLista();
+        int crearAlbumRapido(const char* tituloAlbum);
         void modificarCancion();
         void eliminarCancion();
         void listarCanciones();
 
-        // --- OTRAS CARGAS ---
+        // --- OTROS ---
         void cargarNuevaSuscripcion();
-        void cargarNuevoAcceso();
         void registrarAcceso();
 
-        // --- PLAYLISTS ---
+        // --- PLAYLISTS (Optimizados) ---
         void cargarNuevaPlaylist();
         void modificarPlaylist();
         void eliminarPlaylist();

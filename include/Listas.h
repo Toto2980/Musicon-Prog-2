@@ -12,10 +12,8 @@ private:
     int _idSuscriptorCreador;
     bool _estado;
 
-
 public:
     Playlist();
-
     virtual ~Playlist();
 
     void setIdPlaylist(int id);
@@ -30,7 +28,6 @@ public:
 
     void Cargar();
     void Mostrar();
-
 };
 
 class Listas {
@@ -40,7 +37,6 @@ private:
 
 public:
     Listas();
-
 
     void agregarPlaylist(const char* nombre, int idCreador);
     void mostrarPlaylists();

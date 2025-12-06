@@ -1,7 +1,6 @@
 #ifndef ARTISTA_H
 #define ARTISTA_H
 
-
 class Artista
 {
     private:
@@ -13,7 +12,6 @@ class Artista
     public:
         Artista();
         virtual ~Artista();
-
 
         void setIdArtista(int id);
         void setNombre(const char* nombre);
@@ -27,13 +25,6 @@ class Artista
 
         void Cargar();
         void Mostrar();
-
-
-
-    protected:
-
-
-
 };
 
 #endif // ARTISTA_H

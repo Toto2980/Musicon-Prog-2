@@ -8,21 +8,19 @@ private:
     int _idSuscriptor;
     int _idCancion;
     Fecha _fechaHora;
+    // Eliminado _estado porque no se usa en logs históricos
 
 public:
-    // Constructor
     Accesos();
     virtual ~Accesos();
 
-    // Setters
     void setIdSuscriptor(int id);
     void setIdCancion(int id);
-    void setFechaHora(Fecha fecha); // Recibe un objeto Fecha (que ya trae hora)
+    void setFechaHora(Fecha fecha);
 
-    // Getters
     int getIdSuscriptor();
     int getIdCancion();
-    Fecha getFechaHora(); // Devuelve un objeto Fecha
+    Fecha getFechaHora();
 
     void Cargar();
     void Mostrar();

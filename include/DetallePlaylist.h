@@ -28,4 +28,3 @@ public:
 };
 
 #endif // DETALLEPLAYLIST_H
-
