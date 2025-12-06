@@ -79,17 +79,18 @@ bool Canciones::getEstado() {
 }
 // --- Función Cargar ---
 void Canciones::Cargar() {
-    cout << "Ingrese ID Cancion: ";
-    cin >> _idCancion;
+    // cout << "Ingrese ID Cancion: ";
+    // cin >> _idCancion;
 
-    if(cin.fail()) {
-    cin.clear(); // Quita el estado de error
-    cin.ignore(10000, '\n'); // Borra la entrada incorrecta
-    } else {
-    cin.ignore(10000, '\n');
-    }
-    
+    // if(cin.fail()) {
+    // cin.clear(); // Quita el estado de error
+    // cin.ignore(10000, '\n'); // Borra la entrada incorrecta
+    // } else {
+    // cin.ignore(10000, '\n');
+    // }
+
     cout << "Nombre de la cancion: ";
+    cin.ignore(); // Importante para limpiar el buffer antes del getline
     cin.getline(_nombre, 100);
 
     cout << "ID del Album: ";
@@ -101,7 +102,7 @@ void Canciones::Cargar() {
     cout << "Duracion (en segundos): ";
     cin >> _duracionSegundos;
 
-    _estado = true; 
+    _estado = true;
 }
 
 // --- Función Mostrar ---
@@ -112,8 +113,8 @@ void Canciones::Mostrar() {
         cout << "Nombre         : " << _nombre << endl;
         cout << "ID Album       : " << _idAlbum << endl;
         cout << "ID Genero      : " << _idGenero << endl;
-        
-        cout << "Duracion       : " << _duracionSegundos / 60 << "m " 
+
+        cout << "Duracion       : " << _duracionSegundos / 60 << "m "
                                     << _duracionSegundos % 60 << "s" << endl;
         cout << "-----------------------------------" << endl;
     }
