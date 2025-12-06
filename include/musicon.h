@@ -4,16 +4,15 @@
 #include <iostream>
 #include <string>
 
+// Includes necesarios
+#include "Canciones.h"
+#include "DetallePlaylist.h"
 #include "Artista.h"
 #include "Album.h"
 #include "Suscriptor.h"
 #include "Listas.h"
 #include "Accesos.h"
 #include "Fecha.h"
-#include "DetallePlaylist.h"
-#include "Canciones.h"
-
-
 
 class musicon
 {
@@ -21,9 +20,9 @@ class musicon
         musicon();
         virtual ~musicon();
 
-        // --- MENÚS PÚBLICOS (Para que main.cpp los pueda llamar) ---
+        // --- MENÚS PÚBLICOS ---
         void mostrarMenuPrincipal();
-        void mostrarMenuReportes(); // Renombrado y hecho público
+        void mostrarMenuReportes();
 
         // --- REPORTES PÚBLICOS ---
         void reporteReproduccionesAnuales();
@@ -34,7 +33,7 @@ class musicon
         void reporteCantidadCancionesPorArtista();
 
     protected:
-        // --- FUNCIONES DE VALIDACIÓN ---
+        // --- FUNCIONES DE VALIDACIÓN Y BÚSQUEDA ---
         bool existeCancion(int idCancion);
         bool existeSuscriptor(int idSuscriptor);
         bool existeArtista(int idArtista);
@@ -42,44 +41,34 @@ class musicon
         bool existeGenero(int idGenero);
         bool existeLista(int idLista);
 
-        // --- FUNCIONES DE BÚSQUEDA ---
-        std::string buscarNombreGenero(int idGeneroBuscado);
-
-        bool buscarCancion(int idCancionBuscada, Canciones& regCancion);
-
-        bool buscarArtista(int idArtistaBuscada, Artista& regArtista);
-        bool buscarAlbum(int idAlbumBuscado, Album& regAlbum);
-
+        // Auxiliares
         int contarRegistros(const char* nombreArchivo, int tamanioRegistro);
-
+        int obtenerNuevoIdCancion();
     private:
         // --- MENÚS INTERNOS ---
         void menuCargas();
         void menuConfiguracion();
 
-        // --- SUBMENUCANCIONES
+        // --- SUBMENÚS ---
         void menuCanciones();
         void menuPlaylists();
 
-        // --- CARGAS (ABM) ---
-        void cargarNuevaCancionEnLista(); // (Alta)
-        void modificarCancion();          // (Modificación) - NUEVA
-        void eliminarCancion();           // (Baja Lógica) - NUEVA
+        // --- CARGAS Y LISTADOS (ABM) ---
+        void cargarNuevaCancionEnLista();
+        void modificarCancion();
+        void eliminarCancion();
+        void listarCanciones();
 
-
-        // --- CARGAS ---
+        // --- OTRAS CARGAS ---
         void cargarNuevaSuscripcion();
         void cargarNuevoAcceso();
         void registrarAcceso();
+
+        // --- PLAYLISTS ---
         void cargarNuevaPlaylist();
         void modificarPlaylist();
         void eliminarPlaylist();
-
         void agregarCancionAPlaylist();
 };
 
 #endif // MUSICON_H
-
-
-
-
