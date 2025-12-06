@@ -1,71 +1,35 @@
 #include "Accesos.h"
-
 #include <iostream>
+
 using namespace std;
 
-// --- Definición del Constructor ---
 Accesos::Accesos() {
     _idSuscriptor = 0;
     _idCancion = 0;
-
 }
 
-// --- Definición del Destructor ---
-Accesos::~Accesos()
-{
-    // dtor
+Accesos::~Accesos() {
+    //dtor
 }
 
-// --- Definiciones de los Setters ---
+// SETTERS
+void Accesos::setIdSuscriptor(int id) { _idSuscriptor = id; }
+void Accesos::setIdCancion(int id) { _idCancion = id; }
+void Accesos::setFechaHora(Fecha fecha) { _fechaHora = fecha; }
 
-void Accesos::setIdSuscriptor(int id) {
-    if (id >= 0) {
-        _idSuscriptor = id;
-    } else {
-        _idSuscriptor = 0;
-    }
-}
+// GETTERS
+int Accesos::getIdSuscriptor() { return _idSuscriptor; }
+int Accesos::getIdCancion() { return _idCancion; }
+Fecha Accesos::getFechaHora() { return _fechaHora; }
 
-void Accesos::setIdCancion(int id) {
-    if (id >= 0) {
-        _idCancion = id;
-    } else {
-        _idCancion = 0;
-    }
-}
-
-void Accesos::setFechaHora(Fecha fecha) {
-    _fechaHora = fecha;
-}
-
-
-// --- Definiciones de los Getters ---
-
-int Accesos::getIdSuscriptor() {
-    return _idSuscriptor;
-}
-
-int Accesos::getIdCancion() {
-    return _idCancion;
-}
-
-Fecha Accesos::getFechaHora() {
-    return _fechaHora;
-}
-
+// METODOS
 void Accesos::Cargar() {
-    cout << "Ingrese ID del Suscriptor: ";
-    cin >> _idSuscriptor;
-    cout << "Ingrese ID de la Cancion: ";
-    cin >> _idCancion;
-    cout << "Ingrese Fecha del acceso:" << endl;
-    _fechaHora.Cargar();
+    // Como el acceso es automático, no cargamos nada manual ni usamos estado
 }
 
 void Accesos::Mostrar() {
-    cout << "ID Suscriptor: " << _idSuscriptor << endl;
-    cout << "ID Cancion   : " << _idCancion << endl;
-    cout << "Fecha/Hora   : ";
-    _fechaHora.Mostrar();
-    cout << endl;
+    // Mostramos siempre (los logs no se dan de baja)
+    cout << "Usuario ID: " << _idSuscriptor << " | Cancion ID: " << _idCancion << endl;
+    cout << "Fecha: " << _fechaHora.toString() << endl;
+    cout << "-------------------------" << endl;
 }

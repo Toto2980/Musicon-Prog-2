@@ -42,4 +42,3 @@ void DetallePlaylist::Mostrar() {
         cout << endl;
     }
 }
-

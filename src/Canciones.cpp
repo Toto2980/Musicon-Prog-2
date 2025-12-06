@@ -1,4 +1,4 @@
-    #include "Canciones.h"
+#include "Canciones.h"
 #include <cstring>
 #include <iostream>
 using namespace std;
@@ -79,16 +79,11 @@ bool Canciones::getEstado() {
 }
 // --- Función Cargar ---
 void Canciones::Cargar() {
+    // COMENTADO PORQUE AHORA ES AUTOINCREMENTAL
     // cout << "Ingrese ID Cancion: ";
     // cin >> _idCancion;
 
-    // if(cin.fail()) {
-    // cin.clear(); // Quita el estado de error
-    // cin.ignore(10000, '\n'); // Borra la entrada incorrecta
-    // } else {
-    // cin.ignore(10000, '\n');
-    // }
-
+    // Solo pedimos los datos reales
     cout << "Nombre de la cancion: ";
     cin.ignore(); // Importante para limpiar el buffer antes del getline
     cin.getline(_nombre, 100);

@@ -74,9 +74,9 @@ void Album::Cargar() {
     cin >> _idArtista;
 
     cin.ignore();
-    
+
 cout << "Ingrese Titulo del Album: ";
-    cin.getline(_titulo, 99); 
+    cin.getline(_titulo, 99);
 
     cout << "Ingrese Anio de Publicacion: ";
     cin >> _anioPublicacion;
@@ -99,5 +99,5 @@ void Album::Mostrar() {
 Album::~Album()
 {
     // dtor (Destructor)
-    // Tiene que estar definido, aunque esté vacío.
+
 }

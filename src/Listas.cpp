@@ -1,4 +1,8 @@
 #include "Listas.h"
+#include <iostream>
+#include <cstring>
+
+using namespace std;
 
 // --- CLASE PLAYLIST ---
 
@@ -26,26 +30,22 @@ int Playlist::getIdSuscriptorCreador() { return _idSuscriptorCreador; }
 bool Playlist::getEstado() { return _estado; }
 
 void Playlist::Cargar() {
-    cout << "ID Playlist: ";
-    cin >> _idPlaylist;
-    
-    cout << "Nombre de la Playlist: ";
-    cin.ignore(); 
-    cin.getline(_nombre, 50);
+    // ELIMINADO: Pedido de ID manual
+    // ELIMINADO: Pedido de ID Creador (Se setea desde login)
 
-    cout << "ID del Creador (Suscriptor): ";
-    cin >> _idSuscriptorCreador;
+    std::cout << "Nombre de la Playlist: ";
+    std::cin.ignore();
+    std::cin.getline(_nombre, 50);
 
+    // Estado por defecto activo al cargar
     _estado = true;
 }
 
 void Playlist::Mostrar() {
     if (_estado) {
-        cout << "ID Playlist: " << _idPlaylist
-             << " | Nombre: " << _nombre
-             << " | ID Creador: " << _idSuscriptorCreador
-             << " | Estado: " << (_estado ? "Activo" : "Inactivo")
-             << endl;
+        std::cout << "ID Lista: " << _idPlaylist << " | Nombre: " << _nombre << std::endl;
+        std::cout << "Creada por ID Usuario: " << _idSuscriptorCreador << std::endl;
+        std::cout << "-------------------------" << std::endl;
     }
 }
 
@@ -57,7 +57,7 @@ Listas::Listas() {
 
 void Listas::agregarPlaylist(const char* nombre, int idCreador) {
     if (cantidad >= 100) {
-        cout << "No se pueden agregar mÃ¡s playlists." << endl;
+        cout << "No se pueden agregar más playlists." << endl;
         return;
     }
 
@@ -104,5 +104,3 @@ bool Listas::eliminarPlaylist(const char* nombre) {
     cout << "Playlist eliminada (baja logica)." << endl;
     return true;
 }
-
-

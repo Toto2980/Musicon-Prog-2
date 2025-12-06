@@ -2,8 +2,6 @@
 #include <iostream>
 #include <cstring>
 
-
-
 Artista::Artista(){
     _idArtista = 0;
     strcpy(_nombre, "");
@@ -66,9 +64,7 @@ void Artista::Mostrar() {
     }
 }
 
-
 Artista::~Artista()
 {
     //dtor
 }
-
