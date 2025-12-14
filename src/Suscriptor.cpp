@@ -35,12 +35,9 @@ Fecha Suscriptor::getFechaNacimiento() { return _fechaNacimiento; }
 bool Suscriptor::getEstado() { return _estado; }
 
 void Suscriptor::Cargar() {
-    // ID y Nombre se piden afuera (en registrarse) o son automáticos
-    std::cout << "Nombre de Usuario: ";
-    std::cin.ignore();
-    std::cin.getline(_nombre, 50);
 
     std::cout << "Apellido: ";
+
     std::cin.getline(_apellido, 50);
 
     std::cout << "DNI: ";
@@ -55,7 +52,6 @@ void Suscriptor::Cargar() {
     std::cin >> dia >> mes >> anio;
     _fechaNacimiento = Fecha(dia, mes, anio);
 
-    // ELIMINADO: Pedido de Tipo de Suscripcion
     _estado = true;
 }
 

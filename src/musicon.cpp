@@ -12,6 +12,8 @@
 #include "Generos.h"
 #include "Accesos.h"
 #include "DetallePlaylist.h"
+// Incluimos Listas para usar la clase gestora en el submenu
+#include "Listas.h"
 
 using namespace std;
 
@@ -172,7 +174,7 @@ void musicon::menuBienvenida() {
         cout << "===========================================" << endl;
         cout << "Ingrese opcion: ";
         cin >> opcion;
-        cin.ignore();
+        cin.ignore(10000, '\n'); // BLINDAJE
 
         switch (opcion) {
             case 1: login(); break;
@@ -242,17 +244,19 @@ void musicon::registrarse() {
 }
 
 void musicon::mostrarMenuPrincipal() {
-    int opcion;
+    int opcion = -1; // Inicializar siempre
     do {
         system("cls");
         cout << "MUSICON | User: " << _nombreUsuarioLogueado << " (ID: " << _idUsuarioLogueado << ")" << endl;
         cout << "===========================================" << endl;
         cout << "1. GESTION DE DATOS (Cargas)" << endl;
         cout << "2. INFORMES Y ESTADISTICAS" << endl;
-        cout << "3. CONFIGURACION (Backup)" << endl;
+        cout << "3. CONFIGURACION (Backup / Export)" << endl;
         cout << "0. CERRAR SESION" << endl;
         cout << "===========================================" << endl;
-        cout << "Opcion: "; cin >> opcion;
+        cout << "Opcion: ";
+        cin >> opcion;
+        cin.ignore(10000, '\n'); // BLINDAJE: Limpieza profunda del buffer
 
         switch (opcion) {
             case 1: menuCargas(); break;
@@ -274,7 +278,7 @@ void musicon::menuCargas() {
         cout << "3. PLAYLISTS (ABM)" << endl;
         cout << "0. Volver" << endl;
         cin >> opcion;
-        cin.ignore();
+        cin.ignore(10000, '\n');
 
         switch (opcion) {
             case 1: menuCanciones(); break;
@@ -297,7 +301,7 @@ void musicon::menuCanciones() {
         cout << "4. Listar Todas" << endl;
         cout << "0. Volver" << endl;
         cin >> opcion;
-        cin.ignore();
+        cin.ignore(10000, '\n'); // BLINDAJE
 
         switch (opcion) {
             case 1: cargarNuevaCancionEnLista(); break;
@@ -318,15 +322,21 @@ void musicon::menuPlaylists() {
         cout << "2. Modificar Playlist (Por Nombre)" << endl;
         cout << "3. Eliminar Playlist (Por Nombre)" << endl;
         cout << "4. Agregar Cancion a Playlist" << endl;
+        cout << "5. MIS PLAYLISTS" << endl;
         cout << "0. Volver" << endl;
         cin >> opcion;
-        cin.ignore(); // CRITICO: Limpiamos el buffer aqui para que las funciones entren limpias
+        cin.ignore(10000, '\n');
 
         switch (opcion) {
             case 1: cargarNuevaPlaylist(); break;
             case 2: modificarPlaylist(); break;
             case 3: eliminarPlaylist(); break;
             case 4: agregarCancionAPlaylist(); break;
+            case 5: {
+                Listas gestorListas;
+                gestorListas.mostrarMisPlaylists(_idUsuarioLogueado);
+                break;
+            }
         }
         if (opcion != 0) system("pause");
     } while (opcion != 0);
@@ -682,11 +692,6 @@ void musicon::agregarCancionAPlaylist() {
         return;
     }
 
-    // Validar propiedad de la lista antes de agregar
-    // (Opcional: Si queres listas colaborativas, sacá esto)
-    // Para simplificar, buscamos de nuevo para chequear creador, o confiamos en el ID.
-    // Vamos a confiar en el ID por ahora para no complicar la logica,
-    // pero idealmente buscarIdPlaylist deberia devolver el objeto o validar.
 
     char nombreCancion[100];
     cout << "Nombre de la Cancion a agregar: ";
@@ -725,18 +730,20 @@ void musicon::mostrarMenuReportes() {
         cout << "1. Reproducciones Anuales" << endl;
         cout << "2. Ranking Suscriptores" << endl;
         cout << "3. Ranking Generos" << endl;
-        cout << "4. Ranking Canciones" << endl;
+        cout << "4. Ranking Canciones (TOP 5)" << endl;
         cout << "5. Listar por Genero" << endl;
         cout << "6. Cantidad x Artista" << endl;
         cout << "7. Canciones de Usuario en Listas" << endl;
         cout << "8. Buscar Cancion en Listas" << endl;
         cout << "0. Volver" << endl;
         cin >> op;
+        cin.ignore(10000, '\n'); // BLINDAJE
+
         switch(op){
             case 1: reporteReproduccionesAnuales(); break;
             case 2: reporteReproduccionesPorSuscriptor(); break;
             case 3: reporteReproduccionesPorGenero(); break;
-            case 4: reporteReproduccionesPorCancion(); break;
+            case 4: reporteRankingCanciones(); break;
             case 5: reporteListarCancionesPorGenero(); break;
             case 6: reporteCantidadCancionesPorArtista(); break;
             case 7: reporteCancionesPorUsuarioEnListas(); break;
@@ -938,16 +945,167 @@ void musicon::reporteBuscarCancionEnListas() {
 }
 
 void musicon::menuConfiguracion() {
-    cout << "Haciendo backup de canciones..." << endl;
-    FILE *o = fopen("canciones.dat", "rb");
-    FILE *d = fopen("canciones.bak", "wb");
-    if(o && d) {
-        Canciones c;
-        while(fread(&c, sizeof(Canciones), 1, o)) fwrite(&c, sizeof(Canciones), 1, d);
-        cout << "Backup listo." << endl;
+    int op = -1;
+    do {
+        system("cls");
+        cout << "--- CONFIGURACION ---" << endl;
+        cout << "1. Backup de Canciones (.bak)" << endl;
+        cout << "2. Exportar Canciones a Excel (.csv)" << endl;
+        cout << "0. Volver" << endl;
+        cin >> op;
+        cin.ignore(10000, '\n');
+
+        if (op == 1) {
+            cout << "Haciendo backup de canciones..." << endl;
+            FILE *o = fopen("canciones.dat", "rb");
+            FILE *d = fopen("canciones.bak", "wb");
+            if(o && d) {
+                Canciones c;
+                while(fread(&c, sizeof(Canciones), 1, o)) fwrite(&c, sizeof(Canciones), 1, d);
+                cout << "Backup listo." << endl;
+            }
+            if(o) fclose(o);
+            if(d) fclose(d);
+            system("pause");
+        }
+        else if (op == 2) {
+            exportarCancionesACSV();
+            system("pause");
+        }
+        // Solo pausamos si es opcion invalida para mostrar el error, o si ya mostramos resultado
+
+    } while (op != 0);
+}
+
+void musicon::exportarCancionesACSV() {
+    FILE *p = fopen("canciones.dat", "rb");
+    if (!p) {
+        cout << "No se pudo abrir canciones.dat" << endl;
+        return;
     }
-    if(o) fclose(o);
-    if(d) fclose(d);
+
+    FILE *t = fopen("ListadoCanciones.csv", "wt");
+    if (!t) {
+        cout << "No se pudo crear el archivo CSV." << endl;
+        fclose(p);
+        return;
+    }
+
+    fprintf(t, "ID;Nombre;ID_Album;ID_Genero;Duracion(s)\n");
+
+    Canciones c;
+    while(fread(&c, sizeof(Canciones), 1, p)) {
+        if (c.getEstado()) {
+            fprintf(t, "%d;%s;%d;%d;%d\n",
+                c.getIdCancion(),
+                c.getNombre(),
+                c.getIdAlbum(),
+                c.getIdGenero(),
+                c.getDuracionSegundos()
+            );
+        }
+    }
+
+    fclose(p);
+    fclose(t);
+    cout << "Exportacion exitosa! Busca el archivo 'ListadoCanciones.csv'." << endl;
+}
+
+void musicon::reporteRankingCanciones() {
+    system("cls");
+    cout << "--- RANKING DE CANCIONES MAS ESCUCHADAS ---" << endl;
+
+    // 1. Contar cuántas canciones activas hay para dimensionar el vector
+    FILE *pC = fopen("canciones.dat", "rb");
+    if (pC == NULL) {
+        cout << "No se pudo abrir el archivo de canciones." << endl;
+        return;
+    }
+
+    int cantidadCanciones = 0;
+    Canciones aux;
+    while(fread(&aux, sizeof(Canciones), 1, pC)) {
+        if (aux.getEstado()) {
+            cantidadCanciones++;
+        }
+    }
+
+    if (cantidadCanciones == 0) {
+        cout << "No hay canciones cargadas." << endl;
+        fclose(pC);
+        return;
+    }
+
+    // 2. Crear estructura auxiliar local
+    struct ItemRanking {
+        int id;
+        char nombre[100];
+        int contador;
+    };
+
+    // Arreglo Dinámico
+    ItemRanking *vectorRanking = new ItemRanking[cantidadCanciones];
+
+    // 3. Cargar las canciones en el vector (inicializando contador en 0)
+    rewind(pC); // Volvemos al inicio del archivo
+    int indice = 0;
+    while(fread(&aux, sizeof(Canciones), 1, pC)) {
+        if (aux.getEstado()) {
+            vectorRanking[indice].id = aux.getIdCancion();
+            strcpy(vectorRanking[indice].nombre, aux.getNombre());
+            vectorRanking[indice].contador = 0;
+            indice++;
+        }
+    }
+    fclose(pC);
+
+    // 4. Leer Accesos y sumar votos
+    FILE *pA = fopen("accesos.dat", "rb");
+    if (pA != NULL) {
+        Accesos acc;
+        while(fread(&acc, sizeof(Accesos), 1, pA)) {
+            // Buscamos linealmente la canción en nuestro vector
+            for(int i = 0; i < cantidadCanciones; i++) {
+                if (vectorRanking[i].id == acc.getIdCancion()) {
+                    vectorRanking[i].contador++;
+                    break;
+                }
+            }
+        }
+        fclose(pA);
+    } else {
+        cout << "[!] Advertencia: No hay historial de reproducciones." << endl;
+    }
+
+    // 5. Ordenar por Mayor a Menor según contador
+    ItemRanking temp;
+    for(int i = 0; i < cantidadCanciones - 1; i++) {
+        for(int j = 0; j < cantidadCanciones - i - 1; j++) {
+            if (vectorRanking[j].contador < vectorRanking[j+1].contador) {
+                // Swap
+                temp = vectorRanking[j];
+                vectorRanking[j] = vectorRanking[j+1];
+                vectorRanking[j+1] = temp;
+            }
+        }
+    }
+
+    // 6. Mostrar el Top 5
+    cout << endl;
+    cout << "PUESTO\tCANTIDAD\tTITULO" << endl;
+    cout << "------------------------------------------" << endl;
+
+    int tope = 5;
+    if (cantidadCanciones < 5) tope = cantidadCanciones;
+
+    for(int i = 0; i < tope; i++) {
+        // Solo mostramos si tienen al menos 1 reproducción (opcional)
+        // O mostramos todo el top aunque tengan 0
+        cout << "#" << i+1 << "\t" << vectorRanking[i].contador << "\t\t" << vectorRanking[i].nombre << endl;
+    }
+
+    // 7. Liberar Memoria
+    delete[] vectorRanking;
 }
 
 // --- VALIDACIONES ---

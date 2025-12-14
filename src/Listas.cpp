@@ -1,6 +1,7 @@
 #include "Listas.h"
 #include <iostream>
 #include <cstring>
+#include <cstdio>
 
 using namespace std;
 
@@ -30,14 +31,9 @@ int Playlist::getIdSuscriptorCreador() { return _idSuscriptorCreador; }
 bool Playlist::getEstado() { return _estado; }
 
 void Playlist::Cargar() {
-    // ELIMINADO: Pedido de ID manual
-    // ELIMINADO: Pedido de ID Creador (Se setea desde login)
-
     std::cout << "Nombre de la Playlist: ";
     std::cin.ignore();
     std::cin.getline(_nombre, 50);
-
-    // Estado por defecto activo al cargar
     _estado = true;
 }
 
@@ -74,6 +70,20 @@ void Listas::agregarPlaylist(const char* nombre, int idCreador) {
 }
 
 void Listas::mostrarPlaylists() {
+    // Esta funcion muestra lo que hay en el array en memoria
+    if (cantidad == 0) {
+        // Intentamos leer del archivo para llenar el array si esta vacio
+        FILE *p = fopen("playlists.dat", "rb");
+        if (p) {
+            Playlist reg;
+            while(fread(&reg, sizeof(Playlist), 1, p) && cantidad < 100) {
+                listas[cantidad] = reg;
+                cantidad++;
+            }
+            fclose(p);
+        }
+    }
+
     if (cantidad == 0) {
         cout << "No hay playlists cargadas." << endl;
         return;
@@ -82,6 +92,31 @@ void Listas::mostrarPlaylists() {
     for (int i = 0; i < cantidad; i++) {
         listas[i].Mostrar();
     }
+}
+
+void Listas::mostrarMisPlaylists(int idCreador) {
+    // Primero aseguramos que el array tenga datos del archivo
+    if (cantidad == 0) {
+        FILE *p = fopen("playlists.dat", "rb");
+        if (p) {
+            Playlist reg;
+            while(fread(&reg, sizeof(Playlist), 1, p) && cantidad < 100) {
+                listas[cantidad] = reg;
+                cantidad++;
+            }
+            fclose(p);
+        }
+    }
+
+    bool hay = false;
+    cout << "--- MIS PLAYLISTS ---" << endl;
+    for (int i = 0; i < cantidad; i++) {
+        if (listas[i].getIdSuscriptorCreador() == idCreador && listas[i].getEstado()) {
+            listas[i].Mostrar();
+            hay = true;
+        }
+    }
+    if (!hay) cout << "No tenes playlists creadas." << endl;
 }
 
 int Listas::buscarPlaylist(const char* nombre) {
