@@ -40,6 +40,7 @@ public:
 
     void agregarPlaylist(const char* nombre, int idCreador);
     void mostrarPlaylists();
+    void mostrarMisPlaylists(int idCreador);
     int buscarPlaylist(const char* nombre);
     bool eliminarPlaylist(const char* nombre);
 };

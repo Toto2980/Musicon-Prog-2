@@ -36,6 +36,10 @@ class musicon
         void reporteCancionesPorUsuarioEnListas();
         void reporteBuscarCancionEnListas();
 
+        // --- RANKING Y EXPORTACION ---
+        void reporteRankingCanciones(); // Ranking real con ordenamiento
+        void exportarCancionesACSV();   // Exportar a Excel
+
     protected:
         // --- FUNCIONES DE VALIDACIÓN ---
         bool existeCancion(int idCancion);
@@ -58,7 +62,7 @@ class musicon
         int buscarIdGeneroPorNombre(const char* nombre);
         int buscarIdArtistaPorNombre(const char* nombre);
 
-        // Nuevos buscadores para Playlist ABM
+        // Buscadores para Playlist ABM
         int buscarIdPlaylistPorNombre(const char* nombre);
         int buscarIdCancionPorNombre(const char* nombre);
 
@@ -91,7 +95,7 @@ class musicon
         void cargarNuevaSuscripcion();
         void registrarAcceso();
 
-        // --- PLAYLISTS (Optimizados) ---
+        // --- PLAYLISTS ---
         void cargarNuevaPlaylist();
         void modificarPlaylist();
         void eliminarPlaylist();
