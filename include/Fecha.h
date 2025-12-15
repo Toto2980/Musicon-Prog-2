@@ -2,28 +2,31 @@
 #include <string>
 #include "HoraYMinutos.h"
 
+
 class Fecha{
     private:
-    int _dia, _mes, _anio;
-    HoraYMinutos _objetoHora;
+        int _dia, _mes, _anio;
+        HoraYMinutos _objetoHora; // Composición
 
     public:
-    Fecha();
-    Fecha(int minutos, int hora, int dia, int mes, int anio);
-    Fecha(int dia, int mes, int anio);
+        Fecha(); // Constructor por defecto
+        Fecha(int minutos, int hora, int dia, int mes, int anio); // Fecha + Hora
+        Fecha(int dia, int mes, int anio); // Solo Fecha
 
-    int getDia();
-    int getMes();
-    int getAnio();
-    HoraYMinutos getHorario();
+        // --- GETTERS ---
+        int getDia();
+        int getMes();
+        int getAnio();
+        HoraYMinutos getHorario();
 
-    void setDia(int dia);
-    void setMes(int mes);
-    void setAnio(int anio);
-    void setHorario(HoraYMinutos horario);
+        // --- SETTERS ---
+        void setDia(int dia);
+        void setMes(int mes);
+        void setAnio(int anio);
+        void setHorario(HoraYMinutos horario);
 
-    void Cargar();
-    void Mostrar();
-
-    std::string toString();
+        // --- UTILIDADES ---
+        void Cargar();
+        void Mostrar();
+        std::string toString(); // Para concatenaciones fáciles
 };

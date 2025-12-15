@@ -3,27 +3,30 @@
 
 #include "Fecha.h"
 
+// REGISTRO DE REPRODUCCIONES
 class Accesos {
-private:
-    int _idSuscriptor;
-    int _idCancion;
-    Fecha _fechaHora;
-    // Eliminado _estado porque no se usa en logs históricos
+    private:
+        int _idSuscriptor;
+        int _idCancion;
+        Fecha _fechaHora;
 
-public:
-    Accesos();
-    virtual ~Accesos();
+    public:
+        Accesos();
+        virtual ~Accesos();
 
-    void setIdSuscriptor(int id);
-    void setIdCancion(int id);
-    void setFechaHora(Fecha fecha);
+        // --- SETTERS ---
+        void setIdSuscriptor(int id);
+        void setIdCancion(int id);
+        void setFechaHora(Fecha fecha);
 
-    int getIdSuscriptor();
-    int getIdCancion();
-    Fecha getFechaHora();
+        // --- GETTERS ---
+        int getIdSuscriptor();
+        int getIdCancion();
+        Fecha getFechaHora();
 
-    void Cargar();
-    void Mostrar();
+        // --- METODOS DE ARCHIVO ---
+        void Cargar();
+        void Mostrar();
 };
 
 #endif // ACCESOS_H

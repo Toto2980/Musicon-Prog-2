@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-// Includes necesarios
+// Includes de las entidades del sistema
 #include "Canciones.h"
 #include "DetallePlaylist.h"
 #include "Artista.h"
@@ -15,18 +15,24 @@
 #include "Fecha.h"
 #include "Generos.h"
 
+
 class musicon
 {
     public:
+        /** Default constructor */
         musicon();
+        /** Default destructor */
         virtual ~musicon();
 
         // --- MENÚS PÚBLICOS ---
-        void iniciarSistema(); // Punto de entrada
+        /** Inicia la ejecucion del programa */
+        void iniciarSistema();
+        /** Muestra el menu principal luego del login */
         void mostrarMenuPrincipal();
+        /** Submenu de estadisticas */
         void mostrarMenuReportes();
 
-        // --- REPORTES PÚBLICOS ---
+        // --- REPORTES ---
         void reporteReproduccionesAnuales();
         void reporteReproduccionesPorSuscriptor();
         void reporteReproduccionesPorGenero();
@@ -37,11 +43,11 @@ class musicon
         void reporteBuscarCancionEnListas();
 
         // --- RANKING Y EXPORTACION ---
-        void reporteRankingCanciones(); // Ranking real con ordenamiento
-        void exportarCancionesACSV();   // Exportar a Excel
+        void reporteRankingCanciones();
+        void exportarCancionesACSV();
 
     protected:
-        // --- FUNCIONES DE VALIDACIÓN ---
+        // Helpers para verificar existencia de IDs
         bool existeCancion(int idCancion);
         bool existeSuscriptor(int idSuscriptor);
         bool existeArtista(int idArtista);
@@ -49,24 +55,22 @@ class musicon
         bool existeGenero(int idGenero);
         bool existeLista(int idLista);
 
-        // --- AUTOINCREMENTALES ---
+        // Generadores de IDs autoincrementales
         int obtenerNuevoIdCancion();
         int obtenerNuevoIdSuscriptor();
         int obtenerNuevoIdGenero();
         int obtenerNuevoIdAlbum();
         int obtenerNuevoIdArtista();
 
-        // --- BUSCADORES (Helpers) ---
+        // Buscadores internos que retornan ID o -1
         int buscarIdSuscriptorPorNombre(const char* nombre);
         int buscarIdAlbumPorTitulo(const char* titulo);
         int buscarIdGeneroPorNombre(const char* nombre);
         int buscarIdArtistaPorNombre(const char* nombre);
-
-        // Buscadores para Playlist ABM
         int buscarIdPlaylistPorNombre(const char* nombre);
         int buscarIdCancionPorNombre(const char* nombre);
 
-        // Auxiliares
+        // Utilidad para contar registros en archivo
         int contarRegistros(const char* nombreArchivo, int tamanioRegistro);
 
     private:
@@ -84,18 +88,16 @@ class musicon
         void menuCanciones();
         void menuPlaylists();
 
-        // --- ABML CANCIONES ---
+        // --- ABML Y LOGICA DE NEGOCIO ---
         void cargarNuevaCancionEnLista();
-        int crearAlbumRapido(const char* tituloAlbum);
+        int crearAlbumRapido(const char* tituloAlbum); // Logica Smart de carga
         void modificarCancion();
         void eliminarCancion();
         void listarCanciones();
 
-        // --- OTROS ---
         void cargarNuevaSuscripcion();
         void registrarAcceso();
 
-        // --- PLAYLISTS ---
         void cargarNuevaPlaylist();
         void modificarPlaylist();
         void eliminarPlaylist();

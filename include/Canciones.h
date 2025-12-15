@@ -1,35 +1,40 @@
 #ifndef CANCIONES_H
 #define CANCIONES_H
 
+// ENTIDAD PRINCIPAL: CANCION
+// La unidad básica del sistema. Se vincula a Album y Genero.
 class Canciones {
-private:
-    int _idCancion;
-    char _nombre[100];
-    int _idAlbum;
-    int _idGenero;
-    int _duracionSegundos;
-    bool _estado;
+    private:
+        int _idCancion;
+        char _nombre[100];
+        int _idAlbum;   // FK
+        int _idGenero;  // FK
+        int _duracionSegundos;
+        bool _estado;
 
-public:
-    Canciones();
-    virtual ~Canciones();
+    public:
+        Canciones();
+        virtual ~Canciones();
 
-    void setIdCancion(int id);
-    void setNombre(const char* nombre);
-    void setIdAlbum(int idAl);
-    void setIdGenero(int idGe);
-    void setDuracionSegundos(int duracion);
-    void setEstado(bool e);
+        // --- SETTERS ---
+        void setIdCancion(int id);
+        void setNombre(const char* nombre);
+        void setIdAlbum(int idAl);
+        void setIdGenero(int idGe);
+        void setDuracionSegundos(int duracion);
+        void setEstado(bool e);
 
-    int getIdCancion();
-    const char* getNombre();
-    int getIdAlbum();
-    int getIdGenero();
-    int getDuracionSegundos();
-    bool getEstado();
+        // --- GETTERS ---
+        int getIdCancion();
+        const char* getNombre();
+        int getIdAlbum();
+        int getIdGenero();
+        int getDuracionSegundos();
+        bool getEstado();
 
-    void Cargar();
-    void Mostrar();
+        // --- E/S ---
+        void Cargar();
+        void Mostrar();
 };
 
 #endif // CANCIONES_H

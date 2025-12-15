@@ -5,25 +5,30 @@
 #include <cstring>
 using namespace std;
 
+// ENTIDAD: GENERO MUSICAL
 class Genero {
-private:
-    int _idGeneros;
-    char _nombre[50];
-    bool _estado;
+    private:
+        int _idGeneros;
+        char _nombre[50];
+        bool _estado;
 
-public:
-    Genero(int id = 0, const char* nombre = "", bool estado = true);
+    public:
+        // Constructor con valores por defecto para instanciación rápida
+        Genero(int id = 0, const char* nombre = "", bool estado = true);
 
-    void setIdGeneros(int id);
-    void setNombre(const char* nombre);
-    void setEstado(bool estado);
+        // --- SETTERS ---
+        void setIdGeneros(int id);
+        void setNombre(const char* nombre);
+        void setEstado(bool estado);
 
-    int getIdGeneros();
-    const char* getNombre();
-    bool getEstado();
+        // --- GETTERS ---
+        int getIdGeneros();
+        const char* getNombre();
+        bool getEstado();
 
-    void Cargar();
-    void Mostrar() const;
+        // --- E/S ---
+        void Cargar();
+        void Mostrar() const;
 };
 
 #endif // GENEROS_H_INCLUDED

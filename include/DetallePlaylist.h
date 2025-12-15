@@ -3,28 +3,33 @@
 
 #include "Fecha.h"
 
+// CLASE DE ASOCIACION (Link)
+// Resuelve la relación Muchos a Muchos entre Playlists y Canciones.
 class DetallePlaylist {
-private:
-    int _idPlaylist;
-    int _idCancion;
-    Fecha _fechaAgregado;
-    bool _estado;
+    private:
+        int _idPlaylist;
+        int _idCancion;
+        Fecha _fechaAgregado;
+        bool _estado;
 
-public:
-    DetallePlaylist();
+    public:
+        DetallePlaylist();
 
-    void setIdPlaylist(int id);
-    void setIdCancion(int id);
-    void setFechaAgregado(Fecha f);
-    void setEstado(bool e);
+        // --- SETTERS ---
+        void setIdPlaylist(int id);
+        void setIdCancion(int id);
+        void setFechaAgregado(Fecha f);
+        void setEstado(bool e);
 
-    int getIdPlaylist();
-    int getIdCancion();
-    Fecha getFechaAgregado();
-    bool getEstado();
+        // --- GETTERS ---
+        int getIdPlaylist();
+        int getIdCancion();
+        Fecha getFechaAgregado();
+        bool getEstado();
 
-    void Cargar();
-    void Mostrar();
+        // --- E/S ---
+        void Cargar();
+        void Mostrar();
 };
 
 #endif // DETALLEPLAYLIST_H
