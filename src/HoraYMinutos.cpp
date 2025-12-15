@@ -5,12 +5,14 @@
 using namespace std;
 
 HoraYMinutos::HoraYMinutos(){
+    //ctor
     _hora = 0;
     _minutos = 0;
 }
 
 HoraYMinutos::HoraYMinutos(int hora, int minutos)
 {
+    //ctor parametrizado
     _hora = hora;
     _minutos = minutos;
 }

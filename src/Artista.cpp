@@ -3,6 +3,7 @@
 #include <cstring>
 
 Artista::Artista(){
+    //ctor
     _idArtista = 0;
     strcpy(_nombre, "");
     strcpy(_nacionalidad, "");
@@ -20,7 +21,7 @@ void Artista::setNombre(const char* nombre) {
 
 void Artista::setNacionalidad(const char* nacionalidad) {
     strncpy(_nacionalidad, nacionalidad, 49);
-    _nacionalidad[49] = '\0'; // Asegura el terminador nulo
+    _nacionalidad[49] = '\0';
 }
 
 void Artista::setEstado(bool estado) {
@@ -47,15 +48,15 @@ void Artista::Cargar() {
     std::cout << "ID Artista: ";
     std::cin >> _idArtista;
     std::cout << "Nombre: ";
-    std::cin.ignore(); // Limpiar el buffer del 'enter' anterior
+    std::cin.ignore();
     std::cin.getline(_nombre, 100);
     std::cout << "Nacionalidad: ";
     std::cin.getline(_nacionalidad, 50);
-    _estado = true; // Se activa al cargar
+    _estado = true;
 }
 
 void Artista::Mostrar() {
-    if (_estado == true) { // Solo mostramos si está activo
+    if (_estado == true) {
         std::cout << "------------------------------" << std::endl;
         std::cout << "ID Artista    : " << _idArtista << std::endl;
         std::cout << "Nombre        : " << _nombre << std::endl;

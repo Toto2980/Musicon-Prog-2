@@ -4,6 +4,7 @@
 using namespace std;
 
 DetallePlaylist::DetallePlaylist() {
+    //ctor
     _idPlaylist = 0;
     _idCancion = 0;
     _estado = true;
@@ -28,7 +29,7 @@ void DetallePlaylist::Cargar() {
     cin >> _idCancion;
 
     cout << "--- Fecha de Agregado ---" << endl;
-    _fechaAgregado.Cargar(); //
+    _fechaAgregado.Cargar();
 
     _estado = true;
 }

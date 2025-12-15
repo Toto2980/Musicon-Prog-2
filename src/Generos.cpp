@@ -6,11 +6,9 @@ using namespace std;
 
 
 Genero::Genero(int id, const char* nombre, bool estado) {
+    //ctor
     _idGeneros = id;
-
-
     setNombre(nombre);
-
     _estado = estado;
 }
 

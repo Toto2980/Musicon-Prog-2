@@ -4,7 +4,6 @@
 #include <cstdio>
 #include <ctime>
 
-// Incluimos las cabeceras
 #include "Canciones.h"
 #include "Suscriptor.h"
 #include "Artista.h"
@@ -12,62 +11,53 @@
 #include "Generos.h"
 #include "Accesos.h"
 #include "DetallePlaylist.h"
-// Incluimos Listas para usar la clase gestora en el submenu
 #include "Listas.h"
 
 using namespace std;
 
-// --- UTILS LOCALES ---
+// Funcion auxiliar para sacar el año del sistema
 int obtenerAnioActual() {
     time_t t = time(NULL);
     struct tm *tm = localtime(&t);
     return tm->tm_year + 1900;
 }
 
-// --- CONSTRUCTOR ---
 musicon::musicon() {
+    //ctor
+    // Inicializamos con usuario visitante por defecto
     _idUsuarioLogueado = 0;
     strcpy(_nombreUsuarioLogueado, "Visitante");
 }
 
-musicon::~musicon() { }
-
-// --- PERSISTENCIA Y UTILIDADES ---
-
-int musicon::contarRegistros(const char* nombreArchivo, int tamanioRegistro) {
-    FILE *p = fopen(nombreArchivo, "rb");
-    if (p == NULL) return 0;
-    fseek(p, 0, SEEK_END);
-    int bytes = ftell(p);
-    fclose(p);
-    return bytes / tamanioRegistro;
+musicon::~musicon() {
+    //dtor
 }
 
-// Función genérica para obtener el próximo ID
+// Utilidad generica para calcular IDs autoincrementales leyendo el archivo
 int obtenerNuevoIdGenerico(const char* archivo, int size) {
     FILE *p = fopen(archivo, "rb");
-    if (p == NULL) return 1;
+    if (p == NULL) return 1; // Si no existe, es el primero
     fseek(p, 0, SEEK_END);
     int bytes = ftell(p);
     fclose(p);
     return (bytes / size) + 1;
 }
 
-// Implementación de los autoincrementales
+// Wrappers para cada entidad
 int musicon::obtenerNuevoIdCancion() { return obtenerNuevoIdGenerico("canciones.dat", sizeof(Canciones)); }
 int musicon::obtenerNuevoIdSuscriptor() { return obtenerNuevoIdGenerico("suscriptores.dat", sizeof(Suscriptor)); }
 int musicon::obtenerNuevoIdGenero() { return obtenerNuevoIdGenerico("generos.dat", sizeof(Genero)); }
 int musicon::obtenerNuevoIdAlbum() { return obtenerNuevoIdGenerico("albumes.dat", sizeof(Album)); }
 int musicon::obtenerNuevoIdArtista() { return obtenerNuevoIdGenerico("artistas.dat", sizeof(Artista)); }
 
-// --- BUSCADORES ---
-
+// Buscador generico de usuarios
 int musicon::buscarIdSuscriptorPorNombre(const char* nombreBuscado) {
     FILE *p = fopen("suscriptores.dat", "rb");
     if (p == NULL) return -1;
     Suscriptor reg;
     int idEncontrado = -1;
     while (fread(&reg, sizeof(Suscriptor), 1, p)) {
+        // Comparamos sin importar mayusculas/minusculas
         if (stricmp(reg.getNombre(), nombreBuscado) == 0 && reg.getEstado()) {
             idEncontrado = reg.getIdSuscriptor();
             break;
@@ -76,6 +66,8 @@ int musicon::buscarIdSuscriptorPorNombre(const char* nombreBuscado) {
     fclose(p);
     return idEncontrado;
 }
+
+// ... (Resto de buscadores siguen la misma logica: abrir, recorrer, comparar, cerrar)
 
 int musicon::buscarIdAlbumPorTitulo(const char* titulo) {
     FILE *p = fopen("albumes.dat", "rb");
@@ -122,14 +114,12 @@ int musicon::buscarIdArtistaPorNombre(const char* nombre) {
     return idEncontrado;
 }
 
-// Nuevos buscadores para la UI amigable
 int musicon::buscarIdPlaylistPorNombre(const char* nombre) {
     FILE *p = fopen("playlists.dat", "rb");
     if (p == NULL) return -1;
     Playlist reg;
     int idEncontrado = -1;
     while (fread(&reg, sizeof(Playlist), 1, p)) {
-        // Coincidencia exacta de nombre y que esté activa
         if (stricmp(reg.getNombre(), nombre) == 0 && reg.getEstado()) {
             idEncontrado = reg.getIdPlaylist();
             break;
@@ -154,8 +144,7 @@ int musicon::buscarIdCancionPorNombre(const char* nombre) {
     return idEncontrado;
 }
 
-// --- FLUJO PRINCIPAL ---
-
+// Punto de entrada del sistema
 void musicon::iniciarSistema() {
     menuBienvenida();
 }
@@ -174,7 +163,7 @@ void musicon::menuBienvenida() {
         cout << "===========================================" << endl;
         cout << "Ingrese opcion: ";
         cin >> opcion;
-        cin.ignore(10000, '\n'); // BLINDAJE
+        cin.ignore(10000, '\n'); // Limpiamos el buffer
 
         switch (opcion) {
             case 1: login(); break;
@@ -192,15 +181,17 @@ void musicon::login() {
     cout << "Usuario: ";
     cin.getline(nombreUser, 50);
 
+    // Verificamos si existe en el archivo
     int id = buscarIdSuscriptorPorNombre(nombreUser);
 
     if (id != -1) {
+        // Login exitoso: guardamos el estado en memoria
         _idUsuarioLogueado = id;
         strcpy(_nombreUsuarioLogueado, nombreUser);
         cout << "Bienvenido de nuevo, " << _nombreUsuarioLogueado << "!" << endl;
         system("pause");
         mostrarMenuPrincipal();
-        // Al volver, deslogueamos
+        // Logout al volver
         _idUsuarioLogueado = 0;
         strcpy(_nombreUsuarioLogueado, "Visitante");
     } else {
@@ -214,6 +205,7 @@ void musicon::registrarse() {
     system("cls");
     cout << "--- REGISTRO ---" << endl;
 
+    // Bucle para asegurar nombre unico
     while (true) {
         cout << "Usuario deseado: ";
         cin.getline(nombreUser, 50);
@@ -228,10 +220,10 @@ void musicon::registrarse() {
     nuevo.setIdSuscriptor(idAuto);
     nuevo.setNombre(nombreUser);
 
-    // Carga de datos complementarios
-    nuevo.Cargar(); // Solo pide DNI, Apellido, Email, Fecha
+    nuevo.Cargar();
     nuevo.setEstado(true);
 
+    // Guardado append binario
     FILE *p = fopen("suscriptores.dat", "ab");
     if (p) {
         fwrite(&nuevo, sizeof(Suscriptor), 1, p);
@@ -244,19 +236,17 @@ void musicon::registrarse() {
 }
 
 void musicon::mostrarMenuPrincipal() {
-    int opcion = -1; // Inicializar siempre
+    int opcion = -1;
     do {
         system("cls");
         cout << "MUSICON | User: " << _nombreUsuarioLogueado << " (ID: " << _idUsuarioLogueado << ")" << endl;
-        cout << "===========================================" << endl;
         cout << "1. GESTION DE DATOS (Cargas)" << endl;
         cout << "2. INFORMES Y ESTADISTICAS" << endl;
         cout << "3. CONFIGURACION (Backup / Export)" << endl;
         cout << "0. CERRAR SESION" << endl;
-        cout << "===========================================" << endl;
         cout << "Opcion: ";
         cin >> opcion;
-        cin.ignore(10000, '\n'); // BLINDAJE: Limpieza profunda del buffer
+        cin.ignore(10000, '\n');
 
         switch (opcion) {
             case 1: menuCargas(); break;
@@ -267,6 +257,8 @@ void musicon::mostrarMenuPrincipal() {
         }
     } while (opcion != 0);
 }
+
+// ... (Resto de menus siguen estructura estandar) ...
 
 void musicon::menuCargas() {
     int opcion;
@@ -301,7 +293,7 @@ void musicon::menuCanciones() {
         cout << "4. Listar Todas" << endl;
         cout << "0. Volver" << endl;
         cin >> opcion;
-        cin.ignore(10000, '\n'); // BLINDAJE
+        cin.ignore(10000, '\n');
 
         switch (opcion) {
             case 1: cargarNuevaCancionEnLista(); break;
@@ -319,8 +311,8 @@ void musicon::menuPlaylists() {
         system("cls");
         cout << "--- PLAYLISTS ---" << endl;
         cout << "1. Crear Playlist" << endl;
-        cout << "2. Modificar Playlist (Por Nombre)" << endl;
-        cout << "3. Eliminar Playlist (Por Nombre)" << endl;
+        cout << "2. Modificar Playlist" << endl;
+        cout << "3. Eliminar Playlist" << endl;
         cout << "4. Agregar Cancion a Playlist" << endl;
         cout << "5. MIS PLAYLISTS" << endl;
         cout << "0. Volver" << endl;
@@ -342,9 +334,10 @@ void musicon::menuPlaylists() {
     } while (opcion != 0);
 }
 
-// --- LOGICA INTELIGENTE DE CARGA ---
+// --- LOGICA SMART ---
 
 int musicon::crearAlbumRapido(const char* tituloAlbum) {
+    // Funcion inteligente: Si subis una cancion de un album que no existe, te lo crea aca mismo
     cout << endl << "   >>> NUEVO ALBUM DETECTADO: " << tituloAlbum << " <<<" << endl;
     Album nuevo;
     int id = obtenerNuevoIdAlbum();
@@ -355,6 +348,7 @@ int musicon::crearAlbumRapido(const char* tituloAlbum) {
     cout << "   Artista del album: ";
     cin.getline(nombreArtista, 100);
 
+    // Si el artista tampoco existe, lo creamos tambien
     int idArtista = buscarIdArtistaPorNombre(nombreArtista);
     if (idArtista == -1) {
         cout << "   [!] Artista nuevo. Creando perfil para '" << nombreArtista << "'..." << endl;
@@ -362,7 +356,7 @@ int musicon::crearAlbumRapido(const char* tituloAlbum) {
         Artista nuevoArt;
         nuevoArt.setIdArtista(idArtista);
         nuevoArt.setNombre(nombreArtista);
-        nuevoArt.setNacionalidad("Desconocida");
+        nuevoArt.setNacionalidad("Desconocida"); // Dato default
         nuevoArt.setEstado(true);
         FILE *p = fopen("artistas.dat", "ab");
         if(p) { fwrite(&nuevoArt, sizeof(Artista), 1, p); fclose(p); }
@@ -385,16 +379,14 @@ void musicon::cargarNuevaCancionEnLista() {
     cout << endl << "--- SUBIR CANCION ---" << endl;
     Canciones nueva;
 
-    // 1. ID
     int id = obtenerNuevoIdCancion();
     nueva.setIdCancion(id);
 
-    // 2. Nombre
     char nombre[100];
     cout << "Titulo de la cancion: "; cin.getline(nombre, 100);
     nueva.setNombre(nombre);
 
-    // 3. Album Smart
+    // Logica de Album Smart
     char nombreAlbum[100];
     cout << "Album (Enter si es Single): "; cin.getline(nombreAlbum, 100);
 
@@ -411,10 +403,10 @@ void musicon::cargarNuevaCancionEnLista() {
     nueva.setIdAlbum(idAlbum);
 
     if (seCreoAlbum) {
-        cin.ignore();
+        cin.ignore(); // Limpiamos buffer si hubo entradas anidadas
     }
 
-    // 4. Genero Smart
+    // Logica de Genero Smart
     char nombreGenero[50];
     cout << "Genero (ej: Rock, Pop): ";
     cin.getline(nombreGenero, 50);
@@ -428,19 +420,16 @@ void musicon::cargarNuevaCancionEnLista() {
             FILE *p = fopen("generos.dat", "ab");
             if(p) { fwrite(&g, sizeof(Genero), 1, p); fclose(p); }
         } else {
-            cout << "   [!] Genero vacio asignado a 'Desconocido' (ID 0)." << endl;
-            idGenero = 0;
+            idGenero = 0; // Default: Desconocido
         }
     }
     nueva.setIdGenero(idGenero);
 
-    // 5. Duracion
     int seg;
     cout << "Duracion (segundos): "; cin >> seg;
     nueva.setDuracionSegundos(seg);
     nueva.setEstado(true);
 
-    // Guardar
     FILE *p = fopen("canciones.dat", "ab");
     if(p) {
         fwrite(&nueva, sizeof(Canciones), 1, p);
@@ -449,13 +438,12 @@ void musicon::cargarNuevaCancionEnLista() {
     }
 }
 
-// --- MODIFICACIÓN Y BAJA ---
-
 void musicon::modificarCancion() {
     char nombreBuscado[100];
     cout << "Nombre de la cancion a modificar: ";
     cin.getline(nombreBuscado, 100);
 
+    // Modo r+b: lectura y escritura
     FILE *p = fopen("canciones.dat", "r+b");
     if(!p) { cout << "Error de archivo." << endl; return; }
 
@@ -483,6 +471,7 @@ void musicon::modificarCancion() {
                 if(dur > 0) reg.setDuracionSegundos(dur);
             }
 
+            // Volvemos atras el puntero y sobreescribimos
             fseek(p, -(long)sizeof(Canciones), SEEK_CUR);
             fwrite(&reg, sizeof(Canciones), 1, p);
             cout << "   [OK] Cancion actualizada." << endl;
@@ -515,6 +504,7 @@ void musicon::eliminarCancion() {
             cin >> confirm;
 
             if(confirm == 's' || confirm == 'S') {
+                // Baja logica: cambiamos estado a false
                 reg.setEstado(false);
                 fseek(p, -(long)sizeof(Canciones), SEEK_CUR);
                 fwrite(&reg, sizeof(Canciones), 1, p);
@@ -564,14 +554,12 @@ void musicon::registrarAcceso() {
     if(p) { fwrite(&acc, sizeof(Accesos), 1, p); fclose(p); cout << "   [PLAY] Reproduciendo " << nombreCancion << "..." << endl; }
 }
 
-void musicon::cargarNuevaSuscripcion() { /* Usar registrarse() */ }
-
-// --- PLAYLISTS (OPTIMIZADO) ---
+void musicon::cargarNuevaSuscripcion() { }
 
 void musicon::cargarNuevaPlaylist() {
     Playlist p;
 
-    // Generar ID
+    // Buscamos el ultimo ID para autoincrementar manualmente
     FILE *f = fopen("playlists.dat", "rb");
     int id = 1;
     if (f) {
@@ -586,7 +574,6 @@ void musicon::cargarNuevaPlaylist() {
     p.setIdPlaylist(id);
     p.setIdSuscriptorCreador(_idUsuarioLogueado);
 
-    // Carga Nombre (Sin cin.ignore, porque ya lo hicimos en el menu)
     char nom[50];
     cout << "Nombre de la Nueva Playlist: ";
     cin.getline(nom, 50);
@@ -614,10 +601,10 @@ void musicon::modificarPlaylist() {
     while(fread(&reg, sizeof(Playlist), 1, p)) {
         if(stricmp(reg.getNombre(), nombreBuscado) == 0 && reg.getEstado()) {
 
-            // Verificacion de propiedad (Seguridad)
+            // Validacion de seguridad: solo el dueño edita
             if (reg.getIdSuscriptorCreador() != _idUsuarioLogueado) {
                 cout << "   [!] No puedes modificar esta playlist porque no eres el creador." << endl;
-                encontrado = true; // La encontramos, pero no tenemos permiso
+                encontrado = true;
                 break;
             }
 
@@ -692,7 +679,6 @@ void musicon::agregarCancionAPlaylist() {
         return;
     }
 
-
     char nombreCancion[100];
     cout << "Nombre de la Cancion a agregar: ";
     cin.getline(nombreCancion, 100);
@@ -737,7 +723,7 @@ void musicon::mostrarMenuReportes() {
         cout << "8. Buscar Cancion en Listas" << endl;
         cout << "0. Volver" << endl;
         cin >> op;
-        cin.ignore(10000, '\n'); // BLINDAJE
+        cin.ignore(10000, '\n');
 
         switch(op){
             case 1: reporteReproduccionesAnuales(); break;
@@ -755,7 +741,7 @@ void musicon::mostrarMenuReportes() {
 
 void musicon::reporteReproduccionesAnuales() {
     int anio; cout << "Anio: "; cin >> anio;
-    int cont[12] = {0};
+    int cont[12] = {0}; // Vector acumulador por mes
     FILE *p = fopen("accesos.dat", "rb"); if(!p) return;
     Accesos a;
     while(fread(&a, sizeof(Accesos), 1, p)){
@@ -778,6 +764,7 @@ void musicon::reporteReproduccionesPorSuscriptor() {
     while(fread(&s, sizeof(Suscriptor), 1, pS)) {
         if(s.getEstado()) {
             int c=0;
+            // Recorremos accesos por cada usuario
             FILE *pA = fopen("accesos.dat", "rb");
             if(pA) {
                 Accesos a;
@@ -798,6 +785,7 @@ void musicon::reporteReproduccionesPorGenero() {
 
     FILE *pG = fopen("generos.dat", "rb"); if(!pG) return;
     Genero g;
+    // Doble corte de control implícito: Genero -> Cancion -> Acceso
     while(fread(&g, sizeof(Genero), 1, pG)) {
         int total = 0;
         FILE *pC = fopen("canciones.dat", "rb");
@@ -823,6 +811,7 @@ void musicon::reporteReproduccionesPorGenero() {
 }
 
 void musicon::reporteReproduccionesPorCancion() {
+    // Similar a los anteriores pero pivoteando por Cancion
     int anio; cout << "Anio: "; cin >> anio;
     FILE *pC = fopen("canciones.dat", "rb"); if(!pC) return;
     Canciones c;
@@ -891,6 +880,7 @@ void musicon::reporteCancionesPorUsuarioEnListas() {
     int id; cout << "ID Usuario: "; cin >> id;
     if(!existeSuscriptor(id)) return;
 
+    // Recorremos playlists del usuario y contamos las relaciones en detalle
     FILE *pL = fopen("playlists.dat", "rb"); if(!pL) return;
     Playlist l;
     int total = 0;
@@ -912,7 +902,6 @@ void musicon::reporteCancionesPorUsuarioEnListas() {
 
 void musicon::reporteBuscarCancionEnListas() {
     char nom[100]; cout << "Cancion: "; cin.ignore(); cin.getline(nom, 100);
-    // Buscar ID Cancion
     int idC = -1;
     FILE *pC = fopen("canciones.dat", "rb"); if(!pC) return;
     Canciones c;
@@ -972,8 +961,6 @@ void musicon::menuConfiguracion() {
             exportarCancionesACSV();
             system("pause");
         }
-        // Solo pausamos si es opcion invalida para mostrar el error, o si ya mostramos resultado
-
     } while (op != 0);
 }
 
@@ -991,6 +978,7 @@ void musicon::exportarCancionesACSV() {
         return;
     }
 
+    // Cabecera del CSV
     fprintf(t, "ID;Nombre;ID_Album;ID_Genero;Duracion(s)\n");
 
     Canciones c;
@@ -1015,13 +1003,13 @@ void musicon::reporteRankingCanciones() {
     system("cls");
     cout << "--- RANKING DE CANCIONES MAS ESCUCHADAS ---" << endl;
 
-    // 1. Contar cuántas canciones activas hay para dimensionar el vector
     FILE *pC = fopen("canciones.dat", "rb");
     if (pC == NULL) {
         cout << "No se pudo abrir el archivo de canciones." << endl;
         return;
     }
 
+    // Paso 1: Contar registros para vector dinamico
     int cantidadCanciones = 0;
     Canciones aux;
     while(fread(&aux, sizeof(Canciones), 1, pC)) {
@@ -1036,18 +1024,16 @@ void musicon::reporteRankingCanciones() {
         return;
     }
 
-    // 2. Crear estructura auxiliar local
     struct ItemRanking {
         int id;
         char nombre[100];
         int contador;
     };
 
-    // Arreglo Dinámico
     ItemRanking *vectorRanking = new ItemRanking[cantidadCanciones];
 
-    // 3. Cargar las canciones en el vector (inicializando contador en 0)
-    rewind(pC); // Volvemos al inicio del archivo
+    // Paso 2: Cargar datos basicos al vector
+    rewind(pC);
     int indice = 0;
     while(fread(&aux, sizeof(Canciones), 1, pC)) {
         if (aux.getEstado()) {
@@ -1059,12 +1045,11 @@ void musicon::reporteRankingCanciones() {
     }
     fclose(pC);
 
-    // 4. Leer Accesos y sumar votos
+    // Paso 3: Leer historial y acumular en memoria
     FILE *pA = fopen("accesos.dat", "rb");
     if (pA != NULL) {
         Accesos acc;
         while(fread(&acc, sizeof(Accesos), 1, pA)) {
-            // Buscamos linealmente la canción en nuestro vector
             for(int i = 0; i < cantidadCanciones; i++) {
                 if (vectorRanking[i].id == acc.getIdCancion()) {
                     vectorRanking[i].contador++;
@@ -1077,12 +1062,11 @@ void musicon::reporteRankingCanciones() {
         cout << "[!] Advertencia: No hay historial de reproducciones." << endl;
     }
 
-    // 5. Ordenar por Mayor a Menor según contador
+    // Paso 4: Ordenamiento Burbuja
     ItemRanking temp;
     for(int i = 0; i < cantidadCanciones - 1; i++) {
         for(int j = 0; j < cantidadCanciones - i - 1; j++) {
             if (vectorRanking[j].contador < vectorRanking[j+1].contador) {
-                // Swap
                 temp = vectorRanking[j];
                 vectorRanking[j] = vectorRanking[j+1];
                 vectorRanking[j+1] = temp;
@@ -1090,7 +1074,6 @@ void musicon::reporteRankingCanciones() {
         }
     }
 
-    // 6. Mostrar el Top 5
     cout << endl;
     cout << "PUESTO\tCANTIDAD\tTITULO" << endl;
     cout << "------------------------------------------" << endl;
@@ -1099,16 +1082,13 @@ void musicon::reporteRankingCanciones() {
     if (cantidadCanciones < 5) tope = cantidadCanciones;
 
     for(int i = 0; i < tope; i++) {
-        // Solo mostramos si tienen al menos 1 reproducción (opcional)
-        // O mostramos todo el top aunque tengan 0
         cout << "#" << i+1 << "\t" << vectorRanking[i].contador << "\t\t" << vectorRanking[i].nombre << endl;
     }
 
-    // 7. Liberar Memoria
     delete[] vectorRanking;
 }
 
-// --- VALIDACIONES ---
+// Implementacion de helpers de existencia
 bool musicon::existeCancion(int id) {
     FILE *p = fopen("canciones.dat", "rb"); if(!p) return false;
     Canciones r; bool x=false;

@@ -3,32 +3,28 @@
 #include <iostream>
 using namespace std;
 
-// --- Definición del Constructor ---
 Canciones::Canciones() {
+    //ctor
     _idCancion = 0;
-    strcpy(_nombre, ""); // Lo inicializo vacío
+    strcpy(_nombre, "");
     _idAlbum = 0;
     _idGenero = 0;
     _duracionSegundos = 0;
     _estado = false;
 }
 
-// --- Definición del Destructor ---
 Canciones::~Canciones()
 {
-    // dtor
+    //dtor
 }
-
-// --- Definiciones de los Setters ---
 
 void Canciones::setIdCancion(int id) {
     _idCancion = id;
 }
 
 void Canciones::setNombre(const char* nombre) {
-    // Usamos strncpy como en Artista.cpp
     strncpy(_nombre, nombre, 99);
-    _nombre[99] = '\0'; // Aseguro el nulo al final
+    _nombre[99] = '\0';
 }
 
 void Canciones::setIdAlbum(int idAl) {
@@ -40,19 +36,16 @@ void Canciones::setIdGenero(int idGe) {
 }
 
 void Canciones::setDuracionSegundos(int duracion) {
-
     if (duracion >= 0) {
         _duracionSegundos = duracion;
     } else {
-        _duracionSegundos = 0; // No puede ser negativa
+        _duracionSegundos = 0;
     }
 }
 
 void Canciones::setEstado(bool e) {
     _estado = e;
 }
-
-// --- Definiciones de los Getters ---
 
 int Canciones::getIdCancion() {
     return _idCancion;
@@ -77,15 +70,10 @@ int Canciones::getDuracionSegundos() {
 bool Canciones::getEstado() {
     return _estado;
 }
-// --- Función Cargar ---
-void Canciones::Cargar() {
-    // COMENTADO PORQUE AHORA ES AUTOINCREMENTAL
-    // cout << "Ingrese ID Cancion: ";
-    // cin >> _idCancion;
 
-    // Solo pedimos los datos reales
+void Canciones::Cargar() {
     cout << "Nombre de la cancion: ";
-    cin.ignore(); // Importante para limpiar el buffer antes del getline
+    cin.ignore();
     cin.getline(_nombre, 100);
 
     cout << "ID del Album: ";
@@ -100,7 +88,6 @@ void Canciones::Cargar() {
     _estado = true;
 }
 
-// --- Función Mostrar ---
 void Canciones::Mostrar() {
     if (_estado == true) {
         cout << "-----------------------------------" << endl;
@@ -113,4 +100,5 @@ void Canciones::Mostrar() {
                                     << _duracionSegundos % 60 << "s" << endl;
         cout << "-----------------------------------" << endl;
     }
+}
 }

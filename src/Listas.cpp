@@ -5,16 +5,17 @@
 
 using namespace std;
 
-// --- CLASE PLAYLIST ---
-
 Playlist::Playlist() {
+    //ctor
     _idPlaylist = 0;
     _nombre[0] = '\0';
     _idSuscriptorCreador = 0;
     _estado = true;
 }
 
-Playlist::~Playlist() { }
+Playlist::~Playlist() {
+    //dtor
+}
 
 void Playlist::setIdPlaylist(int id) { _idPlaylist = id; }
 
@@ -45,9 +46,8 @@ void Playlist::Mostrar() {
     }
 }
 
-// --- CLASE GESTORA (Listas) ---
-
 Listas::Listas() {
+    //ctor
     cantidad = 0;
 }
 
@@ -70,9 +70,8 @@ void Listas::agregarPlaylist(const char* nombre, int idCreador) {
 }
 
 void Listas::mostrarPlaylists() {
-    // Esta funcion muestra lo que hay en el array en memoria
     if (cantidad == 0) {
-        // Intentamos leer del archivo para llenar el array si esta vacio
+        // Carga diferida: Solo lee del disco si la memoria esta vacia
         FILE *p = fopen("playlists.dat", "rb");
         if (p) {
             Playlist reg;
@@ -95,7 +94,6 @@ void Listas::mostrarPlaylists() {
 }
 
 void Listas::mostrarMisPlaylists(int idCreador) {
-    // Primero aseguramos que el array tenga datos del archivo
     if (cantidad == 0) {
         FILE *p = fopen("playlists.dat", "rb");
         if (p) {
@@ -138,4 +136,5 @@ bool Listas::eliminarPlaylist(const char* nombre) {
     listas[pos].setEstado(false);
     cout << "Playlist eliminada (baja logica)." << endl;
     return true;
+}
 }

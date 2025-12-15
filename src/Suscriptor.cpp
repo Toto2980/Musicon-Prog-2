@@ -1,65 +1,139 @@
-#include "Suscriptor.h"
+#include "Listas.h"
 #include <iostream>
 #include <cstring>
 #include <cstdio>
 
-Suscriptor::Suscriptor() {
-    _estado = false;
-    _idSuscriptor = 0;
-    strcpy(_nombre, "S/N");
-    strcpy(_apellido, "S/N");
-    strcpy(_email, "S/N");
-    strcpy(_dni, "0");
-}
+using namespace std;
 
-Suscriptor::~Suscriptor() {
-    //dtor
-}
-
-// SETTERS
-void Suscriptor::setIdSuscriptor(int id) { _idSuscriptor = id; }
-void Suscriptor::setDni(const char* dni) { strcpy(_dni, dni); }
-void Suscriptor::setNombre(const char* nombre) { strcpy(_nombre, nombre); }
-void Suscriptor::setApellido(const char* apellido) { strcpy(_apellido, apellido); }
-void Suscriptor::setEmail(const char* email) { strcpy(_email, email); }
-void Suscriptor::setFechaNacimiento(Fecha fecha) { _fechaNacimiento = fecha; }
-void Suscriptor::setEstado(bool estado) { _estado = estado; }
-
-// GETTERS
-int Suscriptor::getIdSuscriptor() { return _idSuscriptor; }
-const char* Suscriptor::getDni() { return _dni; }
-const char* Suscriptor::getNombre() { return _nombre; }
-const char* Suscriptor::getApellido() { return _apellido; }
-const char* Suscriptor::getEmail() { return _email; }
-Fecha Suscriptor::getFechaNacimiento() { return _fechaNacimiento; }
-bool Suscriptor::getEstado() { return _estado; }
-
-void Suscriptor::Cargar() {
-
-    std::cout << "Apellido: ";
-
-    std::cin.getline(_apellido, 50);
-
-    std::cout << "DNI: ";
-    std::cin >> _dni;
-
-    std::cout << "Email: ";
-    std::cin.ignore();
-    std::cin.getline(_email, 100);
-
-    int dia, mes, anio;
-    std::cout << "Fecha de Nacimiento (D M A): ";
-    std::cin >> dia >> mes >> anio;
-    _fechaNacimiento = Fecha(dia, mes, anio);
-
+Playlist::Playlist() {
+    //ctor
+    _idPlaylist = 0;
+    _nombre[0] = '\0';
+    _idSuscriptorCreador = 0;
     _estado = true;
 }
 
-void Suscriptor::Mostrar() {
+Playlist::~Playlist() {
+    //dtor
+}
+
+void Playlist::setIdPlaylist(int id) { _idPlaylist = id; }
+
+void Playlist::setNombre(const char* n) {
+    strcpy(_nombre, n);
+}
+
+void Playlist::setIdSuscriptorCreador(int id) { _idSuscriptorCreador = id; }
+void Playlist::setEstado(bool estado) { _estado = estado; }
+
+int Playlist::getIdPlaylist() { return _idPlaylist; }
+const char* Playlist::getNombre() { return _nombre; }
+int Playlist::getIdSuscriptorCreador() { return _idSuscriptorCreador; }
+bool Playlist::getEstado() { return _estado; }
+
+void Playlist::Cargar() {
+    std::cout << "Nombre de la Playlist: ";
+    std::cin.ignore();
+    std::cin.getline(_nombre, 50);
+    _estado = true;
+}
+
+void Playlist::Mostrar() {
     if (_estado) {
-        std::cout << "ID: " << _idSuscriptor << " | Usuario: " << _nombre << " " << _apellido << std::endl;
-        std::cout << "DNI: " << _dni << " | Email: " << _email << std::endl;
-        std::cout << "F. Nac: " << _fechaNacimiento.toString() << std::endl;
-        std::cout << "-----------------------------------" << std::endl;
+        std::cout << "ID Lista: " << _idPlaylist << " | Nombre: " << _nombre << std::endl;
+        std::cout << "Creada por ID Usuario: " << _idSuscriptorCreador << std::endl;
+        std::cout << "-------------------------" << std::endl;
     }
+}
+
+Listas::Listas() {
+    //ctor
+    cantidad = 0;
+}
+
+void Listas::agregarPlaylist(const char* nombre, int idCreador) {
+    if (cantidad >= 100) {
+        cout << "No se pueden agregar más playlists." << endl;
+        return;
+    }
+
+    Playlist nueva;
+    nueva.setIdPlaylist(cantidad + 1);
+    nueva.setNombre(nombre);
+    nueva.setIdSuscriptorCreador(idCreador);
+    nueva.setEstado(true);
+
+    listas[cantidad] = nueva;
+    cantidad++;
+
+    cout << "Playlist creada con exito (ID: " << cantidad << ")." << endl;
+}
+
+void Listas::mostrarPlaylists() {
+    if (cantidad == 0) {
+        // Carga diferida (Lazy Loading): Solo lee del disco si la memoria esta vacia
+        FILE *p = fopen("playlists.dat", "rb");
+        if (p) {
+            Playlist reg;
+            while(fread(&reg, sizeof(Playlist), 1, p) && cantidad < 100) {
+                listas[cantidad] = reg;
+                cantidad++;
+            }
+            fclose(p);
+        }
+    }
+
+    if (cantidad == 0) {
+        cout << "No hay playlists cargadas." << endl;
+        return;
+    }
+
+    for (int i = 0; i < cantidad; i++) {
+        listas[i].Mostrar();
+    }
+}
+
+void Listas::mostrarMisPlaylists(int idCreador) {
+    if (cantidad == 0) {
+        FILE *p = fopen("playlists.dat", "rb");
+        if (p) {
+            Playlist reg;
+            while(fread(&reg, sizeof(Playlist), 1, p) && cantidad < 100) {
+                listas[cantidad] = reg;
+                cantidad++;
+            }
+            fclose(p);
+        }
+    }
+
+    bool hay = false;
+    cout << "--- MIS PLAYLISTS ---" << endl;
+    for (int i = 0; i < cantidad; i++) {
+        if (listas[i].getIdSuscriptorCreador() == idCreador && listas[i].getEstado()) {
+            listas[i].Mostrar();
+            hay = true;
+        }
+    }
+    if (!hay) cout << "No tenes playlists creadas." << endl;
+}
+
+int Listas::buscarPlaylist(const char* nombre) {
+    for (int i = 0; i < cantidad; i++) {
+        if (strcmp(listas[i].getNombre(), nombre) == 0) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+bool Listas::eliminarPlaylist(const char* nombre) {
+    int pos = buscarPlaylist(nombre);
+    if (pos == -1) {
+        cout << "Playlist no encontrada." << endl;
+        return false;
+    }
+
+    listas[pos].setEstado(false);
+    cout << "Playlist eliminada (baja logica)." << endl;
+    return true;
 }
