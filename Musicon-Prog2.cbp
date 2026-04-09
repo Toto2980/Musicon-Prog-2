@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Musicon-Prog2" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/Musicon-Prog2" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add directory="include" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/Musicon-Prog2" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add directory="include" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="include/Accesos.h" />
+		<Unit filename="include/Album.h" />
+		<Unit filename="include/ArchivoAlbum.h" />
+		<Unit filename="include/ArchivoArtistas.h" />
+		<Unit filename="include/ArchivoCanciones.h" />
+		<Unit filename="include/ArchivoGeneros.h" />
+		<Unit filename="include/ArchivoSuscriptores.h" />
+		<Unit filename="include/Artista.h" />
+		<Unit filename="include/ArtistaManager.h" />
+		<Unit filename="include/CancionManager.h" />
+		<Unit filename="include/Canciones.h" />
+		<Unit filename="include/DetallePlaylist.h" />
+		<Unit filename="include/Fecha.h" />
+		<Unit filename="include/GeneroManager.h" />
+		<Unit filename="include/Generos.h" />
+		<Unit filename="include/HoraYMinutos.h" />
+		<Unit filename="include/InputHelper.h" />
+		<Unit filename="include/Playlist.h" />
+		<Unit filename="include/PlaylistManager.h" />
+		<Unit filename="include/ReporteManager.h" />
+		<Unit filename="include/StringUtils.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="include/StringUtils.h" />
+		<Unit filename="include/Suscriptor.h" />
+		<Unit filename="include/SuscriptorManager.h" />
+		<Unit filename="include/musicon.h" />
+		<Unit filename="main.cpp" />
+		<Unit filename="src/Accesos.cpp" />
+		<Unit filename="src/Album.cpp" />
+		<Unit filename="src/ArchivoAlbum.cpp" />
+		<Unit filename="src/ArchivoArtistas.cpp" />
+		<Unit filename="src/ArchivoCanciones.cpp" />
+		<Unit filename="src/ArchivoGeneros.cpp" />
+		<Unit filename="src/ArchivoSuscriptores.cpp" />
+		<Unit filename="src/Artista.cpp" />
+		<Unit filename="src/ArtistaManager.cpp" />
+		<Unit filename="src/CancionManager.cpp" />
+		<Unit filename="src/Canciones.cpp" />
+		<Unit filename="src/DetallePlaylist.cpp" />
+		<Unit filename="src/Fecha.cpp" />
+		<Unit filename="src/GeneroManager.cpp" />
+		<Unit filename="src/Generos.cpp" />
+		<Unit filename="src/HoraYMinutos.cpp" />
+		<Unit filename="src/InputHelper.cpp" />
+		<Unit filename="src/Playlist.cpp" />
+		<Unit filename="src/PlaylistManager.cpp" />
+		<Unit filename="src/ReporteManager.cpp" />
+		<Unit filename="src/Suscriptor.cpp" />
+		<Unit filename="src/SuscriptorManager.cpp" />
+		<Unit filename="src/musicon.cpp" />
+		<Extensions>
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
