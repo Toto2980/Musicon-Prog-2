@@ -14,7 +14,7 @@ class ArchivoArtistas {
         /** Constructor de ArchivoArtistas. Parámetros: nombreArchivo - Nombre del archivo, por defecto "artistas.dat". */
         ArchivoArtistas(std::string nombreArchivo = "artistas.dat");
 
-        // --- ABML B�sico ---
+        // --- ABML Básico ---
         /** Guarda un artista en el archivo. Parámetros: reg - Artista a guardar. Retorna: true si guardado, false en caso de error. */
         bool Guardar(Artista reg);
         /** Lee un artista desde el archivo en la posición especificada. Parámetros: pos - Posición en el archivo. Retorna: El artista leído. */
@@ -26,7 +26,7 @@ class ArchivoArtistas {
         /** Obtiene la cantidad de registros en el archivo. Retorna: Cantidad de artistas. */
         int ObtenerCantidadRegistros();
 
-        // --- B�squedas ---
+        // --- Búsquedas ---
         /** Busca la posición de un artista por su ID. Parámetros: id - ID del artista. Retorna: Posición, -1 si no encontrado. */
         int BuscarPosicion(int id);
         /** Busca la posición de un artista por su nombre. Parámetros: nombre - Nombre del artista. Retorna: Posición, -1 si no encontrado. */
@@ -36,13 +36,13 @@ class ArchivoArtistas {
         /** Busca el ID de un artista por su nombre. Parámetros: nombre - Nombre del artista. Retorna: ID del artista, -1 si no existe. */
         int BuscarIDPorNombre(const char* nombre);
 
-        // Devuelve el objeto Artista completo dado un ID (�til para reportes)
+        // Devuelve el objeto Artista completo dado un ID (útil para reportes)
         /** Busca un artista por su ID. Parámetros: id - ID del artista. Retorna: El artista encontrado. */
         Artista BuscarPorID(int id);
 
-        // --- L�gica Avanzada (Importaci�n) ---
-        // Busca un artista por nombre. Si no existe, lo crea autom�ticamente.
-        // Devuelve siempre un ID v�lido.
+        // --- Lógica Avanzada (Importación) ---
+        // Busca un artista por nombre. Si no existe, lo crea automáticamente.
+        // Devuelve siempre un ID válido.
         /** Busca un artista por nombre, o lo crea si no existe. Parámetros: nombreArtista - Nombre del artista. Retorna: ID del artista. */
         int BuscarOCrear(std::string nombreArtista);
 };

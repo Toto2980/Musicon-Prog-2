@@ -1,7 +1,7 @@
 /*
  * Archivo: Canciones.h
- * Descripci�n: Header de la clase Canciones, que representa la entidad de una canci�n en el sistema Musicon.
- * Contiene los atributos de una canci�n y m�todos para cargar/mostrar datos desde/hacia el usuario.
+ * Descripción: Header de la clase Canciones, que representa la entidad de una canción en el sistema Musicon.
+ * Contiene los atributos de una canción y métodos para cargar/mostrar datos desde/hacia el usuario.
  * No maneja persistencia directamente, solo mantiene los datos en memoria.
  */
 
@@ -18,18 +18,16 @@
 /** Representa una canción en el sistema Musicon con atributos como nombre, álbum, género, duración y estado. */
 class Canciones {
     private:
-        int _idCancion; // Identificador �nico de la canci�n
-        char _nombre[100]; // Nombre o t�tulo de la canci�n
-        int _idAlbum; // ID del �lbum al que pertenece
-        int _idGenero; // ID del g�nero musical
-        int _duracionSegundos; // Duraci�n en segundos
-        bool _estado; // Estado activo/inactivo (para eliminaci�n l�gica)
+        int _idCancion; // Identificador único de la canción
+        char _nombre[100]; // Nombre o título de la canción
+        int _idAlbum; // ID del álbum al que pertenece
+        int _idGenero; // ID del género musical
+        int _duracionSegundos; // Duración en segundos
+        bool _estado; // Estado activo/inactivo (para eliminación lógica)
 
     public:
         /** Constructor por defecto de la clase Canciones. */
         Canciones();
-        /** Destructor virtual de la clase Canciones. */
-        virtual ~Canciones();
 
         // --- SETTERS ---
         /** Establece el ID de la canción.
@@ -94,7 +92,7 @@ class Canciones {
         bool getEstado();
 
         // --- E/S (Interfaz con usuario) ---
-        // Nota: Mantenemos esto aqu� por ahora, pero idealmente ir�a en una "Vista"
+        // Nota: Mantenemos esto aqué por ahora, pero idealmente iría en una "Vista"
         /** Carga los datos de la canción desde la entrada del usuario. */
         void Cargar();
 

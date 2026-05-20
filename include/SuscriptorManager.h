@@ -1,6 +1,6 @@
 /**
  * Este archivo define la clase SuscriptorManager, que maneja todas las operaciones CRUD para suscriptores
- * (usuarios) en la aplicaci�n Musicon. Utiliza ArchivoSuscriptores para persistencia.
+ * (usuarios) en la aplicación Musicon. Utiliza ArchivoSuscriptores para persistencia.
  */
 
 #ifndef SUSCRIPORMANAGER_H

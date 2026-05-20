@@ -8,17 +8,15 @@
 /** Clase que representa un álbum musical con atributos como ID, título, artista, año de publicación y estado. Incluye métodos para persistencia en archivo binario. */
 class Album {
     private:
-        int _idAlbum; // Identificador �nico del �lbum
-        char _titulo[100]; // T�tulo del �lbum
-        int _idArtista; // ID del artista (clave for�nea)
-        int _anioPublicacion; // A�o de lanzamiento
+        int _idAlbum; // Identificador único del álbum
+        char _titulo[100]; // Título del álbum
+        int _idArtista; // ID del artista (clave foránea)
+        int _anioPublicacion; // Año de lanzamiento
         bool _estado; // Estado activo/inactivo
 
     public:
         /** Constructor por defecto de la clase Album. */
         Album();
-        /** Destructor virtual de la clase Album. */
-        virtual ~Album();
 
         // --- SETTERS ---
         /** Establece el ID del álbum. Parámetros: id - ID único del álbum. */

@@ -2,7 +2,7 @@
 #define PLAYLIST_H
 
 
-#include "Fecha.h" // Necesario para la fecha de creaci�n
+#include "Fecha.h" // Necesario para la fecha de creación
 
 /**
  * Este archivo define la clase Playlist, que representa listas de canciones creadas por usuarios.
@@ -21,8 +21,6 @@ class Playlist {
     public:
         /** Constructor por defecto. */
         Playlist();
-        /** Destructor virtual. */
-        virtual ~Playlist();
 
         // --- SETTERS ---
         /** Establece el ID.

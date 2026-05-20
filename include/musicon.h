@@ -3,10 +3,9 @@
  * Maneja menús y delegación de operaciones a los managers especializados.
  */
 
-#ifndef MUSICON_H
-#define MUSICON_H
+#pragma once
 
-// NOTA: Se eliminaron iostream y using namespace std de aqu� para cumplir con la correcci�n del profesor.
+// NOTA: Se eliminaron iostream y using namespace std de aqué para cumplir con la corrección del profesor.
 // Solo se incluyen las declaraciones necesarias.
 
 /** Clase principal del sistema Musicon que maneja el menú y la lógica general. */
@@ -15,10 +14,9 @@ class musicon
     public:
         /** Constructor de musicon. */
         musicon();
-        /** Destructor virtual de musicon. */
-        virtual ~musicon();
 
-        // --- MEN�S P�BLICOS ---
+
+        // --- MENÚS PÚBLICOS ---
         /** Inicia el sistema. */
         void iniciarSistema();
         /** Muestra el menú principal. */
@@ -27,7 +25,7 @@ class musicon
         void mostrarMenuReportes();
 
         // --- REPORTES ---
-        // La l�gica de informes se delega a ReporteManager.
+        // La lógica de informes se delega a ReporteManager.
 
     protected:
         // Helpers de existencia
@@ -72,13 +70,13 @@ class musicon
         int _idUsuarioLogueado;
         char _nombreUsuarioLogueado[50];
 
-        // --- MEN�S INTERNOS ---
+        // --- MENÚS INTERNOS ---
         /** Muestra el menú de bienvenida. */
         void menuBienvenida();
         /** Maneja el login. */
         void login();
 
-        // --- SUBMEN�S DE GESTI�N (ABMLs) ---
+        // --- SUBMENÚS DE GESTIÓN (ABMLs) ---
         /** Muestra el menú de cargas. */
         void menuCargas();
         /** Muestra el menú de configuración. */
@@ -95,7 +93,7 @@ class musicon
         /** Muestra el menú de géneros. */
         void menuGeneros();
 
-        // --- L�GICA DE NEGOCIO (IMPLEMENTACI�N) ---
+        // --- LÓGICA DE NEGOCIO (IMPLEMENTACIÓN) ---
 
         // CANCIONES
         /** Carga una nueva canción en lista. */
@@ -109,8 +107,7 @@ class musicon
         /** Lista las canciones. */
         void listarCanciones();
 
-        // PLAYLISTS
-        // La l�gica de playlists fue movida a PlaylistManager.
+        
 
         // OTROS
         /** Carga una nueva suscripción. */
@@ -119,7 +116,7 @@ class musicon
         void registrarAcceso();
 
         // ARTISTAS Y GENEROS
-        // La l�gica de artistas y g�neros fue movida a ArtistaManager y GeneroManager.
+        // La lógica de artistas y géneros fue movida a ArtistaManager y GeneroManager.
 };
 
-#endif // MUSICON_H
+

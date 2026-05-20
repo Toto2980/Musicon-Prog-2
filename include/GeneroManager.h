@@ -1,6 +1,6 @@
 /**
  * Este archivo define la clase GeneroManager, que maneja todas las operaciones CRUD para géneros musicales
- * en la aplicaci�n Musicon. Utiliza la clase Genero para persistencia.
+ * en la aplicación Musicon. Utiliza la clase Genero para persistencia.
  */
 
 #ifndef GENEROMANAGER_H

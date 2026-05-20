@@ -18,8 +18,6 @@ class Accesos {
     public:
         /** Constructor por defecto de la clase Accesos. */
         Accesos();
-        /** Destructor virtual de la clase Accesos. */
-        virtual ~Accesos();
 
         // --- SETTERS ---
         /** Establece el ID del suscriptor que realizó el acceso. */
@@ -46,7 +44,7 @@ class Accesos {
         /** Obtiene la cantidad total de registros de acceso en el archivo. */
         int ObtenerCantidadRegistros();
 
-        // No solemos "Modificar" o "Buscar por ID" un acceso porque es un log hist�rico,
+        // No solemos "Modificar" o "Buscar por ID" un acceso porque es un log histórico,
         // pero Leer() y ObtenerCantidad son vitales para los reportes.
 };
 

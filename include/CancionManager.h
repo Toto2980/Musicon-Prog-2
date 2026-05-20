@@ -1,6 +1,6 @@
 /**
  * Este archivo define la clase CancionManager, que maneja todas las operaciones relacionadas con canciones
- * en la aplicaci�n Musicon. Incluye CRUD de canciones, importaci�n/exportaci�n, backups y registro de accesos.
+ * en la aplicación Musicon. Incluye CRUD de canciones, importación/exportación, backups y registro de accesos.
  */
 
 #ifndef CANCIONMANAGER_H
@@ -15,9 +15,9 @@
 class CancionManager {
     private:
         ArchivoCanciones _archivoCanciones; // Archivo para operaciones con canciones
-        ArchivoAlbum _archivoAlbum; // Archivo para operaciones con �lbumes
+        ArchivoAlbum _archivoAlbum; // Archivo para operaciones con álbumes
         ArchivoArtistas _archivoArtistas; // Archivo para operaciones con artistas
-        ArchivoGeneros _archivoGeneros; // Archivo para operaciones con g�neros
+        ArchivoGeneros _archivoGeneros; // Archivo para operaciones con géneros
 
         /** Método privado para crear un álbum rápidamente si no existe. Parámetros: tituloAlbum - El título del álbum a crear. Retorna: El ID del álbum creado o encontrado. */
         int crearAlbumRapido(const char* tituloAlbum);

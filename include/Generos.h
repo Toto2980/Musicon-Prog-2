@@ -10,8 +10,8 @@
 /** Representa un género musical con atributos como ID, nombre y estado. Incluye métodos para persistencia en archivo binario. */
 class Genero {
     private:
-        int _idGeneros; // Identificador �nico del g�nero
-        char _nombre[50]; // Nombre del g�nero musical
+        int _idGeneros; // Identificador único del género
+        char _nombre[50]; // Nombre del género musical
         bool _estado; // Estado activo/inactivo
 
     public:

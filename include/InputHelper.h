@@ -17,7 +17,7 @@ public:
     /** Pausa la ejecución esperando entrada del usuario. */
     static void pausa();
 
-    // --- NUEVAS UTILIDADES PARA IMPORTACI�N ---
+    // --- NUEVAS UTILIDADES PARA IMPORTACIÓN ---
     // Quita espacios al principio y final
     /** Quita espacios al principio y final de una cadena. Parámetros: str - La cadena original. Retorna: La cadena sin espacios. */
     static std::string trim(const std::string& str);

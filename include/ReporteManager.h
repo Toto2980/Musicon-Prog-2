@@ -1,7 +1,7 @@
 /**
  * Este archivo define la clase ReporteManager, responsable de generar todos los reportes y estadísticas
- * de la aplicaci�n Musicon. Utiliza algoritmos optimizados con mapas para evitar bucles O(N�) y proporciona
- * informes sobre reproducciones, rankings y an�lisis de datos.
+ * de la aplicación Musicon. Utiliza algoritmos optimizados con mapas para evitar bucles O(N²) y proporciona
+ * informes sobre reproducciones, rankings y análisis de datos.
  */
 
 #ifndef REPORTEMANAGER_H
