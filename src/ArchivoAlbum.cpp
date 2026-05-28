@@ -7,25 +7,7 @@
 
 using namespace std;
 
-/**
- * Compara dos textos sin distinguir mayúsculas y minúsculas.
- */
-static bool sonIgualesSinMayusculas(const char* texto1, const char* texto2) {
-    if (texto1 == nullptr || texto2 == nullptr) return texto1 == texto2;
-
-    while (*texto1 && *texto2) {
-        if (std::tolower(static_cast<unsigned char>(*texto1)) !=
-            std::tolower(static_cast<unsigned char>(*texto2))) {
-            return false;
-        }
-        ++texto1;
-        ++texto2;
-    }
-
-    return *texto1 == *texto2;
-}
-
-// ... (M�todos anteriores se mantienen igual) ...
+// ... (Métodos anteriores se mantienen igual) ...
 
 ArchivoAlbum::ArchivoAlbum(string nombreArchivo) { _nombreArchivo = nombreArchivo; }
 
@@ -97,7 +79,7 @@ int ArchivoAlbum::BuscarIDPorTitulo(const char* titulo) {
     if (p == NULL) return -1;
     Album aux;
     while(fread(&aux, sizeof(Album), 1, p)) {
-        if(sonIgualesSinMayusculas(aux.getTitulo(), titulo) && aux.getEstado()) {
+        if(InputHelper::sonIgualesSinMayusculas(aux.getTitulo(), titulo) && aux.getEstado()) {
             fclose(p);
             return aux.getIdAlbum();
         }
@@ -114,10 +96,10 @@ Album ArchivoAlbum::BuscarPorID(int id) {
     return reg;
 }
 
-// --- IMPLEMENTACI�N INTELIGENTE ---
+// --- IMPLEMENTACIÓN INTELIGENTE ---
 int ArchivoAlbum::BuscarOCrear(string tituloAlbum, int idArtista) {
     string tituloLimpio = InputHelper::trim(tituloAlbum);
-    if (tituloLimpio.empty()) return 0; // O un ID gen�rico "Sin Album"
+    if (tituloLimpio.empty()) return 0; // O un ID genérico "Sin Album"
 
     // 1. Buscar coincidencia exacta de Titulo Y Artista
     FILE *p = fopen(_nombreArchivo.c_str(), "rb");
@@ -126,7 +108,7 @@ int ArchivoAlbum::BuscarOCrear(string tituloAlbum, int idArtista) {
         while(fread(&aux, sizeof(Album), 1, p)) {
             if(aux.getEstado() &&
                aux.getIdArtista() == idArtista &&
-               sonIgualesSinMayusculas(aux.getTitulo(), tituloLimpio.c_str())) {
+               InputHelper::sonIgualesSinMayusculas(aux.getTitulo(), tituloLimpio.c_str())) {
                 fclose(p);
                 return aux.getIdAlbum(); // ENCONTRADO
             }
@@ -140,7 +122,7 @@ int ArchivoAlbum::BuscarOCrear(string tituloAlbum, int idArtista) {
     nuevo.setIdAlbum(nuevoId);
     nuevo.setTitulo(tituloLimpio.c_str());
     nuevo.setIdArtista(idArtista);
-    nuevo.setAnioPublicacion(0); // A�o desconocido por defecto
+    nuevo.setAnioPublicacion(0); // Año desconocido por defecto
     nuevo.setEstado(true);
 
     Guardar(nuevo);

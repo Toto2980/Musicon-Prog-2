@@ -22,9 +22,6 @@ Accesos::Accesos() {
  * Limpia cualquier recurso usado por el registro de acceso.
  * Actualmente no hay recursos especiales que liberar.
  */
-Accesos::~Accesos() {
-    //dtor
-}
 
 // CAMBIAR VALORES
 

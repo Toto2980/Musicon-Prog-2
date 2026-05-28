@@ -12,11 +12,11 @@ using namespace std;
 
 /**
  * Inicializa todos los atributos con valores neutros.
- * El ID se deja en 0 (se asignar� autom�ticamente), nombre vac�o, IDs de album/g�nero en 0,
- * duraci�n en 0 y estado inactivo.
+ * El ID se deja en 0 (se asignará automáticamente), nombre vacío, IDs de album/género en 0,
+ * duración en 0 y estado inactivo.
  */
 Canciones::Canciones() {
-    _idCancion = 0;
+    setId(0);
     strcpy(_nombre, "");
     _idAlbum = 0;
     _idGenero = 0;
@@ -25,15 +25,14 @@ Canciones::Canciones() {
 }
 
 /**
- * No hay recursos dinámicos que liberar, pero se declara virtual por si se hereda en el futuro.
+ * No hay recursos dinámicos que liberar.
  */
-Canciones::~Canciones() { }
 
 /**
  * Asigna el ID único de la canción.
- * Par�metros: id - El ID �nico a asignar.
+ * Parámetros: id - El ID único a asignar.
  */
-void Canciones::setIdCancion(int id) { _idCancion = id; }
+void Canciones::setIdCancion(int id) { setId(id); }
 
 /**
  * Asigna el nombre de la canción con límite de 99 caracteres.
@@ -69,7 +68,7 @@ void Canciones::setDuracionSegundos(int duracion) {
 
 /**
  * Asigna el estado activo o inactivo.
- * Par�metros: e - true para activo, false para inactivo (eliminaci�n l�gica).
+ * Parámetros: e - true para activo, false para inactivo (eliminación lógica).
  */
 void Canciones::setEstado(bool e) { _estado = e; }
 
@@ -77,7 +76,7 @@ void Canciones::setEstado(bool e) { _estado = e; }
  * Dice el ID único de la canción.
  * Retorna: El ID único asignado.
  */
-int Canciones::getIdCancion() { return _idCancion; }
+int Canciones::getIdCancion() { return getId(); }
 
 /**
  * Dice el nombre de la canción.
@@ -111,11 +110,11 @@ bool Canciones::getEstado() { return _estado; }
 
 /**
  * Solicita al usuario los datos de la canción.
- * No pide ID (se genera autom�ticamente fuera de esta clase).
+ * No pide ID (se genera automáticamente fuera de esta clase).
  * Usa InputHelper para entradas seguras y establece el estado como activo.
  */
 void Canciones::Cargar() {
-    // Ya no pedimos el ID aqu�, el ID se gestiona fuera autom�ticamente
+    // Ya no pedimos el ID aqué, el ID se gestiona fuera automáticamente
     // Usamos InputHelper para inputs seguros
     char buffer[100];
     InputHelper::pedirCadena("Nombre de la cancion: ", buffer, 100);
@@ -130,13 +129,13 @@ void Canciones::Cargar() {
 
 /**
  * Imprime los datos de la canción en la consola si está activa.
- * Formatea la duraci�n en minutos y segundos para mejor legibilidad.
+ * Formatea la duración en minutos y segundos para mejor legibilidad.
  */
 void Canciones::Mostrar() {
-    // Solo mostramos si est� activo
+    // Solo mostramos si está activo
     if (_estado) {
         cout << "-----------------------------------" << endl;
-        cout << "ID Cancion     : " << _idCancion << endl;
+        cout << "ID Cancion     : " << getIdCancion() << endl;
         cout << "Nombre         : " << _nombre << endl;
         cout << "ID Album       : " << _idAlbum << endl;
         cout << "ID Genero      : " << _idGenero << endl;

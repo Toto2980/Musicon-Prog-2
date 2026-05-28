@@ -18,8 +18,6 @@ Fecha::Fecha() {
     _objetoHora = HoraYMinutos();
 }
 
-Fecha::~Fecha() {}
-
 Fecha::Fecha(int minutos, int hora, int dia, int mes, int anio) {
     _dia = dia;
     _mes = mes;

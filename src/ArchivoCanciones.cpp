@@ -1,28 +1,11 @@
 #include "../include/ArchivoCanciones.h"
+#include "InputHelper.h"
 #include <cstdio>
 #include <cstring>
 #include <iostream>
 #include <cctype>
 
 using namespace std;
-
-/**
- * Compara dos textos sin distinguir mayúsculas y minúsculas.
- */
-static bool sonIgualesSinMayusculas(const char* texto1, const char* texto2) {
-    if (texto1 == nullptr || texto2 == nullptr) return texto1 == texto2;
-
-    while (*texto1 && *texto2) {
-        if (std::tolower(static_cast<unsigned char>(*texto1)) !=
-            std::tolower(static_cast<unsigned char>(*texto2))) {
-            return false;
-        }
-        ++texto1;
-        ++texto2;
-    }
-
-    return *texto1 == *texto2;
-}
 
 ArchivoCanciones::ArchivoCanciones(string nombreArchivo) {
     _nombreArchivo = nombreArchivo;
@@ -118,7 +101,7 @@ Canciones ArchivoCanciones::BuscarPorID(int id) {
     return reg;
 }
 
-// NUEVO: Implementaci�n de la b�squeda de duplicados
+// NUEVO: Implementación de la búsqueda de duplicados
 int ArchivoCanciones::BuscarPosicionPorNombreYAlbum(const char* nombre, int idAlbum) {
     FILE *p = fopen(_nombreArchivo.c_str(), "rb");
     if (p == NULL) return -1;
@@ -126,10 +109,10 @@ int ArchivoCanciones::BuscarPosicionPorNombreYAlbum(const char* nombre, int idAl
     Canciones aux;
     int pos = 0;
     while(fread(&aux, sizeof(Canciones), 1, p)) {
-        // Verificamos estado activo, mismo ID de �lbum y mismo nombre
+        // Verificamos estado activo, mismo ID de álbum y mismo nombre
         if(aux.getEstado() &&
            aux.getIdAlbum() == idAlbum &&
-           sonIgualesSinMayusculas(aux.getNombre(), nombre)) {
+           InputHelper::sonIgualesSinMayusculas(aux.getNombre(), nombre)) {
             fclose(p);
             return pos;
         }

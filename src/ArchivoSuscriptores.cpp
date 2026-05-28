@@ -1,27 +1,10 @@
 #include "../include/ArchivoSuscriptores.h"
+#include "InputHelper.h"
 #include <cstdio>
 #include <cstring>
 #include <cctype>
 
 using namespace std;
-
-/**
- * Compara dos textos sin distinguir mayúsculas y minúsculas.
- */
-static bool sonIgualesSinMayusculas(const char* texto1, const char* texto2) {
-    if (texto1 == nullptr || texto2 == nullptr) return texto1 == texto2;
-
-    while (*texto1 && *texto2) {
-        if (std::tolower(static_cast<unsigned char>(*texto1)) !=
-            std::tolower(static_cast<unsigned char>(*texto2))) {
-            return false;
-        }
-        ++texto1;
-        ++texto2;
-    }
-
-    return *texto1 == *texto2;
-}
 
 ArchivoSuscriptores::ArchivoSuscriptores(string nombreArchivo) {
     _nombreArchivo = nombreArchivo;
@@ -125,10 +108,10 @@ int ArchivoSuscriptores::BuscarPosicionPorNombre(const char* nombre) {
     Suscriptor aux;
     int pos = 0;
     while(fread(&aux, sizeof(Suscriptor), 1, p)) {
-        // DEBUG: Descomenta esto para ver qu� lee
+        // DEBUG: Descomenta esto para ver qué lee
         // cout << "Leido: " << aux.getNombre() << " vs Buscado: " << nombre << endl;
 
-        if(sonIgualesSinMayusculas(aux.getNombre(), nombre) && aux.getEstado()) {
+        if(InputHelper::sonIgualesSinMayusculas(aux.getNombre(), nombre) && aux.getEstado()) {
             fclose(p);
             return pos;
         }

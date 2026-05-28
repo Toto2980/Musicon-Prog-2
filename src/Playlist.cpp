@@ -8,24 +8,6 @@
 using namespace std;
 
 /**
- * Compara dos textos sin distinguir mayúsculas y minúsculas.
- */
-static bool sonIgualesSinMayusculas(const char* texto1, const char* texto2) {
-    if (texto1 == nullptr || texto2 == nullptr) return texto1 == texto2;
-
-    while (*texto1 && *texto2) {
-        if (std::tolower(static_cast<unsigned char>(*texto1)) !=
-            std::tolower(static_cast<unsigned char>(*texto2))) {
-            return false;
-        }
-        ++texto1;
-        ++texto2;
-    }
-
-    return *texto1 == *texto2;
-}
-
-/**
  * Este archivo implementa la clase Playlist, con métodos para crear, guardar y buscar playlists.
  * Maneja la persistencia de datos en archivos y la interacción con el usuario.
  */
@@ -34,7 +16,7 @@ static bool sonIgualesSinMayusculas(const char* texto1, const char* texto2) {
  * Prepara una nueva lista de canciones vacía con valores iniciales.
  */
 Playlist::Playlist() {
-    _idPlaylist = 0;
+    setId(0);
     _nombre[0] = '\0';
     _idSuscriptorCreador = 0;
     // La fecha se inicializa por defecto en su propio constructor (0/0/0)
@@ -42,15 +24,11 @@ Playlist::Playlist() {
 }
 
 /**
- * Destructor.
- */
-Playlist::~Playlist() { }
 
-/**
  * Asigna el número único que identifica esta lista.
  * Parámetros: id - El número identificador.
  */
-void Playlist::setIdPlaylist(int id) { _idPlaylist = id; }
+void Playlist::setIdPlaylist(int id) { setId(id); }
 
 /**
  * Asigna el título que el usuario le dio a la lista.
@@ -82,7 +60,7 @@ void Playlist::setEstado(bool estado) { _estado = estado; }
  * Dice cuál es el número de esta lista.
  * Retorna: El ID único.
  */
-int Playlist::getIdPlaylist() { return _idPlaylist; }
+int Playlist::getIdPlaylist() { return getId(); }
 
 /**
  * Dice cuál es el título de esta lista.
@@ -124,7 +102,7 @@ void Playlist::Cargar() {
 
 void Playlist::Mostrar() {
     if (_estado) {
-        cout << "ID Lista: " << _idPlaylist << " | Nombre: " << _nombre << endl;
+        cout << "ID Lista: " << getIdPlaylist() << " | Nombre: " << _nombre << endl;
         cout << "Creada por ID Usuario: " << _idSuscriptorCreador << endl;
         cout << "Fecha Creacion: " << _fechaCreacion.toString() << endl; // <--- NUEVO
         cout << "-------------------------" << endl;
@@ -238,7 +216,7 @@ int Playlist::BuscarPorNombre(const char* nombre) {
     Playlist aux;
     int i = 0;
     while(fread(&aux, sizeof(Playlist), 1, p)) {
-        if(sonIgualesSinMayusculas(aux.getNombre(), nombre) && aux.getEstado()) {
+        if(InputHelper::sonIgualesSinMayusculas(aux.getNombre(), nombre) && aux.getEstado()) {
             fclose(p);
             return i;
         }

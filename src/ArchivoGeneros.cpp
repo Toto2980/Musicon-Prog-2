@@ -7,25 +7,7 @@
 
 using namespace std;
 
-/**
- * Compara dos textos sin distinguir mayúsculas y minúsculas.
- */
-static bool sonIgualesSinMayusculas(const char* texto1, const char* texto2) {
-    if (texto1 == nullptr || texto2 == nullptr) return texto1 == texto2;
-
-    while (*texto1 && *texto2) {
-        if (std::tolower(static_cast<unsigned char>(*texto1)) !=
-            std::tolower(static_cast<unsigned char>(*texto2))) {
-            return false;
-        }
-        ++texto1;
-        ++texto2;
-    }
-
-    return *texto1 == *texto2;
-}
-
-// ... (M�todos anteriores Guardar, Leer, etc. se mantienen igual) ...
+// ... (Métodos anteriores Guardar, Leer, etc. se mantienen igual) ...
 
 ArchivoGeneros::ArchivoGeneros(string nombreArchivo) { _nombreArchivo = nombreArchivo; }
 
@@ -97,7 +79,7 @@ int ArchivoGeneros::BuscarIDPorNombre(const char* nombre) {
     if (p == NULL) return -1;
     Genero aux;
     while(fread(&aux, sizeof(Genero), 1, p)) {
-        if(sonIgualesSinMayusculas(aux.getNombre(), nombre) && aux.getEstado()) {
+        if(InputHelper::sonIgualesSinMayusculas(aux.getNombre(), nombre) && aux.getEstado()) {
             fclose(p);
             return aux.getIdGeneros();
         }
@@ -114,7 +96,7 @@ Genero ArchivoGeneros::BuscarPorID(int id) {
     return reg;
 }
 
-// --- IMPLEMENTACI�N INTELIGENTE ---
+// --- IMPLEMENTACIÓN INTELIGENTE ---
 int ArchivoGeneros::BuscarOCrear(string nombreGenero) {
     string nombreLimpio = InputHelper::trim(nombreGenero);
     if (nombreLimpio.empty()) return 0; // O un ID por defecto para "Sin Genero"

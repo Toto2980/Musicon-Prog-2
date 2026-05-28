@@ -1,7 +1,7 @@
 /**
  * Este archivo implementa la clase ReporteManager. Genera diversos reportes y estadísticas
- * del sistema Musicon, incluyendo reproducciones, rankings y b�squedas inteligentes.
- * Utiliza mapas desordenados para optimizar el procesamiento de datos y evitar algoritmos O(N�).
+ * del sistema Musicon, incluyendo reproducciones, rankings y búsquedas inteligentes.
+ * Utiliza mapas desordenados para optimizar el procesamiento de datos y evitar algoritmos O(N²).
  */
 
 #include "../include/ReporteManager.h"
@@ -24,14 +24,14 @@ using namespace std;
 bool ReporteManager::contieneSubcadenaLocal(const char* texto, const char* busqueda) {
     string t = texto;
     string b = busqueda;
-    for (auto& c : t) c = tolower(c); // Convierte a min�sculas
+    for (auto& c : t) c = tolower(c); // Convierte a minúsculas
     for (auto& c : b) c = tolower(c);
     return t.find(b) != string::npos; // Busca la subcadena
 }
 
 /*
- * Muestra el men� principal de reportes y maneja la navegaci�n entre diferentes tipos de informes.
- * Incluye reportes de reproducciones, rankings, b�squedas y estad�sticas.
+ * Muestra el menú principal de reportes y maneja la navegación entre diferentes tipos de informes.
+ * Incluye reportes de reproducciones, rankings, búsquedas y estadísticas.
  */
 void ReporteManager::MostrarMenuReportes() {
     int op;
@@ -67,9 +67,9 @@ void ReporteManager::MostrarMenuReportes() {
 }
 
 /*
- * Genera un reporte de reproducciones mensuales para un a�o espec�fico.
+ * Genera un reporte de reproducciones mensuales para un año específico.
  * Cuenta las reproducciones por mes utilizando un arreglo de contadores.
- * Par�metros: Solicita el a�o al usuario.
+ * Parámetros: Solicita el año al usuario.
  */
 void ReporteManager::reporteReproduccionesAnuales() {
     int anio = InputHelper::pedirEntero("Anio: ");
@@ -79,7 +79,7 @@ void ReporteManager::reporteReproduccionesAnuales() {
     int total = a.ObtenerCantidadRegistros();
     for (int i = 0; i < total; i++) { // Itera sobre todos los accesos
         a.Leer(i);
-        if (a.getFechaHora().getAnio() == anio) { // Filtra por a�o
+        if (a.getFechaHora().getAnio() == anio) { // Filtra por año
             int m = a.getFechaHora().getMes();
             if (m >= 1 && m <= 12) cont[m - 1]++; // Incrementa contador del mes
         }
@@ -90,13 +90,13 @@ void ReporteManager::reporteReproduccionesAnuales() {
 }
 
 /*
- * Genera un reporte de reproducciones por suscriptor para un a�o espec�fico.
+ * Genera un reporte de reproducciones por suscriptor para un año específico.
  * Utiliza un mapa desordenado para indexar suscriptores y contar reproducciones eficientemente.
- * Par�metros: Solicita el a�o (0 para el a�o actual).
+ * Parámetros: Solicita el año (0 para el año actual).
  */
 void ReporteManager::reporteReproduccionesPorSuscriptor() {
     int anio = InputHelper::pedirEntero("Anio (0=actual): ");
-    if (anio == 0) { // Si es 0, usa el a�o actual
+    if (anio == 0) { // Si es 0, usa el año actual
         time_t t = time(NULL);
         struct tm *tm = localtime(&t);
         anio = tm->tm_year + 1900;
@@ -108,7 +108,7 @@ void ReporteManager::reporteReproduccionesPorSuscriptor() {
     vector<string> nombres; // Nombres de suscriptores
     vector<int> ids; // IDs de suscriptores
     vector<int> contador; // Contador de reproducciones
-    unordered_map<int,int> indicePorSuscriptor; // Mapa para acceso r�pido por ID
+    unordered_map<int,int> indicePorSuscriptor; // Mapa para acceso rápido por ID
 
     for (int i = 0; i < totalSus; i++) { // Carga suscriptores activos
         Suscriptor s = archS.Leer(i);
@@ -124,7 +124,7 @@ void ReporteManager::reporteReproduccionesPorSuscriptor() {
     int totalAcc = a.ObtenerCantidadRegistros();
     for (int i = 0; i < totalAcc; i++) { // Cuenta reproducciones por suscriptor
         a.Leer(i);
-        if (a.getFechaHora().getAnio() != anio) continue; // Filtra por a�o
+        if (a.getFechaHora().getAnio() != anio) continue; // Filtra por año
         auto it = indicePorSuscriptor.find(a.getIdSuscriptor()); // Busca en mapa
         if (it != indicePorSuscriptor.end()) {
             contador[it->second]++; // Incrementa contador
@@ -137,13 +137,13 @@ void ReporteManager::reporteReproduccionesPorSuscriptor() {
 }
 
 /*
- * Genera un reporte de reproducciones por g�nero para un a�o espec�fico.
- * Utiliza mapas para indexar g�neros y canciones, evitando b�squedas lineales O(N�).
- * Par�metros: Solicita el a�o (0 para el a�o actual).
+ * Genera un reporte de reproducciones por género para un año específico.
+ * Utiliza mapas para indexar géneros y canciones, evitando búsquedas lineales O(N²).
+ * Parámetros: Solicita el año (0 para el año actual).
  */
 void ReporteManager::reporteReproduccionesPorGenero() {
     int anio = InputHelper::pedirEntero("Anio (0=actual): ");
-    if (anio == 0) { // Si es 0, usa el a�o actual
+    if (anio == 0) { // Si es 0, usa el año actual
         time_t t = time(NULL);
         struct tm *tm = localtime(&t);
         anio = tm->tm_year + 1900;
@@ -151,12 +151,12 @@ void ReporteManager::reporteReproduccionesPorGenero() {
 
     ArchivoGeneros archG;
     int totalGen = archG.ObtenerCantidadRegistros();
-    vector<int> ids; // IDs de g�neros
-    vector<string> nombres; // Nombres de g�neros
+    vector<int> ids; // IDs de géneros
+    vector<string> nombres; // Nombres de géneros
     vector<int> contador; // Contador de reproducciones
-    unordered_map<int,int> indicePorGenero; // Mapa para acceso r�pido
+    unordered_map<int,int> indicePorGenero; // Mapa para acceso rápido
 
-    for (int i = 0; i < totalGen; i++) { // Carga g�neros activos
+    for (int i = 0; i < totalGen; i++) { // Carga géneros activos
         Genero g = archG.Leer(i);
         if (g.getEstado()) {
             ids.push_back(g.getIdGeneros());
@@ -168,20 +168,20 @@ void ReporteManager::reporteReproduccionesPorGenero() {
 
     ArchivoCanciones archC;
     int totalCan = archC.ObtenerCantidadRegistros();
-    unordered_map<int,int> generoPorCancion; // Mapa canci�n -> g�nero
-    for (int i = 0; i < totalCan; i++) { // Mapea canciones a g�neros
+    unordered_map<int,int> generoPorCancion; // Mapa canción -> género
+    for (int i = 0; i < totalCan; i++) { // Mapea canciones a géneros
         Canciones c = archC.Leer(i);
         if (c.getEstado()) generoPorCancion[c.getIdCancion()] = c.getIdGenero();
     }
 
     Accesos a;
     int totalAcc = a.ObtenerCantidadRegistros();
-    for (int i = 0; i < totalAcc; i++) { // Cuenta reproducciones por g�nero
+    for (int i = 0; i < totalAcc; i++) { // Cuenta reproducciones por género
         a.Leer(i);
-        if (a.getFechaHora().getAnio() != anio) continue; // Filtra por a�o
-        auto it = generoPorCancion.find(a.getIdCancion()); // Busca g�nero de la canci�n
+        if (a.getFechaHora().getAnio() != anio) continue; // Filtra por año
+        auto it = generoPorCancion.find(a.getIdCancion()); // Busca género de la canción
         if (it != generoPorCancion.end()) {
-            auto idx = indicePorGenero.find(it->second); // Busca �ndice del g�nero
+            auto idx = indicePorGenero.find(it->second); // Busca índice del género
             if (idx != indicePorGenero.end()) contador[idx->second]++; // Incrementa
         }
     }

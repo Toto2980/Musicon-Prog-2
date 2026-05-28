@@ -24,7 +24,7 @@ Suscriptor::Suscriptor() {
 }
 
 /**
- * Destructor: No hay recursos din�micos que liberar.
+ * Destructor: No hay recursos dinámicos que liberar.
  */
 Suscriptor::~Suscriptor() { }
 
@@ -47,8 +47,8 @@ const char* Suscriptor::getEmail() { return _email; }
 Fecha Suscriptor::getFechaNacimiento() { return _fechaNacimiento; }
 
 /**
- * M�todo Cargar: Solicita apellido, DNI, email y fecha de nacimiento al usuario.
- * El nombre se maneja fuera (en l�gica de negocio), establece estado activo.
+ * Método Cargar: Solicita apellido, DNI, email y fecha de nacimiento al usuario.
+ * El nombre se maneja fuera (en lógica de negocio), establece estado activo.
  * Usa InputHelper para validaciones de rango en fecha.
  */
 void Suscriptor::Cargar() {
@@ -71,15 +71,15 @@ void Suscriptor::Cargar() {
     int a = InputHelper::pedirEnteroRango("Anio: ", 1900, 2025);
     _fechaNacimiento = Fecha(d, m, a);
 
-    setEstado(true); // M�todo heredado
+    setEstado(true); // Método heredado
 }
 
 /**
- * M�todo Mostrar: Imprime ID, nombre completo, DNI, email y fecha de nacimiento si activo.
+ * Método Mostrar: Imprime ID, nombre completo, DNI, email y fecha de nacimiento si activo.
  * Formato legible con separadores.
  */
 void Suscriptor::Mostrar() {
-    if (getEstado()) { // M�todo heredado
+    if (getEstado()) { // Método heredado
         cout << "ID: " << _idSuscriptor << " | Usuario: " << getNombre() << " " << _apellido << endl;
         cout << "DNI: " << _dni << " | Email: " << _email << endl;
         cout << "F. Nac: " << _fechaNacimiento.toString() << endl;

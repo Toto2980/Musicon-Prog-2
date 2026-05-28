@@ -1,29 +1,11 @@
 #include "../include/ArchivoArtistas.h"
-#include "InputHelper.h" // Necesario para la funci�n trim()
+#include "InputHelper.h" // Necesario para la función trim()
 #include <cstdio>
 #include <cstring>
 #include <iostream>
 #include <cctype>
 
 using namespace std;
-
-/**
- * Compara dos textos sin distinguir mayúsculas y minúsculas.
- */
-static bool sonIgualesSinMayusculas(const char* texto1, const char* texto2) {
-    if (texto1 == nullptr || texto2 == nullptr) return texto1 == texto2;
-
-    while (*texto1 && *texto2) {
-        if (std::tolower(static_cast<unsigned char>(*texto1)) !=
-            std::tolower(static_cast<unsigned char>(*texto2))) {
-            return false;
-        }
-        ++texto1;
-        ++texto2;
-    }
-
-    return *texto1 == *texto2;
-}
 
 ArchivoArtistas::ArchivoArtistas(string nombreArchivo) {
     _nombreArchivo = nombreArchivo;
@@ -108,7 +90,7 @@ int ArchivoArtistas::BuscarPosicionPorNombre(const char* nombre) {
     int pos = 0;
     while(fread(&aux, sizeof(Artista), 1, p)) {
         // getNombre() pertenece directamente a la clase Artista.
-        if(sonIgualesSinMayusculas(aux.getNombre(), nombre) && aux.getEstado()) {
+        if(InputHelper::sonIgualesSinMayusculas(aux.getNombre(), nombre) && aux.getEstado()) {
             fclose(p);
             return pos;
         }
@@ -140,7 +122,7 @@ Artista ArchivoArtistas::BuscarPorID(int id) {
 int ArchivoArtistas::BuscarOCrear(string nombreArtista) {
     // 1. Limpiar el nombre (quitar espacios extra)
     string nombreLimpio = InputHelper::trim(nombreArtista);
-    if (nombreLimpio.empty()) return 0; // Validaci�n b�sica
+    if (nombreLimpio.empty()) return 0; // Validación básica
 
     // 2. Buscar si ya existe
     int idExistente = BuscarIDPorNombre(nombreLimpio.c_str());
