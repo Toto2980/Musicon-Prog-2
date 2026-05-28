@@ -9,6 +9,7 @@
 #define CANCIONES_H
 
 #include <string>
+ #include "EntidadPadre.h"
 
 /**
  * Este archivo define la clase Canciones, que representa una canción en el sistema Musicon.
@@ -16,9 +17,8 @@
  */
 
 /** Representa una canción en el sistema Musicon con atributos como nombre, álbum, género, duración y estado. */
-class Canciones {
+class Canciones : public EntidadPadre {
     private:
-        int _idCancion; // Identificador único de la canción
         char _nombre[100]; // Nombre o título de la canción
         int _idAlbum; // ID del álbum al que pertenece
         int _idGenero; // ID del género musical

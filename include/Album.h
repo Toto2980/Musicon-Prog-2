@@ -5,10 +5,11 @@
 #ifndef ALBUM_H
 #define ALBUM_H
 
+#include "EntidadPadre.h"
+
 /** Clase que representa un álbum musical con atributos como ID, título, artista, año de publicación y estado. Incluye métodos para persistencia en archivo binario. */
-class Album {
+class Album : public EntidadPadre {
     private:
-        int _idAlbum; // Identificador único del álbum
         char _titulo[100]; // Título del álbum
         int _idArtista; // ID del artista (clave foránea)
         int _anioPublicacion; // Año de lanzamiento

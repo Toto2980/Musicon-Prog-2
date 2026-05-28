@@ -17,6 +17,10 @@ public:
     /** Pausa la ejecución esperando entrada del usuario. */
     static void pausa();
 
+    /** Compara dos cadenas sin distinguir mayúsculas/minúsculas. */
+    static bool sonIgualesSinMayusculas(const char* texto1, const char* texto2);
+    static bool sonIgualesSinMayusculas(const std::string& texto1, const std::string& texto2);
+
     // --- NUEVAS UTILIDADES PARA IMPORTACIÓN ---
     // Quita espacios al principio y final
     /** Quita espacios al principio y final de una cadena. Parámetros: str - La cadena original. Retorna: La cadena sin espacios. */

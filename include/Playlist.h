@@ -3,6 +3,7 @@
 
 
 #include "Fecha.h" // Necesario para la fecha de creación
+#include "EntidadPadre.h"
 
 /**
  * Este archivo define la clase Playlist, que representa listas de canciones creadas por usuarios.
@@ -10,9 +11,8 @@
  */
 
 /** Representa una playlist de canciones creada por un suscriptor. */
-class Playlist {
+class Playlist : public EntidadPadre {
     private:
-        int _idPlaylist; /**< Identificador único de la playlist */
         char _nombre[50]; /**< Nombre de la playlist */
         int _idSuscriptorCreador; /**< ID del suscriptor que la creó */
         Fecha _fechaCreacion; /**< Fecha de creación */

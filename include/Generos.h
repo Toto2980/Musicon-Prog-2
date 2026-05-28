@@ -7,10 +7,11 @@
 #ifndef GENEROS_H_INCLUDED
 #define GENEROS_H_INCLUDED
 
+#include "EntidadPadre.h"
+
 /** Representa un género musical con atributos como ID, nombre y estado. Incluye métodos para persistencia en archivo binario. */
-class Genero {
+class Genero : public EntidadPadre {
     private:
-        int _idGeneros; // Identificador único del género
         char _nombre[50]; // Nombre del género musical
         bool _estado; // Estado activo/inactivo
 
@@ -40,7 +41,7 @@ class Genero {
         /** Obtiene el ID del género.
          * Retorna: ID único.
          */
-        int getIdGeneros();
+        int getIdGeneros() const;
 
         /** Obtiene el nombre del género.
          * Retorna: Puntero a la cadena del nombre.
