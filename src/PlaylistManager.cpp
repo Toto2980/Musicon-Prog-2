@@ -5,10 +5,10 @@
  */
 
 #include "../include/PlaylistManager.h"
-#include "InputHelper.h"
+#include "../include/InputHelper.h"
 #include "../include/ArchivoCanciones.h"
-#include "ArchivoSuscriptores.h"
-#include "Canciones.h"
+#include "../include/ArchivoSuscriptores.h"
+#include "../include/Canciones.h"
 #include <iostream>
 #include <cstring>
 #include <ctime>

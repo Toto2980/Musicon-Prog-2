@@ -5,18 +5,18 @@
  * No contiene lógica de negocio directa, solo navegación de menús y llamadas a los managers.
  */
 
-#include "musicon.h"
-#include "InputHelper.h"
-#include "ArchivoCanciones.h"
-#include "ArchivoSuscriptores.h"
-#include "CancionManager.h"
-#include "SuscriptorManager.h"
-#include "PlaylistManager.h"
-#include "ArtistaManager.h"
-#include "GeneroManager.h"
-#include "ReporteManager.h"
-#include "Canciones.h"
-#include "Accesos.h"
+#include "../include/musicon.h"
+#include "../include/InputHelper.h"
+#include "../include/ArchivoCanciones.h"
+#include "../include/ArchivoSuscriptores.h"
+#include "../include/CancionManager.h"
+#include "../include/SuscriptorManager.h"
+#include "../include/PlaylistManager.h"
+#include "../include/ArtistaManager.h"
+#include "../include/GeneroManager.h"
+#include "../include/ReporteManager.h"
+#include "../include/Canciones.h"
+#include "../include/Accesos.h"
 #include <iostream>
 #include <cstring>
 #include <cstdio>
@@ -83,9 +83,10 @@ void musicon::login() {
     system("cls"); // Limpia la pantalla
     cout << "--- LOGIN ---" << endl;
     InputHelper::pedirCadena("Usuario: ", nombreUser, 50); // Pide el nombre de usuario al usuario
+    std::string nombreBuscado = InputHelper::trim(nombreUser);
 
     ArchivoSuscriptores arch; // Instancia del archivo de suscriptores para buscar
-    int pos = arch.BuscarPosicionPorNombre(nombreUser); // Busca la posición del suscriptor por nombre
+    int pos = arch.BuscarPosicionPorNombre(nombreBuscado.c_str()); // Busca la posición del suscriptor por nombre
     if (pos != -1) { // Si se encontró el usuario
         Suscriptor sus = arch.Leer(pos); // Lee los datos del suscriptor
         _idUsuarioLogueado = sus.getIdSuscriptor(); // Establece el ID del usuario logueado

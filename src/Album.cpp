@@ -4,7 +4,7 @@
  */
 
 #include "../include/Album.h"
-#include "InputHelper.h"
+#include "../include/InputHelper.h"
 #include <cstring>
 #include <iostream>
 #include <cstdio>

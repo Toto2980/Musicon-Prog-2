@@ -1,5 +1,5 @@
 #include "../include/ArchivoCanciones.h"
-#include "InputHelper.h"
+#include "../include/InputHelper.h"
 #include <cstdio>
 #include <cstring>
 #include <iostream>

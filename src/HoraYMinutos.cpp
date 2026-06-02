@@ -1,5 +1,5 @@
 #include <iostream>
-#include "HoraYMinutos.h"
+#include "../include/HoraYMinutos.h"
 #include <string>
 
 using namespace std;

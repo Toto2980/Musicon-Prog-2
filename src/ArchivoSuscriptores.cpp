@@ -1,5 +1,5 @@
 #include "../include/ArchivoSuscriptores.h"
-#include "InputHelper.h"
+#include "../include/InputHelper.h"
 #include <cstdio>
 #include <cstring>
 #include <cctype>
@@ -107,11 +107,13 @@ int ArchivoSuscriptores::BuscarPosicionPorNombre(const char* nombre) {
     if (p == NULL) return -1;
     Suscriptor aux;
     int pos = 0;
+    std::string nombreBuscado = InputHelper::trim(nombre);
     while(fread(&aux, sizeof(Suscriptor), 1, p)) {
         // DEBUG: Descomenta esto para ver qué lee
-        // cout << "Leido: " << aux.getNombre() << " vs Buscado: " << nombre << endl;
+        // cout << "Leido: " << aux.getNombre() << " vs Buscado: " << nombreBuscado << endl;
 
-        if(InputHelper::sonIgualesSinMayusculas(aux.getNombre(), nombre) && aux.getEstado()) {
+        std::string nombreArchivo = InputHelper::trim(aux.getNombre());
+        if(InputHelper::sonIgualesSinMayusculas(nombreArchivo, nombreBuscado) && aux.getEstado()) {
             fclose(p);
             return pos;
         }

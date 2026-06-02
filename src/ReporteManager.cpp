@@ -5,7 +5,7 @@
  */
 
 #include "../include/ReporteManager.h"
-#include "InputHelper.h"
+#include "../include/InputHelper.h"
 #include <iostream>
 #include <iomanip>
 #include <cstring>

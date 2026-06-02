@@ -1,5 +1,5 @@
 #include "../include/ArchivoAlbum.h"
-#include "InputHelper.h"
+#include "../include/InputHelper.h"
 #include <cstdio>
 #include <cstring>
 #include <iostream>
@@ -7,7 +7,6 @@
 
 using namespace std;
 
-// ... (Métodos anteriores se mantienen igual) ...
 
 ArchivoAlbum::ArchivoAlbum(string nombreArchivo) { _nombreArchivo = nombreArchivo; }
 

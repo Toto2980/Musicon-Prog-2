@@ -1,4 +1,4 @@
-#include "InputHelper.h"
+#include "../include/InputHelper.h"
 #include <iostream>
 #include <limits>
 #include <cstdio>

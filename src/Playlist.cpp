@@ -1,5 +1,5 @@
-#include "Playlist.h"
-#include "InputHelper.h" // Usamos tu helper para inputs seguros
+#include "../include/Playlist.h"
+#include "../include/InputHelper.h" // Usamos tu helper para inputs seguros
 #include <iostream>
 #include <cstring>
 #include <cstdio>

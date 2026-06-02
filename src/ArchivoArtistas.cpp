@@ -1,5 +1,5 @@
 #include "../include/ArchivoArtistas.h"
-#include "InputHelper.h" // Necesario para la función trim()
+#include "../include/InputHelper.h" // Necesario para la función trim()
 #include <cstdio>
 #include <cstring>
 #include <iostream>

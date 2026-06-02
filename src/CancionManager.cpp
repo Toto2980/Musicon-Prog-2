@@ -6,7 +6,7 @@
 
 #include "../include/CancionManager.h"
 #include "../include/Accesos.h"
-#include "InputHelper.h"
+#include "../include/InputHelper.h"
 #include <iostream>
 #include <cstring>
 #include <iomanip>

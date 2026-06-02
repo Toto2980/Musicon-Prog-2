@@ -4,7 +4,7 @@
  */
 
 #include "../include/SuscriptorManager.h"
-#include "InputHelper.h"
+#include "../include/InputHelper.h"
 #include <iostream>
 #include <cstring>
 
@@ -17,6 +17,9 @@ void SuscriptorManager::Agregar() {
     Suscriptor nuevo;
     while (true) {
         InputHelper::pedirCadena("Usuario deseado: ", nombreUser, 50);
+        std::string nombreBuscado = InputHelper::trim(nombreUser);
+        strncpy(nombreUser, nombreBuscado.c_str(), sizeof(nombreUser) - 1);
+        nombreUser[sizeof(nombreUser) - 1] = '\0';
         if (_archivoSuscriptores.BuscarPosicionPorNombre(nombreUser) != -1) {
             cout << "[!] Ese nombre ya existe." << endl;
         } else { break; }

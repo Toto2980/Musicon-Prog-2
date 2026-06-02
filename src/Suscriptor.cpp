@@ -3,8 +3,8 @@
  * Maneja inicialización, validaciones y uso de InputHelper para entradas seguras.
  */
 
-#include "Suscriptor.h"
-#include "InputHelper.h"
+#include "../include/Suscriptor.h"
+#include "../include/InputHelper.h"
 #include <iostream>
 #include <cstring>
 

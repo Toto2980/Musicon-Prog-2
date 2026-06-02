@@ -3,8 +3,8 @@
  * Incluye constructor con parámetros, setters/getters, métodos de carga/muestra y persistencia en archivo binario.
  */
 
-#include "Generos.h"
-#include "InputHelper.h"
+#include "../include/Generos.h"
+#include "../include/InputHelper.h"
 #include <iostream>
 #include <cstring>
 #include <cstdio>

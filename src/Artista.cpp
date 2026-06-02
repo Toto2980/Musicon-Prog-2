@@ -4,7 +4,7 @@
  */
 
 #include "../include/Artista.h"
-#include "InputHelper.h"
+#include "../include/InputHelper.h"
 #include <iostream>
 #include <cstring>
 

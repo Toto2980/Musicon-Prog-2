@@ -5,7 +5,7 @@
 
 #include "../include/GeneroManager.h"
 #include "../include/ArchivoGeneros.h"
-#include "InputHelper.h"
+#include "../include/InputHelper.h"
 #include <iostream>
 #include <cstring>
 

@@ -1,5 +1,5 @@
 #include "../include/ArchivoGeneros.h"
-#include "InputHelper.h" // Necesario para trim
+#include "../include/InputHelper.h" // Necesario para trim
 #include <cstdio>
 #include <cstring>
 #include <iostream> // Para debug cout
@@ -7,7 +7,6 @@
 
 using namespace std;
 
-// ... (Métodos anteriores Guardar, Leer, etc. se mantienen igual) ...
 
 ArchivoGeneros::ArchivoGeneros(string nombreArchivo) { _nombreArchivo = nombreArchivo; }
 

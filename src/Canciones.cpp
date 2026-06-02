@@ -6,7 +6,7 @@
 #include "../include/Canciones.h"
 #include <iostream>
 #include <cstring>
-#include "InputHelper.h" // Aprovechamos tu InputHelper
+#include "../include/InputHelper.h" // Aprovechamos tu InputHelper
 
 using namespace std;
 
