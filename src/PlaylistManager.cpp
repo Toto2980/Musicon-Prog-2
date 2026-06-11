@@ -102,19 +102,109 @@ void PlaylistManager::MostrarMisPlaylists(int idUsuario) {
  * Parámetros: idUsuario - ID del usuario creador de la playlist.
  */
 void PlaylistManager::CrearPlaylist(int idUsuario) {
-    Playlist p;
-    int id = p.GenerarIDNuevo(); // Genera ID único
-    p.setIdPlaylist(id);
-    p.setIdSuscriptorCreador(idUsuario);
-    p.Cargar(); // Solicita datos al usuario
 
-    time_t now = time(0); // Obtiene fecha/hora actual
+    ArchivoSuscriptores archSus;
+
+    int posSus = archSus.BuscarPosicion(idUsuario);
+
+    if(posSus != -1){
+
+        Suscriptor sus = archSus.Leer(posSus);
+
+        if(sus.getTipoSuscriptor() == 1){
+
+            Playlist aux;
+
+            int totalPlaylists =
+                aux.ObtenerCantidadRegistros();
+
+            int cantidadUsuario = 0;
+
+            for(int i = 0; i < totalPlaylists; i++){
+
+                if(!aux.Leer(i)) continue;
+
+                if(aux.getEstado() &&
+                   aux.getIdSuscriptorCreador() == idUsuario){
+
+                    cantidadUsuario++;
+                }
+            }
+
+            if(cantidadUsuario >= 3){
+
+                cout << endl;
+                cout << "==================================" << endl;
+                cout << "PLAN GRATUITO" << endl;
+                cout << "==================================" << endl;
+                cout << endl;
+
+                cout << "Has alcanzado el limite de 3 playlists."
+                     << endl << endl;
+
+                cout << "1. Suscribirme al plan PAGO" << endl;
+                cout << "2. Omitir" << endl;
+
+                int op =
+                InputHelper::pedirEnteroRango(
+                    "Opcion: ",
+                    1,
+                    2
+                );
+
+                if(op == 1){
+
+                    sus.setTipoSuscriptor(2);
+
+                    archSus.Modificar(
+                        posSus,
+                        sus
+                    );
+
+                    cout << endl;
+                    cout << "Ahora sos usuario PAGO."
+                         << endl << endl;
+                }
+                else{
+
+                    cout << endl;
+                    cout << "Operacion cancelada."
+                         << endl;
+
+                    return;
+                }
+            }
+        }
+    }
+
+    Playlist p;
+
+    int id = p.GenerarIDNuevo();
+
+    p.setIdPlaylist(id);
+
+    p.setIdSuscriptorCreador(idUsuario);
+
+    p.Cargar();
+
+    time_t now = time(0);
+
     tm *ltm = localtime(&now);
-    p.setFechaCreacion(Fecha(ltm->tm_mday, 1 + ltm->tm_mon, 1900 + ltm->tm_year)); // Fecha de creación
+
+    p.setFechaCreacion(
+        Fecha(
+            ltm->tm_mday,
+            1 + ltm->tm_mon,
+            1900 + ltm->tm_year
+        )
+    );
+
     p.setEstado(true);
 
-    if (p.Guardar()) cout << "   [OK] Playlist creada." << endl; // Guarda la playlist
-    else cout << "   [ERROR] No se pudo guardar la playlist." << endl;
+    if (p.Guardar())
+        cout << "   [OK] Playlist creada." << endl;
+    else
+        cout << "   [ERROR] No se pudo guardar la playlist." << endl;
 }
 
 /*

@@ -79,28 +79,95 @@ void musicon::menuBienvenida() {
  * Pide el nombre de usuario, busca en el archivo de suscriptores y, si existe, establece el usuario como logueado.
  */
 void musicon::login() {
-    char nombreUser[50]; // Variable para almacenar el nombre del usuario ingresado
-    system("cls"); // Limpia la pantalla
+    char nombreUser[50];
+
+    system("cls");
     cout << "--- LOGIN ---" << endl;
-    InputHelper::pedirCadena("Usuario: ", nombreUser, 50); // Pide el nombre de usuario al usuario
-    std::string nombreBuscado = InputHelper::trim(nombreUser);
 
-    ArchivoSuscriptores arch; // Instancia del archivo de suscriptores para buscar
-    int pos = arch.BuscarPosicionPorNombre(nombreBuscado.c_str()); // Busca la posición del suscriptor por nombre
-    if (pos != -1) { // Si se encontró el usuario
-        Suscriptor sus = arch.Leer(pos); // Lee los datos del suscriptor
-        _idUsuarioLogueado = sus.getIdSuscriptor(); // Establece el ID del usuario logueado
-        strcpy(_nombreUsuarioLogueado, sus.getNombre()); // Establece el nombre del usuario logueado
+    InputHelper::pedirCadena(
+        "Usuario: ",
+        nombreUser,
+        50
+    );
 
-        cout << "Bienvenido de nuevo, " << _nombreUsuarioLogueado << "!" << endl;
-        InputHelper::pausa(); // Pausa para que el usuario lea el mensaje
-        mostrarMenuPrincipal(); // Muestra el menú principal para usuarios logueados
+    std::string nombreBuscado =
+        InputHelper::trim(nombreUser);
 
-        _idUsuarioLogueado = 0; // Resetea el ID al salir
-        strcpy(_nombreUsuarioLogueado, "Visitante"); // Resetea el nombre
-    } else {
-        cout << "Usuario no encontrado. Registrate primero." << endl; // Mensaje de error
-        InputHelper::pausa(); // Pausa
+    // ==========================
+    // ADMIN FIJO
+    // ==========================
+
+    if(nombreBuscado == "admin"){
+
+        _idUsuarioLogueado = -1;
+
+        strcpy(
+            _nombreUsuarioLogueado,
+            "ADMIN"
+        );
+
+        cout << endl;
+        cout << "Bienvenido Administrador."
+             << endl;
+
+        InputHelper::pausa();
+
+        mostrarMenuPrincipal();
+
+        _idUsuarioLogueado = 0;
+
+        strcpy(
+            _nombreUsuarioLogueado,
+            "Visitante"
+        );
+
+        return;
+    }
+
+    ArchivoSuscriptores arch;
+
+    int pos =
+        arch.BuscarPosicionPorNombre(
+            nombreBuscado.c_str()
+        );
+
+    if (pos != -1) {
+
+        Suscriptor sus =
+            arch.Leer(pos);
+
+        _idUsuarioLogueado =
+            sus.getIdSuscriptor();
+
+        strcpy(
+            _nombreUsuarioLogueado,
+            sus.getNombre()
+        );
+
+        cout
+            << "Bienvenido de nuevo, "
+            << _nombreUsuarioLogueado
+            << "!"
+            << endl;
+
+        InputHelper::pausa();
+
+        mostrarMenuPrincipal();
+
+        _idUsuarioLogueado = 0;
+
+        strcpy(
+            _nombreUsuarioLogueado,
+            "Visitante"
+        );
+    }
+    else {
+
+        cout
+            << "Usuario no encontrado. Registrate primero."
+            << endl;
+
+        InputHelper::pausa();
     }
 }
 
@@ -109,26 +176,128 @@ void musicon::login() {
  * Ofrece opciones para gestionar cargas, usuarios, informes y configuración.
  */
 void musicon::mostrarMenuPrincipal() {
-    int opcion = -1;
-    do {
-        system("cls"); // Limpia la pantalla
-        cout << "MUSICON | User: " << _nombreUsuarioLogueado << " (ID: " << _idUsuarioLogueado << ")" << endl; // Muestra el usuario actual
-        cout << "1. GESTION DE CARGAS (Canciones/Listas)" << endl;
-        cout << "2. GESTION DE USUARIOS (Admin)" << endl;
-        cout << "3. INFORMES Y ESTADISTICAS" << endl;
-        cout << "4. CONFIGURACION (Artistas/Generos/Backup)" << endl;
-        cout << "0. CERRAR SESION" << endl;
 
-        opcion = InputHelper::pedirEnteroRango("Opcion: ", 0, 4); // Pide opción entre 0 y 4
+    // ==========================
+    // ADMIN
+    // ==========================
 
-        switch (opcion) {
-            case 1: menuCargas(); break; // Menú de cargas
-            case 2: menuSuscriptores(); break; // Menú de suscriptores
-            case 3: mostrarMenuReportes(); break; // Menú de reportes
-            case 4: menuConfiguracion(); break; // Menú de configuración
-            case 0: cout << "Cerrando sesion..." << endl; break; // Mensaje de cierre
+    if(_idUsuarioLogueado == -1){
+
+        int opcion;
+
+        do{
+
+            system("cls");
+
+            cout
+                << "MUSICON | ADMIN"
+                << endl;
+
+            cout
+                << "1. GESTION DE CARGAS"
+                << endl;
+
+            cout
+                << "2. GESTION DE USUARIOS"
+                << endl;
+
+            cout
+                << "3. INFORMES"
+                << endl;
+
+            cout
+                << "4. CONFIGURACION"
+                << endl;
+
+            cout
+                << "0. CERRAR SESION"
+                << endl;
+
+            opcion =
+                InputHelper::pedirEnteroRango(
+                    "Opcion: ",
+                    0,
+                    4
+                );
+
+            switch(opcion){
+
+            case 1:
+                menuCargas();
+                break;
+
+            case 2:
+                menuSuscriptores();
+                break;
+
+            case 3:
+                mostrarMenuReportes();
+                break;
+
+            case 4:
+                menuConfiguracion();
+                break;
+            }
+
+        }while(opcion != 0);
+
+        return;
+    }
+
+    // ==========================
+    // USUARIO GRATIS / PAGO
+    // ==========================
+
+    int opcion;
+
+    do{
+
+        system("cls");
+
+        cout
+            << "MUSICON | "
+            << _nombreUsuarioLogueado
+            << endl;
+
+        cout
+            << "1. CANCIONES"
+            << endl;
+
+        cout
+            << "2. PLAYLISTS"
+            << endl;
+
+        cout
+            << "3. ESCUCHAR CANCION"
+            << endl;
+
+        cout
+            << "0. CERRAR SESION"
+            << endl;
+
+        opcion =
+            InputHelper::pedirEnteroRango(
+                "Opcion: ",
+                0,
+                3
+            );
+
+        switch(opcion){
+
+        case 1:
+            menuCanciones();
+            break;
+
+        case 2:
+            menuPlaylists();
+            break;
+
+        case 3:
+            registrarAcceso();
+            break;
         }
-    } while (opcion != 0); // Repite hasta cerrar sesión
+
+    }while(opcion != 0);
 }
 
 void musicon::menuCargas() {
@@ -206,27 +375,63 @@ void musicon::menuPlaylists() {
  * Muestra el menú de gestión de suscriptores, delegando a SuscriptorManager.
  */
 void musicon::menuSuscriptores() {
-    SuscriptorManager manager; // Instancia del manager de suscriptores
+
+    SuscriptorManager manager;
+
     int opcion;
+
     do {
-        system("cls"); // Limpia la pantalla
+
+        system("cls");
+
         cout << "--- GESTION DE SUSCRIPTORES ---" << endl;
+
         cout << "1. Registrar Nuevo Usuario" << endl;
         cout << "2. Modificar Usuario" << endl;
-        cout << "3. Eliminar Usuario" << endl;
-        cout << "4. Listar Todos" << endl;
+        cout << "3. Dar de Baja Usuario" << endl;
+        cout << "4. Listar Usuarios Activos" << endl;
+        cout << "5. Listar Usuarios Inactivos" << endl;
+        cout << "6. Listar Todos" << endl;
         cout << "0. Volver" << endl;
 
-        opcion = InputHelper::pedirEnteroRango("Opcion: ", 0, 4); // Pide opción entre 0 y 4
+        opcion =
+        InputHelper::pedirEnteroRango(
+            "Opcion: ",
+            0,
+            6
+        );
 
         switch(opcion) {
-            case 1: manager.Agregar(); break; // Agregar suscriptor
-            case 2: manager.Modificar(); break; // Modificar suscriptor
-            case 3: manager.Eliminar(); break; // Eliminar suscriptor
-            case 4: manager.Listar(); break; // Listar suscriptores
+
+        case 1:
+            manager.Agregar();
+            break;
+
+        case 2:
+            manager.Modificar();
+            break;
+
+        case 3:
+            manager.Eliminar();
+            break;
+
+        case 4:
+            manager.ListarActivos();
+            break;
+
+        case 5:
+            manager.ListarInactivos();
+            break;
+
+        case 6:
+            manager.ListarTodos();
+            break;
         }
-        if (opcion != 0) InputHelper::pausa(); // Pausa si no es volver
-    } while(opcion != 0); // Repite hasta volver
+
+        if(opcion != 0)
+            InputHelper::pausa();
+
+    } while(opcion != 0);
 }
 
 /*
