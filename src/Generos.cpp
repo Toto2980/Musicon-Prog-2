@@ -3,38 +3,21 @@
  * Incluye constructor con parámetros, setters/getters, métodos de carga/muestra y persistencia en archivo binario.
  */
 
-#include "Generos.h"
+#include "../include/Generos.h"
+#include "../include/ArchivoBinario.h"
+#include "../include/Constantes.h"
+#include "../include/Texto.h"
 #include <iostream>
 #include <cstring>
-#include <cstdio>
-#include <cctype>
 
 using namespace std;
 
 /**
- * Compara dos textos sin distinguir mayúsculas y minúsculas.
- */
-static bool sonIgualesSinMayusculas(const char* texto1, const char* texto2) {
-    if (texto1 == nullptr || texto2 == nullptr) return texto1 == texto2;
-
-    while (*texto1 && *texto2) {
-        if (std::tolower(static_cast<unsigned char>(*texto1)) !=
-            std::tolower(static_cast<unsigned char>(*texto2))) {
-            return false;
-        }
-        ++texto1;
-        ++texto2;
-    }
-
-    return *texto1 == *texto2;
-}
-
-/**
- * Constructor con par�metros opcionales: Inicializa ID, nombre y estado.
- * Par�metros: id - ID �nico, nombre - Nombre del g�nero, estado - Activo/inactivo.
+ * Constructor con parámetros opcionales: Inicializa ID, nombre y estado.
+ * Parámetros: id - ID único, nombre - Nombre del género, estado - Activo/inactivo.
  */
 Genero::Genero(int id, const char* nombre, bool estado) {
-    _idGeneros = id;
+    setId(id);
     setNombre(nombre);
     _estado = estado;
 }
@@ -42,126 +25,97 @@ Genero::Genero(int id, const char* nombre, bool estado) {
 /**
  * Setters: Establecen los valores de los atributos con validaciones.
  */
-void Genero::setIdGeneros(int id) { _idGeneros = id; }
+void Genero::setIdGeneros(int id) { setId(id); }
 void Genero::setNombre(const char* n) { strncpy(_nombre, n, 49); _nombre[49] = '\0'; }
 void Genero::setEstado(bool estado) { _estado = estado; }
 
 /**
  * Getters: Devuelven los valores de los atributos.
  */
-int Genero::getIdGeneros() { return _idGeneros; }
+int Genero::getIdGeneros() const { return getId(); }
 const char* Genero::getNombre() { return _nombre; }
 bool Genero::getEstado() { return _estado; }
 
 /**
- * M�todo Cargar: Solicita al usuario ID y nombre del g�nero.
+ * Método Cargar: Solicita al usuario ID y nombre del género.
  * Establece estado activo.
  */
 void Genero::Cargar() {
-    cout << "ID de genero: "; cin >> _idGeneros;
+    cout << "ID de genero: "; cin >> _id;
     cin.ignore();
     cout << "Nombre del genero: "; cin.getline(_nombre, 50);
     _estado = true;
 }
 
 /**
- * M�todo Mostrar: Imprime ID, nombre y estado del g�nero (const para no modificar).
+ * Método Mostrar: Imprime ID, nombre y estado del género (const para no modificar).
  */
 void Genero::Mostrar() const {
-    cout << "ID: " << _idGeneros << " | " << _nombre << " (" << (_estado ? "Activo" : "Inactivo") << ")" << endl;
+    cout << "ID: " << getIdGeneros() << " | " << _nombre << " (" << (_estado ? "Activo" : "Inactivo") << ")" << endl;
 }
 
 // --- PERSISTENCIA ---
 
 /**
- * Guardar: Agrega el g�nero al final del archivo binario "generos.dat".
- * Retorno: true si se escribi� correctamente, false si error.
+ * Guardar: Agrega el género al final del archivo binario "generos.dat".
+ * Retorno: true si se escribió correctamente, false si error.
  */
 bool Genero::Guardar() {
-    FILE *p = fopen("generos.dat", "ab");
-    if (p == NULL) return false;
-    bool ok = fwrite(this, sizeof(Genero), 1, p);
-    fclose(p);
-    return ok;
+    return ArchivoBinario<Genero>(cfg::archivos::GENEROS).agregar(*this);
 }
 
 /**
- * Leer: Lee un g�nero desde la posici�n especificada en el archivo.
- * Par�metros: pos - Posici�n (basado en 0).
- * Retorno: true si se ley� correctamente.
+ * Leer: Lee un género desde la posición especificada en el archivo.
+ * Parámetros: pos - Posición (basado en 0).
+ * Retorno: true si se leyó correctamente.
  */
 bool Genero::Leer(int pos) {
-    FILE *p = fopen("generos.dat", "rb");
-    if (p == NULL) return false;
-    fseek(p, pos * sizeof(Genero), SEEK_SET);
-    bool ok = fread(this, sizeof(Genero), 1, p);
-    fclose(p);
-    return ok;
+    return ArchivoBinario<Genero>(cfg::archivos::GENEROS).leer(pos, *this);
 }
 
 /**
- * Modificar: Sobrescribe el g�nero en la posici�n especificada.
- * Par�metros: pos - Posici�n a modificar.
- * Retorno: true si se modific� correctamente.
+ * Modificar: Sobrescribe el género en la posición especificada.
+ * Parámetros: pos - Posición a modificar.
+ * Retorno: true si se modificó correctamente.
  */
 bool Genero::Modificar(int pos) {
-    FILE *p = fopen("generos.dat", "rb+");
-    if (p == NULL) return false;
-    fseek(p, pos * sizeof(Genero), SEEK_SET);
-    bool ok = fwrite(this, sizeof(Genero), 1, p);
-    fclose(p);
-    return ok;
+    return ArchivoBinario<Genero>(cfg::archivos::GENEROS).escribir(pos, *this);
 }
 
 /*
- * ObtenerCantidadRegistros: Calcula el n�mero de g�neros en el archivo.
+ * ObtenerCantidadRegistros: Calcula el número de géneros en el archivo.
  * Retorno: Cantidad de registros.
  */
 int Genero::ObtenerCantidadRegistros() {
-    FILE *p = fopen("generos.dat", "rb");
-    if (p == NULL) return 0;
-    fseek(p, 0, SEEK_END);
-    int cant = ftell(p) / sizeof(Genero);
-    fclose(p);
-    return cant;
+    return ArchivoBinario<Genero>(cfg::archivos::GENEROS).contar();
 }
 
 /*
- * BuscarIDPorNombre: Busca el ID de un g�nero por nombre (insensible a may�sculas).
- * Par�metros: nombre - Nombre a buscar.
+ * BuscarIDPorNombre: Busca el ID de un género por nombre (insensible a mayúsculas).
+ * Parámetros: nombre - Nombre a buscar.
  * Retorno: ID si encontrado y activo, -1 si no.
  */
 int Genero::BuscarIDPorNombre(const char* nombre) {
-    FILE *p = fopen("generos.dat", "rb");
-    if (p == NULL) return -1;
-    Genero aux;
-    while(fread(&aux, sizeof(Genero), 1, p)) {
-        if(sonIgualesSinMayusculas(aux.getNombre(), nombre) && aux.getEstado()) {
-            fclose(p);
-            return aux.getIdGeneros();
+    std::vector<Genero> todos = ArchivoBinario<Genero>(cfg::archivos::GENEROS).leerTodos();
+    for (size_t i = 0; i < todos.size(); ++i) {
+        if (Texto::igualesSinMayusculas(todos[i].getNombre(), nombre) && todos[i].getEstado()) {
+            return todos[i].getIdGeneros();
         }
     }
-    fclose(p);
     return -1;
 }
 
 /*
- * BuscarPosicionPorID: Busca la posici�n de un g�nero por su ID.
- * Par�metros: id - ID a buscar.
- * Retorno: Posici�n si encontrado y activo, -1 si no.
+ * BuscarPosicionPorID: Busca la posición de un género por su ID.
+ * Parámetros: id - ID a buscar.
+ * Retorno: Posición si encontrado y activo, -1 si no.
  */
 int Genero::BuscarPosicionPorID(int id) {
-    FILE *p = fopen("generos.dat", "rb");
-    if (p == NULL) return -1;
-    Genero aux;
-    int pos = 0;
-    while(fread(&aux, sizeof(Genero), 1, p)) {
-        if(aux.getIdGeneros() == id && aux.getEstado()) {
-            fclose(p);
-            return pos;
+    std::vector<Genero> todos = ArchivoBinario<Genero>(cfg::archivos::GENEROS).leerTodos();
+    for (size_t pos = 0; pos < todos.size(); ++pos) {
+        if (todos[pos].getIdGeneros() == id && todos[pos].getEstado()) {
+            return static_cast<int>(pos);
         }
-        pos++;
     }
-    fclose(p);
     return -1;
 }

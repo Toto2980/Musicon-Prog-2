@@ -1,29 +1,12 @@
-#include "Playlist.h"
-#include "InputHelper.h" // Usamos tu helper para inputs seguros
+#include "../include/Playlist.h"
+#include "../include/InputHelper.h" // Usamos tu helper para inputs seguros
+#include "../include/ArchivoBinario.h"
+#include "../include/Constantes.h"
+#include "../include/Texto.h"
 #include <iostream>
 #include <cstring>
-#include <cstdio>
-#include <cctype>
 
 using namespace std;
-
-/**
- * Compara dos textos sin distinguir mayúsculas y minúsculas.
- */
-static bool sonIgualesSinMayusculas(const char* texto1, const char* texto2) {
-    if (texto1 == nullptr || texto2 == nullptr) return texto1 == texto2;
-
-    while (*texto1 && *texto2) {
-        if (std::tolower(static_cast<unsigned char>(*texto1)) !=
-            std::tolower(static_cast<unsigned char>(*texto2))) {
-            return false;
-        }
-        ++texto1;
-        ++texto2;
-    }
-
-    return *texto1 == *texto2;
-}
 
 /**
  * Este archivo implementa la clase Playlist, con métodos para crear, guardar y buscar playlists.
@@ -34,7 +17,7 @@ static bool sonIgualesSinMayusculas(const char* texto1, const char* texto2) {
  * Prepara una nueva lista de canciones vacía con valores iniciales.
  */
 Playlist::Playlist() {
-    _idPlaylist = 0;
+    setId(0);
     _nombre[0] = '\0';
     _idSuscriptorCreador = 0;
     // La fecha se inicializa por defecto en su propio constructor (0/0/0)
@@ -42,15 +25,11 @@ Playlist::Playlist() {
 }
 
 /**
- * Destructor.
- */
-Playlist::~Playlist() { }
 
-/**
  * Asigna el número único que identifica esta lista.
  * Parámetros: id - El número identificador.
  */
-void Playlist::setIdPlaylist(int id) { _idPlaylist = id; }
+void Playlist::setIdPlaylist(int id) { setId(id); }
 
 /**
  * Asigna el título que el usuario le dio a la lista.
@@ -82,7 +61,7 @@ void Playlist::setEstado(bool estado) { _estado = estado; }
  * Dice cuál es el número de esta lista.
  * Retorna: El ID único.
  */
-int Playlist::getIdPlaylist() { return _idPlaylist; }
+int Playlist::getIdPlaylist() { return getId(); }
 
 /**
  * Dice cuál es el título de esta lista.
@@ -124,7 +103,7 @@ void Playlist::Cargar() {
 
 void Playlist::Mostrar() {
     if (_estado) {
-        cout << "ID Lista: " << _idPlaylist << " | Nombre: " << _nombre << endl;
+        cout << "ID Lista: " << getIdPlaylist() << " | Nombre: " << _nombre << endl;
         cout << "Creada por ID Usuario: " << _idSuscriptorCreador << endl;
         cout << "Fecha Creacion: " << _fechaCreacion.toString() << endl; // <--- NUEVO
         cout << "-------------------------" << endl;
@@ -138,11 +117,7 @@ void Playlist::Mostrar() {
  * Retorna: Verdadero si se guardó sin problemas.
  */
 bool Playlist::Guardar() {
-    FILE *p = fopen("playlists.dat", "ab");
-    if (p == NULL) return false;
-    bool ok = fwrite(this, sizeof(Playlist), 1, p);
-    fclose(p);
-    return ok;
+    return ArchivoBinario<Playlist>(cfg::archivos::PLAYLISTS).agregar(*this);
 }
 
 /**
@@ -151,12 +126,7 @@ bool Playlist::Guardar() {
  * Retorna: Verdadero si se cargó correctamente.
  */
 bool Playlist::Leer(int pos) {
-    FILE *p = fopen("playlists.dat", "rb");
-    if (p == NULL) return false;
-    fseek(p, pos * sizeof(Playlist), SEEK_SET);
-    bool ok = fread(this, sizeof(Playlist), 1, p);
-    fclose(p);
-    return ok;
+    return ArchivoBinario<Playlist>(cfg::archivos::PLAYLISTS).leer(pos, *this);
 }
 
 /**
@@ -165,12 +135,7 @@ bool Playlist::Leer(int pos) {
  * Retorna: Verdadero si se actualizó bien.
  */
 bool Playlist::Modificar(int pos) {
-    FILE *p = fopen("playlists.dat", "rb+");
-    if (p == NULL) return false;
-    fseek(p, pos * sizeof(Playlist), SEEK_SET);
-    bool ok = fwrite(this, sizeof(Playlist), 1, p);
-    fclose(p);
-    return ok;
+    return ArchivoBinario<Playlist>(cfg::archivos::PLAYLISTS).escribir(pos, *this);
 }
 
 /**
@@ -178,12 +143,7 @@ bool Playlist::Modificar(int pos) {
  * Retorna: El número total de listas.
  */
 int Playlist::ObtenerCantidadRegistros() {
-    FILE *p = fopen("playlists.dat", "rb");
-    if (p == NULL) return 0;
-    fseek(p, 0, SEEK_END);
-    int cant = ftell(p) / sizeof(Playlist);
-    fclose(p);
-    return cant;
+    return ArchivoBinario<Playlist>(cfg::archivos::PLAYLISTS).contar();
 }
 
 /**
@@ -191,18 +151,11 @@ int Playlist::ObtenerCantidadRegistros() {
  * Retorna: El siguiente número disponible.
  */
 int Playlist::GenerarIDNuevo() {
-    FILE *p = fopen("playlists.dat", "rb");
-    if (p == NULL) return 1;
-    fseek(p, 0, SEEK_END);
-    long size = ftell(p);
-    if (size < static_cast<long>(sizeof(Playlist))) {
-        fclose(p);
-        return 1;
-    }
-    fseek(p, -static_cast<long>(sizeof(Playlist)), SEEK_END);
+    ArchivoBinario<Playlist> af(cfg::archivos::PLAYLISTS);
+    int n = af.contar();
+    if (n <= 0) return 1;
     Playlist ultimo;
-    fread(&ultimo, sizeof(Playlist), 1, p);
-    fclose(p);
+    if (!af.leer(n - 1, ultimo)) return 1;
     return ultimo.getIdPlaylist() + 1;
 }
 
@@ -212,18 +165,12 @@ int Playlist::GenerarIDNuevo() {
  * Retorna: La posición si la encontró, o -1 si no existe.
  */
 int Playlist::BuscarPorID(int id) {
-    FILE *p = fopen("playlists.dat", "rb");
-    if (p == NULL) return -1;
-    Playlist aux;
-    int i = 0;
-    while(fread(&aux, sizeof(Playlist), 1, p)) {
-        if(aux.getIdPlaylist() == id && aux.getEstado()) {
-            fclose(p);
-            return i;
+    std::vector<Playlist> todos = ArchivoBinario<Playlist>(cfg::archivos::PLAYLISTS).leerTodos();
+    for (size_t i = 0; i < todos.size(); ++i) {
+        if (todos[i].getIdPlaylist() == id && todos[i].getEstado()) {
+            return static_cast<int>(i);
         }
-        i++;
     }
-    fclose(p);
     return -1;
 }
 
@@ -233,17 +180,11 @@ int Playlist::BuscarPorID(int id) {
  * Retorna: Posición si encontrada, -1 si no.
  */
 int Playlist::BuscarPorNombre(const char* nombre) {
-    FILE *p = fopen("playlists.dat", "rb");
-    if (p == NULL) return -1;
-    Playlist aux;
-    int i = 0;
-    while(fread(&aux, sizeof(Playlist), 1, p)) {
-        if(sonIgualesSinMayusculas(aux.getNombre(), nombre) && aux.getEstado()) {
-            fclose(p);
-            return i;
+    std::vector<Playlist> todos = ArchivoBinario<Playlist>(cfg::archivos::PLAYLISTS).leerTodos();
+    for (size_t i = 0; i < todos.size(); ++i) {
+        if (Texto::igualesSinMayusculas(todos[i].getNombre(), nombre) && todos[i].getEstado()) {
+            return static_cast<int>(i);
         }
-        i++;
     }
-    fclose(p);
     return -1;
 }

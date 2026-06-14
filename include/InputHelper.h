@@ -1,26 +1,37 @@
+/*
+ * InputHelper.h
+ * Métodos estáticos para leer datos del usuario de forma robusta.
+ * Las utilidades de cadena (comparar, trim, contiene) se delegan en Texto.
+ */
+
 #ifndef INPUTHELPER_H
 #define INPUTHELPER_H
 
 #include <string>
 
-/** Clase con métodos estáticos para ayudar con la entrada de datos del usuario. */
+/** Helpers de entrada por consola. */
 class InputHelper {
 public:
-    /** Pide un entero al usuario. Parámetros: mensaje - Mensaje a mostrar, reintentar - Si reintentar en caso de error. Retorna: El entero ingresado. */
+    /** Pide un entero. Si 'reintentar' es false, devuelve -1 ante una entrada inválida. */
     static int pedirEntero(std::string mensaje, bool reintentar = true);
-    /** Pide un entero en un rango. Parámetros: mensaje - Mensaje a mostrar, min - Valor mínimo, max - Valor máximo. Retorna: El entero en rango. */
+    /** Pide un entero dentro de [min, max]. */
     static int pedirEnteroRango(std::string mensaje, int min, int max);
-    /** Pide una opción de una lista. Parámetros: cantidadOpciones - Cantidad de opciones. Retorna: La opción elegida. */
+    /** Pide una opción de una lista de 1..cantidadOpciones. */
     static int pedirOpcionDeLista(int cantidadOpciones);
-    /** Pide una cadena al usuario. Parámetros: mensaje - Mensaje a mostrar, buffer - Buffer para almacenar la cadena, tamano - Tamaño del buffer. */
+    /** Pide una cadena y la guarda en 'buffer' (hasta 'tamano' caracteres). */
     static void pedirCadena(std::string mensaje, char* buffer, int tamano);
-    /** Pausa la ejecución esperando entrada del usuario. */
+    /** Pausa la ejecución hasta que el usuario presiona ENTER. */
     static void pausa();
 
-    // --- NUEVAS UTILIDADES PARA IMPORTACI�N ---
-    // Quita espacios al principio y final
-    /** Quita espacios al principio y final de una cadena. Parámetros: str - La cadena original. Retorna: La cadena sin espacios. */
+    /** Compara dos cadenas sin distinguir mayúsculas/minúsculas. */
+    static bool sonIgualesSinMayusculas(const char* texto1, const char* texto2);
+    static bool sonIgualesSinMayusculas(const std::string& texto1, const std::string& texto2);
+
+    /** Quita espacios al principio y al final de una cadena. */
     static std::string trim(const std::string& str);
+
+    /** Indica si 'texto' contiene 'busqueda' ignorando mayúsculas/minúsculas. */
+    static bool contieneSubcadena(const std::string& texto, const std::string& busqueda);
 };
 
 #endif // INPUTHELPER_H

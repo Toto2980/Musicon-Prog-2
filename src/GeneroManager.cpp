@@ -1,23 +1,23 @@
 /**
  * Este archivo implementa la clase GeneroManager. Maneja el CRUD básico para géneros musicales,
- * incluyendo agregar, modificar, eliminar y listar g�neros del sistema.
+ * incluyendo agregar, modificar, eliminar y listar géneros del sistema.
  */
 
 #include "../include/GeneroManager.h"
 #include "../include/ArchivoGeneros.h"
-#include "InputHelper.h"
+#include "../include/InputHelper.h"
 #include <iostream>
 #include <cstring>
 
 using namespace std;
 
 /**
- * Agrega un nuevo g�nero musical al sistema. Genera ID �nico y solicita el nombre.
+ * Agrega un nuevo género musical al sistema. Genera ID único y solicita el nombre.
  */
 void GeneroManager::Agregar() {
     Genero g;
     ArchivoGeneros arch;
-    int id = arch.GenerarIDNuevo(); // Genera ID �nico
+    int id = arch.GenerarIDNuevo(); // Genera ID único
     g.setIdGeneros(id);
 
     char buffer[50];
@@ -25,7 +25,7 @@ void GeneroManager::Agregar() {
     g.setNombre(buffer);
     g.setEstado(true);
 
-    if (g.Guardar()) { // Guarda el g�nero
+    if (g.Guardar()) { // Guarda el género
         cout << "Genero guardado." << endl;
     } else {
         cout << "Error al guardar el genero." << endl;
@@ -33,7 +33,7 @@ void GeneroManager::Agregar() {
 }
 
 /*
- * Modifica un g�nero existente. Busca por nombre y permite cambiar el nombre.
+ * Modifica un género existente. Busca por nombre y permite cambiar el nombre.
  */
 void GeneroManager::Modificar() {
     char nombre[50];
@@ -46,7 +46,7 @@ void GeneroManager::Modificar() {
         return;
     }
 
-    int pos = reg.BuscarPosicionPorID(id); // Busca la posici�n
+    int pos = reg.BuscarPosicionPorID(id); // Busca la posición
     reg.Leer(pos); // Lee el registro
     cout << "--- GENERO ENCONTRADO ---" << endl;
     reg.Mostrar(); // Muestra datos actuales

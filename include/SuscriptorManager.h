@@ -1,30 +1,38 @@
-/**
- * Este archivo define la clase SuscriptorManager, que maneja todas las operaciones CRUD para suscriptores
- * (usuarios) en la aplicaci�n Musicon. Utiliza ArchivoSuscriptores para persistencia.
+/*
+ * SuscriptorManager.h
+ * Operaciones CRUD de suscriptores (usuarios). Usa ArchivoSuscriptores para
+ * la persistencia.
  */
 
-#ifndef SUSCRIPORMANAGER_H
-#define SUSCRIPORMANAGER_H
+#ifndef SUSCRIPTORMANAGER_H
+#define SUSCRIPTORMANAGER_H
 
 #include "ArchivoSuscriptores.h"
 
-/** Gestiona operaciones de suscriptores (agregar, modificar, eliminar, listar). Utiliza ArchivoSuscriptores para acceder a los datos persistentes. */
+/** Gestiona altas, bajas, modificaciones y listados de suscriptores. */
 class SuscriptorManager {
-private:
-    ArchivoSuscriptores _archivoSuscriptores; // Instancia del archivo de suscriptores
-
 public:
-    /** Agrega un nuevo suscriptor al sistema (registro de usuario). */
-    void Agregar();
+    /** Filtro para los listados. */
+    enum Filtro { ACTIVOS, INACTIVOS, TODOS };
 
+    /** Registra un nuevo suscriptor (valida nombre único). */
+    void Agregar();
     /** Modifica un suscriptor existente. */
     void Modificar();
-
-    /** Elimina un suscriptor (marcándolo como inactivo). */
+    /** Da de baja (lógica) un suscriptor. */
     void Eliminar();
 
-    /** Lista todos los suscriptores activos. */
+    /** Lista usuarios activos (alias de ListarActivos). */
     void Listar();
+    void ListarActivos();
+    void ListarInactivos();
+    void ListarTodos();
+
+private:
+    ArchivoSuscriptores _archivoSuscriptores;
+
+    /** Imprime los suscriptores que cumplen el filtro indicado. */
+    void listarConFiltro(const char* titulo, Filtro filtro);
 };
 
-#endif // SUSCRIPORMANAGER_H
+#endif // SUSCRIPTORMANAGER_H

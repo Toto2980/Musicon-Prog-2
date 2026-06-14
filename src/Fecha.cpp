@@ -4,7 +4,7 @@
  */
 
 #include "../include/Fecha.h"
-#include "InputHelper.h"
+#include "../include/InputHelper.h"
 #include <iostream>
 #include <sstream>
 #include <iomanip>
@@ -17,8 +17,6 @@ Fecha::Fecha() {
     _anio = 0;
     _objetoHora = HoraYMinutos();
 }
-
-Fecha::~Fecha() {}
 
 Fecha::Fecha(int minutos, int hora, int dia, int mes, int anio) {
     _dia = dia;

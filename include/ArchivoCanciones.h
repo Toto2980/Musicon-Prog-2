@@ -31,7 +31,7 @@ class ArchivoCanciones {
         /** Busca una canción por su ID. Parámetros: id - ID de la canción. Retorna: La canción encontrada. */
         Canciones BuscarPorID(int id);
 
-        // NUEVO: Busca la posici�n f�sica de una canci�n por su nombre y su �lbum.
+        // Busca la posición física de una canción por su nombre y su álbum.
         // Sirve para detectar duplicados antes de guardar.
         /** Busca la posición de una canción por nombre y álbum. Parámetros: nombre - Nombre de la canción, idAlbum - ID del álbum. Retorna: Posición, -1 si no encontrado. */
         int BuscarPosicionPorNombreYAlbum(const char* nombre, int idAlbum);

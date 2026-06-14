@@ -1,6 +1,7 @@
-#include "Accesos.h"
+#include "../include/Accesos.h"
+#include "../include/ArchivoBinario.h"
+#include "../include/Constantes.h"
 #include <iostream>
-#include <cstdio>
 
 using namespace std;
 
@@ -22,9 +23,6 @@ Accesos::Accesos() {
  * Limpia cualquier recurso usado por el registro de acceso.
  * Actualmente no hay recursos especiales que liberar.
  */
-Accesos::~Accesos() {
-    //dtor
-}
 
 // CAMBIAR VALORES
 
@@ -73,11 +71,7 @@ Fecha Accesos::getFechaHora() { return _fechaHora; }
  * Retorna: Verdadero si se guardó correctamente, falso si hubo un problema.
  */
 bool Accesos::Guardar() {
-    FILE *p = fopen("accesos.dat", "ab");
-    if (p == NULL) return false;
-    bool ok = fwrite(this, sizeof(Accesos), 1, p);
-    fclose(p);
-    return ok;
+    return ArchivoBinario<Accesos>(cfg::archivos::ACCESOS).agregar(*this);
 }
 
 /**
@@ -86,12 +80,7 @@ bool Accesos::Guardar() {
  * Retorna: Verdadero si se cargó correctamente.
  */
 bool Accesos::Leer(int pos) {
-    FILE *p = fopen("accesos.dat", "rb");
-    if (p == NULL) return false;
-    fseek(p, pos * sizeof(Accesos), SEEK_SET);
-    bool ok = fread(this, sizeof(Accesos), 1, p);
-    fclose(p);
-    return ok;
+    return ArchivoBinario<Accesos>(cfg::archivos::ACCESOS).leer(pos, *this);
 }
 
 /**
@@ -99,10 +88,5 @@ bool Accesos::Leer(int pos) {
  * Retorna: El número total de accesos registrados.
  */
 int Accesos::ObtenerCantidadRegistros() {
-    FILE *p = fopen("accesos.dat", "rb");
-    if (p == NULL) return 0;
-    fseek(p, 0, SEEK_END);
-    int cant = ftell(p) / sizeof(Accesos);
-    fclose(p);
-    return cant;
+    return ArchivoBinario<Accesos>(cfg::archivos::ACCESOS).contar();
 }

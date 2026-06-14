@@ -16,9 +16,6 @@ private:
     int buscarIdCancionPorNombre(const char* nombre);
 
 public:
-    /** Muestra el menú de gestión de playlists para un usuario específico. Parámetros: idUsuario - ID del usuario logueado. */
-    void MostrarMenu(int idUsuario);
-
     /** Muestra todas las playlists de un usuario. Parámetros: idUsuario - ID del usuario. */
     void MostrarMisPlaylists(int idUsuario);
 

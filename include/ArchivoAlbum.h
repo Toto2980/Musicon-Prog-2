@@ -28,7 +28,7 @@ class ArchivoAlbum {
         /** Busca un álbum por su ID. Parámetros: id - ID del álbum. Retorna: El álbum encontrado. */
         Album BuscarPorID(int id);
 
-        // NUEVO: Busca por Titulo Y Artista (para evitar hom�nimos)
+        // NUEVO: Busca por Titulo Y Artista (para evitar homónimos)
         /** Busca un álbum por título y artista, o lo crea si no existe. Parámetros: tituloAlbum - Título del álbum, idArtista - ID del artista. Retorna: ID del álbum. */
         int BuscarOCrear(std::string tituloAlbum, int idArtista);
 };

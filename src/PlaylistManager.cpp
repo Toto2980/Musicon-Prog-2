@@ -1,64 +1,35 @@
 /**
  * Este archivo implementa la clase PlaylistManager. Gestiona las playlists de usuarios,
- * incluyendo creaci�n, modificaci�n, eliminaci�n y gesti�n de canciones en playlists.
- * Maneja la relaci�n muchos-a-muchos entre usuarios y canciones.
+ * incluyendo creación, modificación, eliminación y gestión de canciones en playlists.
+ * Maneja la relación muchos-a-muchos entre usuarios y canciones.
  */
 
 #include "../include/PlaylistManager.h"
-#include "InputHelper.h"
+#include "../include/InputHelper.h"
+#include "../include/Texto.h"
+#include "../include/Consola.h"
+#include "../include/Constantes.h"
 #include "../include/ArchivoCanciones.h"
-#include "ArchivoSuscriptores.h"
-#include "Canciones.h"
+#include "../include/ArchivoSuscriptores.h"
+#include "../include/Canciones.h"
 #include <iostream>
 #include <cstring>
 #include <ctime>
 #include <string>
-#include <cctype>
 
 using namespace std;
 
-/**
- * Compara dos textos sin distinguir mayúsculas y minúsculas.
- */
-static bool sonIgualesSinMayusculas(const char* texto1, const char* texto2) {
-    if (texto1 == nullptr || texto2 == nullptr) return texto1 == texto2;
-
-    while (*texto1 && *texto2) {
-        if (std::tolower(static_cast<unsigned char>(*texto1)) !=
-            std::tolower(static_cast<unsigned char>(*texto2))) {
-            return false;
-        }
-        ++texto1;
-        ++texto2;
-    }
-
-    return *texto1 == *texto2;
-}
-
-/**
- * Función helper local para verificar si un texto contiene una subcadena, ignorando mayúsculas/minúsculas.
- * Parámetros: texto - Texto donde buscar, busqueda - Subcadena a buscar.
- * Retorna: true si encuentra la subcadena.
- */
-static bool contieneSubcadenaLocal(const char* texto, const char* busqueda) {
-    string t = texto;
-    string b = busqueda;
-    for (auto& c : t) c = tolower(c); // Convierte a min�sculas
-    for (auto& c : b) c = tolower(c);
-    return t.find(b) != string::npos; // Busca la subcadena
-}
-
 /*
- * Busca el ID de una canci�n por su nombre.
- * Par�metros: nombre - Nombre de la canci�n a buscar.
- * Retorno: ID de la canci�n si existe y est� activa, -1 si no se encuentra.
+ * Busca el ID de una canción por su nombre.
+ * Parámetros: nombre - Nombre de la canción a buscar.
+ * Retorno: ID de la canción si existe y está activa, -1 si no se encuentra.
  */
 int PlaylistManager::buscarIdCancionPorNombre(const char* nombre) {
     ArchivoCanciones arch;
     int total = arch.ObtenerCantidadRegistros();
     for (int i = 0; i < total; i++) { // Busca linealmente
         Canciones c = arch.Leer(i);
-        if (sonIgualesSinMayusculas(c.getNombre(), nombre) && c.getEstado()) {
+        if (InputHelper::sonIgualesSinMayusculas(c.getNombre(), nombre) && c.getEstado()) {
             return c.getIdCancion();
         }
     }
@@ -66,34 +37,8 @@ int PlaylistManager::buscarIdCancionPorNombre(const char* nombre) {
 }
 
 /*
- * Muestra el men� de gesti�n de playlists para un usuario espec�fico.
- * Par�metros: idUsuario - ID del usuario que gestiona las playlists.
- */
-void PlaylistManager::MostrarMenu(int idUsuario) {
-    int opcion;
-    do {
-        system("cls");
-        cout << "--- PLAYLISTS ---\n";
-        cout << "1. Mis Playlists\n";
-        cout << "2. Crear Playlist\n";
-        cout << "3. Modificar Playlist\n";
-        cout << "4. Eliminar Playlist\n";
-        cout << "5. Agregar Cancion a Playlist\n";
-        cout << "0. Volver\n";
-        opcion = InputHelper::pedirEnteroRango("Opcion: ", 0, 5);
-        switch (opcion) {
-            case 1: MostrarMisPlaylists(idUsuario); break;
-            case 2: CrearPlaylist(idUsuario); break;
-            case 3: ModificarPlaylist(idUsuario); break;
-            case 4: EliminarPlaylist(idUsuario); break;
-            case 5: AgregarCancionAPlaylist(); break;
-        }
-    } while (opcion != 0);
-}
-
-/*
- * Muestra todas las playlists creadas por un usuario espec�fico.
- * Par�metros: idUsuario - ID del usuario cuyas playlists mostrar.
+ * Muestra todas las playlists creadas por un usuario específico.
+ * Parámetros: idUsuario - ID del usuario cuyas playlists mostrar.
  */
 void PlaylistManager::MostrarMisPlaylists(int idUsuario) {
     Playlist p;
@@ -115,30 +60,121 @@ void PlaylistManager::MostrarMisPlaylists(int idUsuario) {
 }
 
 /*
- * Crea una nueva playlist para un usuario espec�fico.
- * Genera ID �nico, solicita datos y establece fecha de creaci�n actual.
- * Par�metros: idUsuario - ID del usuario creador de la playlist.
+ * Crea una nueva playlist para un usuario específico.
+ * Genera ID único, solicita datos y establece fecha de creación actual.
+ * Parámetros: idUsuario - ID del usuario creador de la playlist.
  */
 void PlaylistManager::CrearPlaylist(int idUsuario) {
-    Playlist p;
-    int id = p.GenerarIDNuevo(); // Genera ID �nico
-    p.setIdPlaylist(id);
-    p.setIdSuscriptorCreador(idUsuario);
-    p.Cargar(); // Solicita datos al usuario
-
-    time_t now = time(0); // Obtiene fecha/hora actual
-    tm *ltm = localtime(&now);
-    p.setFechaCreacion(Fecha(ltm->tm_mday, 1 + ltm->tm_mon, 1900 + ltm->tm_year)); // Fecha de creaci�n
-    p.setEstado(true);
-
-    if (p.Guardar()) cout << "   [OK] Playlist creada." << endl; // Guarda la playlist
-    else cout << "   [ERROR] No se pudo guardar la playlist." << endl;
+	
+	ArchivoSuscriptores archSus;
+	
+	int posSus = archSus.BuscarPosicion(idUsuario);
+	
+	if(posSus != -1){
+		
+		Suscriptor sus = archSus.Leer(posSus);
+		
+		if(sus.getTipoSuscriptor() == cfg::GRATIS){
+			
+			Playlist aux;
+			
+			int totalPlaylists =
+				aux.ObtenerCantidadRegistros();
+			
+			int cantidadUsuario = 0;
+			
+			for(int i = 0; i < totalPlaylists; i++){
+				
+				if(!aux.Leer(i)) continue;
+				
+				if(aux.getEstado() &&
+				   aux.getIdSuscriptorCreador() == idUsuario){
+					
+					cantidadUsuario++;
+				}
+			}
+			
+			if(cantidadUsuario >= cfg::LIMITE_PLAYLISTS_GRATIS){
+				
+				cout << endl;
+				cout << "==================================" << endl;
+				cout << "PLAN GRATUITO" << endl;
+				cout << "==================================" << endl;
+				cout << endl;
+				
+				cout << "Has alcanzado el limite de plan gratuito."
+					<< endl << endl;
+				
+				cout << "1. Suscribirme al plan PAGO" << endl;
+				cout << "2. Omitir" << endl;
+				
+				int op =
+					InputHelper::pedirEnteroRango(
+												  "Opcion: ",
+												  1,
+												  2
+												  );
+				
+				if(op == 1){
+					
+					sus.setTipoSuscriptor(cfg::PAGO);
+					
+					archSus.Modificar(
+									  posSus,
+									  sus
+									  );
+					
+					cout << endl;
+					cout << "Ahora sos usuario PAGO."
+						<< endl << endl;
+				}
+				else{
+					
+					cout << endl;
+					cout << "Operacion cancelada."
+						<< endl;
+					
+					return;
+				}
+			}
+		}
+	}
+	
+	Playlist p;
+	
+	int id = p.GenerarIDNuevo();
+	
+	p.setIdPlaylist(id);
+	
+	p.setIdSuscriptorCreador(idUsuario);
+	
+	p.Cargar();
+	
+	time_t now = time(0);
+	
+	tm *ltm = localtime(&now);
+	
+	p.setFechaCreacion(
+					   Fecha(
+							 ltm->tm_mday,
+							 1 + ltm->tm_mon,
+							 1900 + ltm->tm_year
+							 )
+					   );
+	
+	p.setEstado(true);
+	
+	if (p.Guardar())
+		cout << "   [OK] Playlist creada." << endl;
+	else
+		cout << "   [ERROR] No se pudo guardar la playlist." << endl;
 }
+
 
 /*
  * Modifica el nombre de una playlist existente del usuario.
- * Busca playlists por nombre parcial y permite selecci�n si hay m�ltiples.
- * Par�metros: idUsuario - ID del usuario propietario de la playlist.
+ * Busca playlists por nombre parcial y permite selección si hay múltiples.
+ * Parámetros: idUsuario - ID del usuario propietario de la playlist.
  */
 void PlaylistManager::ModificarPlaylist(int idUsuario) {
     char nombreBuscado[50];
@@ -156,10 +192,10 @@ void PlaylistManager::ModificarPlaylist(int idUsuario) {
         if (!reg.Leer(i)) continue;
         if (reg.getEstado() &&
             reg.getIdSuscriptorCreador() == idUsuario &&
-            contieneSubcadenaLocal(reg.getNombre(), nombreBuscado)) { // Filtra por usuario y nombre
+            Texto::contiene(reg.getNombre(), nombreBuscado)) { // Filtra por usuario y nombre
 
             if (cantidadEncontrados < 50) {
-                posicionesEncontradas[cantidadEncontrados] = i; // Guarda posici�n
+                posicionesEncontradas[cantidadEncontrados] = i; // Guarda posición
                 cout << (cantidadEncontrados + 1) << ". " << reg.getNombre()
                      << " (ID: " << reg.getIdPlaylist() << ")" << endl;
                 cantidadEncontrados++;
@@ -176,14 +212,14 @@ void PlaylistManager::ModificarPlaylist(int idUsuario) {
     int seleccion = InputHelper::pedirOpcionDeLista(cantidadEncontrados); // Selecciona playlist
     if (seleccion == 0) return;
 
-    int pos = posicionesEncontradas[seleccion - 1]; // Obtiene posici�n seleccionada
+    int pos = posicionesEncontradas[seleccion - 1]; // Obtiene posición seleccionada
     reg.Leer(pos);
 
     cout << endl << "--- EDITANDO: " << reg.getNombre() << " ---" << endl;
     char nuevoNombre[50];
     InputHelper::pedirCadena("Nuevo Nombre (Enter para mantener): ", nuevoNombre, 50); // Nuevo nombre
 
-    if (strlen(nuevoNombre) > 0) { // Si se especific� nuevo nombre
+    if (strlen(nuevoNombre) > 0) { // Si se específico nuevo nombre
         reg.setNombre(nuevoNombre);
         if (reg.Modificar(pos)) cout << "   [OK] Playlist modificada." << endl; // Modifica
         else cout << "   [ERROR] No se pudo modificar la playlist." << endl;
@@ -206,7 +242,7 @@ void PlaylistManager::EliminarPlaylist(int idUsuario) {
         if (!reg.Leer(i)) continue;
         if (reg.getEstado() &&
             reg.getIdSuscriptorCreador() == idUsuario &&
-            contieneSubcadenaLocal(reg.getNombre(), nombreBuscado)) {
+            Texto::contiene(reg.getNombre(), nombreBuscado)) {
 
             if (cantidadEncontrados < 50) {
                 posicionesEncontradas[cantidadEncontrados] = i;
@@ -258,7 +294,7 @@ void PlaylistManager::AgregarCancionAPlaylist() {
 
     for (int i = 0; i < total; i++) {
         if (!p.Leer(i)) continue;
-        if (p.getEstado() && contieneSubcadenaLocal(p.getNombre(), nombrePlaylist)) {
+        if (p.getEstado() && Texto::contiene(p.getNombre(), nombrePlaylist)) {
             if (cantidadEncontrados < 50) {
                 idsEncontrados[cantidadEncontrados] = p.getIdPlaylist();
 

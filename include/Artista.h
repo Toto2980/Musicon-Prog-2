@@ -1,12 +1,12 @@
 /**
  * Este archivo define la clase Artista, que representa a un artista musical en el sistema Musicon.
- * Guarda directamente su nombre, estado, ID y nacionalidad, sin depender de una clase base externa.
+ * Guarda directamente su nombre, estado, ID y nacionalidad.
  */
 
 #ifndef ARTISTA_H
 #define ARTISTA_H
 
-#include <cstring>
+ #include <cstring>
 
 /** Representa a un artista musical con nombre, estado, ID y nacionalidad. */
 class Artista {
@@ -28,7 +28,7 @@ class Artista {
                 _nombre[0] = '\0';
                 return;
             }
-            std::strncpy(_nombre, nombre, sizeof(_nombre) - 1);
+            strncpy(_nombre, nombre, sizeof(_nombre)-1);
             _nombre[sizeof(_nombre) - 1] = '\0';
         }
 

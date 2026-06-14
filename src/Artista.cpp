@@ -4,7 +4,7 @@
  */
 
 #include "../include/Artista.h"
-#include "InputHelper.h"
+#include "../include/InputHelper.h"
 #include <iostream>
 #include <cstring>
 
@@ -21,25 +21,25 @@ Artista::Artista() {
 }
 
 /**
- * Destructor: No hay recursos din�micos, pero se define para consistencia.
+ * Destructor: No hay recursos dinámicos, pero se define para consistencia.
  */
 Artista::~Artista() {}
 
 /**
  * Setter para el ID del artista.
- * Par�metros: id - ID �nico a asignar.
+ * Parámetros: id - ID único a asignar.
  */
 void Artista::setIdArtista(int id) { _idArtista = id; }
 
 /**
  * Setter para la nacionalidad.
- * Par�metros: nacionalidad - Cadena con la nacionalidad (copia segura con l�mite).
+ * Parámetros: nacionalidad - Cadena con la nacionalidad (copia segura con límite).
  */
 void Artista::setNacionalidad(const char* nacionalidad) { strncpy(_nacionalidad, nacionalidad, 49); _nacionalidad[49] = '\0'; }
 
 /**
  * Getter para el ID del artista.
- * Retorno: ID �nico.
+ * Retorno: ID único.
  */
 int Artista::getIdArtista() { return _idArtista; }
 
@@ -66,11 +66,11 @@ void Artista::Cargar() {
 }
 
 /**
- * M�todo Mostrar: Imprime ID, nombre y nacionalidad si el artista est� activo.
+ * Método Mostrar: Imprime ID, nombre y nacionalidad si el artista está activo.
  * Formato compacto para listados.
  */
 void Artista::Mostrar() {
     if (getEstado()) {
-        cout << "ID: " << _idArtista << " | " << getNombre() << " (" << _nacionalidad << ")" << endl;
+        cout << "ID: " << getIdArtista() << " | " << getNombre() << " (" << _nacionalidad << ")" << endl;
     }
 }

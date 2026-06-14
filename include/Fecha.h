@@ -20,8 +20,6 @@ class Fecha {
     public:
         /** Constructor por defecto. */
         Fecha();
-        /** Destructor virtual de la clase Fecha. */
-        virtual ~Fecha();
 
         /** Constructor con hora incluida. Parámetros: minutos, hora, dia, mes, anio. */
         Fecha(int minutos, int hora, int dia, int mes, int anio);

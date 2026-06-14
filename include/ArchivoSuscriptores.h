@@ -28,7 +28,7 @@ class ArchivoSuscriptores {
         /** Obtiene la cantidad de registros en el archivo. Retorna: Cantidad de suscriptores. */
         int ObtenerCantidadRegistros();
 
-        // B�squedas específicas de este dominio
+        // Búsquedas específicas de este dominio
         /** Busca la posición de un suscriptor por su nombre. Parámetros: nombre - Nombre del suscriptor. Retorna: Posición, -1 si no encontrado. */
         int BuscarPosicionPorNombre(const char* nombre);
         /** Busca la posición de un suscriptor por su DNI. Parámetros: dni - DNI del suscriptor. Retorna: Posición, -1 si no encontrado. */

@@ -1,155 +1,85 @@
+/*
+ * ArchivoSuscriptores.cpp
+ * Persistencia de suscriptores sobre ArchivoBinario<Suscriptor>.
+ */
+
 #include "../include/ArchivoSuscriptores.h"
-#include <cstdio>
+#include "../include/ArchivoBinario.h"
+#include "../include/Texto.h"
 #include <cstring>
-#include <cctype>
+#include <vector>
 
 using namespace std;
 
-/**
- * Compara dos textos sin distinguir mayúsculas y minúsculas.
- */
-static bool sonIgualesSinMayusculas(const char* texto1, const char* texto2) {
-    if (texto1 == nullptr || texto2 == nullptr) return texto1 == texto2;
-
-    while (*texto1 && *texto2) {
-        if (std::tolower(static_cast<unsigned char>(*texto1)) !=
-            std::tolower(static_cast<unsigned char>(*texto2))) {
-            return false;
-        }
-        ++texto1;
-        ++texto2;
-    }
-
-    return *texto1 == *texto2;
-}
-
-ArchivoSuscriptores::ArchivoSuscriptores(string nombreArchivo) {
-    _nombreArchivo = nombreArchivo;
-}
+ArchivoSuscriptores::ArchivoSuscriptores(string nombreArchivo) : _nombreArchivo(nombreArchivo) {}
 
 bool ArchivoSuscriptores::Guardar(Suscriptor reg) {
-    FILE *p = fopen(_nombreArchivo.c_str(), "ab");
-    if (p == NULL) return false;
-    bool ok = fwrite(&reg, sizeof(Suscriptor), 1, p);
-    fclose(p);
-    return ok;
+    return ArchivoBinario<Suscriptor>(_nombreArchivo).agregar(reg);
 }
 
 Suscriptor ArchivoSuscriptores::Leer(int pos) {
     Suscriptor reg;
     reg.setEstado(false);
-    FILE *p = fopen(_nombreArchivo.c_str(), "rb");
-    if (p == NULL) return reg;
-    fseek(p, pos * sizeof(Suscriptor), SEEK_SET);
-    fread(&reg, sizeof(Suscriptor), 1, p);
-    fclose(p);
+    ArchivoBinario<Suscriptor>(_nombreArchivo).leer(pos, reg);
     return reg;
 }
 
 int ArchivoSuscriptores::ObtenerCantidadRegistros() {
-    FILE *p = fopen(_nombreArchivo.c_str(), "rb");
-    if (p == NULL) return 0;
-    fseek(p, 0, SEEK_END);
-    int cant = ftell(p) / sizeof(Suscriptor);
-    fclose(p);
-    return cant;
+    return ArchivoBinario<Suscriptor>(_nombreArchivo).contar();
 }
 
 int ArchivoSuscriptores::GenerarIDNuevo() {
-    FILE *p = fopen(_nombreArchivo.c_str(), "rb");
-    if (p == NULL) return 1;
-    fseek(p, 0, SEEK_END);
-    long size = ftell(p);
-    if (size <= 0) {
-        fclose(p);
-        return 1;
-    }
-    fseek(p, -static_cast<long>(sizeof(Suscriptor)), SEEK_END);
+    ArchivoBinario<Suscriptor> af(_nombreArchivo);
+    int n = af.contar();
+    if (n <= 0) return 1;
     Suscriptor ultimo;
-    if (fread(&ultimo, sizeof(Suscriptor), 1, p) != 1) {
-        fclose(p);
-        return 1;
-    }
-    fclose(p);
+    if (!af.leer(n - 1, ultimo)) return 1;
     return ultimo.getIdSuscriptor() + 1;
 }
 
 Suscriptor* ArchivoSuscriptores::LeerTodos(int &cantidad) {
-    cantidad = ObtenerCantidadRegistros();
+    vector<Suscriptor> regs = ArchivoBinario<Suscriptor>(_nombreArchivo).leerTodos();
+    cantidad = static_cast<int>(regs.size());
     if (cantidad <= 0) return nullptr;
 
-    FILE *p = fopen(_nombreArchivo.c_str(), "rb");
-    if (p == NULL) {
-        cantidad = 0;
-        return nullptr;
-    }
-
-    Suscriptor *buffer = new Suscriptor[cantidad];
-    int leidos = fread(buffer, sizeof(Suscriptor), cantidad, p);
-    fclose(p);
-
-    if (leidos != cantidad) {
-        cantidad = leidos;
-    }
+    // Se mantiene la firma original (arreglo dinamico); el llamador hace delete[].
+    Suscriptor* buffer = new Suscriptor[cantidad];
+    for (int i = 0; i < cantidad; ++i) buffer[i] = regs[i];
     return buffer;
 }
 
 bool ArchivoSuscriptores::Modificar(int pos, Suscriptor reg) {
-    FILE *p = fopen(_nombreArchivo.c_str(), "rb+");
-    if (p == NULL) return false;
-    fseek(p, pos * sizeof(Suscriptor), SEEK_SET);
-    bool ok = fwrite(&reg, sizeof(Suscriptor), 1, p);
-    fclose(p);
-    return ok;
+    return ArchivoBinario<Suscriptor>(_nombreArchivo).escribir(pos, reg);
 }
 
 int ArchivoSuscriptores::BuscarPosicion(int id) {
-    FILE *p = fopen(_nombreArchivo.c_str(), "rb");
-    if (p == NULL) return -1;
-    Suscriptor aux;
-    int pos = 0;
-    while(fread(&aux, sizeof(Suscriptor), 1, p)) {
-        if(aux.getIdSuscriptor() == id && aux.getEstado()) {
-            fclose(p);
-            return pos;
+    vector<Suscriptor> todos = ArchivoBinario<Suscriptor>(_nombreArchivo).leerTodos();
+    for (size_t i = 0; i < todos.size(); ++i) {
+        if (todos[i].getIdSuscriptor() == id && todos[i].getEstado()) {
+            return static_cast<int>(i);
         }
-        pos++;
     }
-    fclose(p);
     return -1;
 }
 
 int ArchivoSuscriptores::BuscarPosicionPorNombre(const char* nombre) {
-    FILE *p = fopen(_nombreArchivo.c_str(), "rb");
-    if (p == NULL) return -1;
-    Suscriptor aux;
-    int pos = 0;
-    while(fread(&aux, sizeof(Suscriptor), 1, p)) {
-        // DEBUG: Descomenta esto para ver qu� lee
-        // cout << "Leido: " << aux.getNombre() << " vs Buscado: " << nombre << endl;
-
-        if(sonIgualesSinMayusculas(aux.getNombre(), nombre) && aux.getEstado()) {
-            fclose(p);
-            return pos;
+    string nombreBuscado = Texto::trim(nombre);
+    vector<Suscriptor> todos = ArchivoBinario<Suscriptor>(_nombreArchivo).leerTodos();
+    for (size_t i = 0; i < todos.size(); ++i) {
+        string nombreArchivo = Texto::trim(todos[i].getNombre());
+        if (Texto::igualesSinMayusculas(nombreArchivo, nombreBuscado) && todos[i].getEstado()) {
+            return static_cast<int>(i);
         }
-        pos++;
     }
-    fclose(p);
     return -1;
 }
 
 int ArchivoSuscriptores::BuscarPosicionPorDNI(const char* dni) {
-    FILE *p = fopen(_nombreArchivo.c_str(), "rb");
-    if (p == NULL) return -1;
-    Suscriptor aux;
-    int pos = 0;
-    while(fread(&aux, sizeof(Suscriptor), 1, p)) {
-        if(strcmp(aux.getDni(), dni) == 0 && aux.getEstado()) {
-            fclose(p);
-            return pos;
+    vector<Suscriptor> todos = ArchivoBinario<Suscriptor>(_nombreArchivo).leerTodos();
+    for (size_t i = 0; i < todos.size(); ++i) {
+        if (strcmp(todos[i].getDni(), dni) == 0 && todos[i].getEstado()) {
+            return static_cast<int>(i);
         }
-        pos++;
     }
-    fclose(p);
     return -1;
 }

@@ -1,131 +1,77 @@
+/*
+ * ArchivoGeneros.cpp
+ * Persistencia de generos sobre ArchivoBinario<Genero>.
+ */
+
 #include "../include/ArchivoGeneros.h"
-#include "InputHelper.h" // Necesario para trim
-#include <cstdio>
-#include <cstring>
-#include <iostream> // Para debug cout
-#include <cctype>
+#include "../include/ArchivoBinario.h"
+#include "../include/Texto.h"
+#include <iostream>
+#include <vector>
 
 using namespace std;
 
-/**
- * Compara dos textos sin distinguir mayúsculas y minúsculas.
- */
-static bool sonIgualesSinMayusculas(const char* texto1, const char* texto2) {
-    if (texto1 == nullptr || texto2 == nullptr) return texto1 == texto2;
-
-    while (*texto1 && *texto2) {
-        if (std::tolower(static_cast<unsigned char>(*texto1)) !=
-            std::tolower(static_cast<unsigned char>(*texto2))) {
-            return false;
-        }
-        ++texto1;
-        ++texto2;
-    }
-
-    return *texto1 == *texto2;
-}
-
-// ... (M�todos anteriores Guardar, Leer, etc. se mantienen igual) ...
-
-ArchivoGeneros::ArchivoGeneros(string nombreArchivo) { _nombreArchivo = nombreArchivo; }
+ArchivoGeneros::ArchivoGeneros(string nombreArchivo) : _nombreArchivo(nombreArchivo) {}
 
 bool ArchivoGeneros::Guardar(Genero reg) {
-    FILE *p = fopen(_nombreArchivo.c_str(), "ab");
-    if (p == NULL) return false;
-    bool ok = fwrite(&reg, sizeof(Genero), 1, p);
-    fclose(p);
-    return ok;
+    return ArchivoBinario<Genero>(_nombreArchivo).agregar(reg);
 }
 
 Genero ArchivoGeneros::Leer(int pos) {
     Genero reg;
     reg.setEstado(false);
-    FILE *p = fopen(_nombreArchivo.c_str(), "rb");
-    if (p == NULL) return reg;
-    fseek(p, pos * sizeof(Genero), SEEK_SET);
-    fread(&reg, sizeof(Genero), 1, p);
-    fclose(p);
+    ArchivoBinario<Genero>(_nombreArchivo).leer(pos, reg);
     return reg;
 }
 
 int ArchivoGeneros::ObtenerCantidadRegistros() {
-    FILE *p = fopen(_nombreArchivo.c_str(), "rb");
-    if (p == NULL) return 0;
-    fseek(p, 0, SEEK_END);
-    int cant = ftell(p) / sizeof(Genero);
-    fclose(p);
-    return cant;
+    return ArchivoBinario<Genero>(_nombreArchivo).contar();
 }
 
 int ArchivoGeneros::GenerarIDNuevo() {
-    FILE *p = fopen(_nombreArchivo.c_str(), "rb");
-    if (p == NULL) return 1;
-    fseek(p, 0, SEEK_END);
-    long size = ftell(p);
-    if (size <= 0) {
-        fclose(p);
-        return 1;
-    }
-    fseek(p, -static_cast<long>(sizeof(Genero)), SEEK_END);
+    ArchivoBinario<Genero> af(_nombreArchivo);
+    int n = af.contar();
+    if (n <= 0) return 1;
     Genero ultimo;
-    if (fread(&ultimo, sizeof(Genero), 1, p) != 1) {
-        fclose(p);
-        return 1;
-    }
-    fclose(p);
+    if (!af.leer(n - 1, ultimo)) return 1;
     return ultimo.getIdGeneros() + 1;
 }
 
 int ArchivoGeneros::BuscarPosicion(int id) {
-    FILE *p = fopen(_nombreArchivo.c_str(), "rb");
-    if (p == NULL) return -1;
-    Genero aux;
-    int pos = 0;
-    while(fread(&aux, sizeof(Genero), 1, p)) {
-        if(aux.getIdGeneros() == id && aux.getEstado()) {
-            fclose(p);
-            return pos;
+    vector<Genero> todos = ArchivoBinario<Genero>(_nombreArchivo).leerTodos();
+    for (size_t i = 0; i < todos.size(); ++i) {
+        if (todos[i].getIdGeneros() == id && todos[i].getEstado()) {
+            return static_cast<int>(i);
         }
-        pos++;
     }
-    fclose(p);
     return -1;
 }
 
 int ArchivoGeneros::BuscarIDPorNombre(const char* nombre) {
-    FILE *p = fopen(_nombreArchivo.c_str(), "rb");
-    if (p == NULL) return -1;
-    Genero aux;
-    while(fread(&aux, sizeof(Genero), 1, p)) {
-        if(sonIgualesSinMayusculas(aux.getNombre(), nombre) && aux.getEstado()) {
-            fclose(p);
-            return aux.getIdGeneros();
+    vector<Genero> todos = ArchivoBinario<Genero>(_nombreArchivo).leerTodos();
+    for (size_t i = 0; i < todos.size(); ++i) {
+        if (Texto::igualesSinMayusculas(todos[i].getNombre(), nombre) && todos[i].getEstado()) {
+            return todos[i].getIdGeneros();
         }
     }
-    fclose(p);
     return -1;
 }
 
 Genero ArchivoGeneros::BuscarPorID(int id) {
-    Genero reg;
-    reg.setEstado(false);
     int pos = BuscarPosicion(id);
     if (pos >= 0) return Leer(pos);
+    Genero reg;
+    reg.setEstado(false);
     return reg;
 }
 
-// --- IMPLEMENTACI�N INTELIGENTE ---
 int ArchivoGeneros::BuscarOCrear(string nombreGenero) {
-    string nombreLimpio = InputHelper::trim(nombreGenero);
-    if (nombreLimpio.empty()) return 0; // O un ID por defecto para "Sin Genero"
+    string nombreLimpio = Texto::trim(nombreGenero);
+    if (nombreLimpio.empty()) return 0;
 
-    // 1. Buscar si existe
     int idExistente = BuscarIDPorNombre(nombreLimpio.c_str());
-    if (idExistente != -1) {
-        return idExistente;
-    }
+    if (idExistente != -1) return idExistente;
 
-    // 2. Si no existe, crear
     Genero nuevo;
     int nuevoId = GenerarIDNuevo();
     nuevo.setIdGeneros(nuevoId);
@@ -133,7 +79,7 @@ int ArchivoGeneros::BuscarOCrear(string nombreGenero) {
     nuevo.setEstado(true);
 
     Guardar(nuevo);
-    cout << "   [INFO] Nuevo Genero creado: " << nombreLimpio << " (ID: " << nuevoId << ")" << endl;
-
+    cout << "   [INFO] Nuevo Genero creado: " << nombreLimpio
+         << " (ID: " << nuevoId << ")" << endl;
     return nuevoId;
 }

@@ -4,18 +4,18 @@
  */
 
 #include "../include/ArtistaManager.h"
-#include "InputHelper.h"
+#include "../include/InputHelper.h"
 #include <iostream>
 #include <cstring>
 
 using namespace std;
 
 /**
- * Agrega un nuevo artista al sistema. Genera ID �nico y solicita datos al usuario.
+ * Agrega un nuevo artista al sistema. Genera ID único y solicita datos al usuario.
  */
 void ArtistaManager::Agregar() {
     Artista nuevo;
-    int id = _archivoArtistas.GenerarIDNuevo(); // Genera ID �nico
+    int id = _archivoArtistas.GenerarIDNuevo(); // Genera ID único
     nuevo.setIdArtista(id);
     nuevo.Cargar(); // Solicita datos al usuario
     nuevo.setEstado(true);
@@ -65,7 +65,7 @@ void ArtistaManager::Modificar() {
 }
 
 /**
- * Elimina un artista l�gicamente (marca como inactivo). Busca por nombre y confirma antes de eliminar.
+ * Elimina un artista lógicamente (marca como inactivo). Busca por nombre y confirma antes de eliminar.
  */
 void ArtistaManager::Eliminar() {
     char nombre[100];
@@ -77,12 +77,12 @@ void ArtistaManager::Eliminar() {
         return;
     }
 
-    int pos = _archivoArtistas.BuscarPosicion(id); // Busca posici�n
+    int pos = _archivoArtistas.BuscarPosicion(id); // Busca posición
     Artista reg = _archivoArtistas.Leer(pos); // Lee el registro
     reg.Mostrar(); // Muestra datos
 
     char op;
-    cout << "Seguro desea eliminarlo? (s/n): "; // Confirma eliminaci�n
+    cout << "Seguro desea eliminarlo? (s/n): "; // Confirma eliminación
     cin >> op;
     cin.ignore(10000, '\n');
 

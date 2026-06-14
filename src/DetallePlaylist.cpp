@@ -1,6 +1,7 @@
 #include <iostream>
-#include <cstdio>
 #include "../include/DetallePlaylist.h"
+#include "../include/ArchivoBinario.h"
+#include "../include/Constantes.h"
 
 using namespace std;
 
@@ -102,11 +103,7 @@ void DetallePlaylist::Mostrar() {
  * Retorna: Verdadero si se guardó sin problemas.
  */
 bool DetallePlaylist::Guardar() {
-    FILE *p = fopen("Listas_Canciones.dat", "ab");
-    if (p == NULL) return false;
-    bool ok = fwrite(this, sizeof(DetallePlaylist), 1, p);
-    fclose(p);
-    return ok;
+    return ArchivoBinario<DetallePlaylist>(cfg::archivos::DETALLE_PL).agregar(*this);
 }
 
 /**
@@ -115,12 +112,7 @@ bool DetallePlaylist::Guardar() {
  * Retorna: Verdadero si se cargó correctamente.
  */
 bool DetallePlaylist::Leer(int pos) {
-    FILE *p = fopen("Listas_Canciones.dat", "rb");
-    if (p == NULL) return false;
-    fseek(p, pos * sizeof(DetallePlaylist), SEEK_SET);
-    bool ok = fread(this, sizeof(DetallePlaylist), 1, p);
-    fclose(p);
-    return ok;
+    return ArchivoBinario<DetallePlaylist>(cfg::archivos::DETALLE_PL).leer(pos, *this);
 }
 
 /**
@@ -128,12 +120,7 @@ bool DetallePlaylist::Leer(int pos) {
  * Retorna: El número total de conexiones.
  */
 int DetallePlaylist::ObtenerCantidadRegistros() {
-    FILE *p = fopen("Listas_Canciones.dat", "rb");
-    if (p == NULL) return 0;
-    fseek(p, 0, SEEK_END);
-    int cant = ftell(p) / sizeof(DetallePlaylist);
-    fclose(p);
-    return cant;
+    return ArchivoBinario<DetallePlaylist>(cfg::archivos::DETALLE_PL).contar();
 }
 
 // ACCIONES ESPECIALES
@@ -144,20 +131,14 @@ int DetallePlaylist::ObtenerCantidadRegistros() {
  * Retorna: La posición si existe, o -1 si no está.
  */
 int DetallePlaylist::BuscarCancionEnPlaylist(int idPlaylist, int idCancion) {
-    FILE *p = fopen("Listas_Canciones.dat", "rb");
-    if (p == NULL) return -1;
-
-    DetallePlaylist aux;
-    int pos = 0;
-    while(fread(&aux, sizeof(DetallePlaylist), 1, p)) {
-        if(aux.getIdPlaylist() == idPlaylist &&
-           aux.getIdCancion() == idCancion &&
-           aux.getEstado()) {
-            fclose(p);
-            return pos;
+    std::vector<DetallePlaylist> todos =
+        ArchivoBinario<DetallePlaylist>(cfg::archivos::DETALLE_PL).leerTodos();
+    for (size_t pos = 0; pos < todos.size(); ++pos) {
+        if (todos[pos].getIdPlaylist() == idPlaylist &&
+            todos[pos].getIdCancion() == idCancion &&
+            todos[pos].getEstado()) {
+            return static_cast<int>(pos);
         }
-        pos++;
     }
-    fclose(p);
     return -1;
 }

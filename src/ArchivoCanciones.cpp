@@ -1,140 +1,73 @@
+/*
+ * ArchivoCanciones.cpp
+ * Persistencia de canciones. Delega la E/S binaria de bajo nivel en
+ * ArchivoBinario<Canciones> y solo aporta la logica especifica del dominio
+ * (busquedas por id/nombre, generacion de id).
+ */
+
 #include "../include/ArchivoCanciones.h"
-#include <cstdio>
-#include <cstring>
-#include <iostream>
-#include <cctype>
+#include "../include/ArchivoBinario.h"
+#include "../include/Texto.h"
+#include <vector>
 
 using namespace std;
 
-/**
- * Compara dos textos sin distinguir mayúsculas y minúsculas.
- */
-static bool sonIgualesSinMayusculas(const char* texto1, const char* texto2) {
-    if (texto1 == nullptr || texto2 == nullptr) return texto1 == texto2;
-
-    while (*texto1 && *texto2) {
-        if (std::tolower(static_cast<unsigned char>(*texto1)) !=
-            std::tolower(static_cast<unsigned char>(*texto2))) {
-            return false;
-        }
-        ++texto1;
-        ++texto2;
-    }
-
-    return *texto1 == *texto2;
-}
-
-ArchivoCanciones::ArchivoCanciones(string nombreArchivo) {
-    _nombreArchivo = nombreArchivo;
-}
+ArchivoCanciones::ArchivoCanciones(string nombreArchivo) : _nombreArchivo(nombreArchivo) {}
 
 bool ArchivoCanciones::Guardar(Canciones reg) {
-    FILE *p = fopen(_nombreArchivo.c_str(), "ab");
-    if (p == NULL) return false;
-
-    bool ok = fwrite(&reg, sizeof(Canciones), 1, p);
-    fclose(p);
-    return ok;
+    return ArchivoBinario<Canciones>(_nombreArchivo).agregar(reg);
 }
 
 Canciones ArchivoCanciones::Leer(int pos) {
     Canciones reg;
-    reg.setEstado(false);
-
-    FILE *p = fopen(_nombreArchivo.c_str(), "rb");
-    if (p == NULL) return reg;
-
-    fseek(p, pos * sizeof(Canciones), SEEK_SET);
-    fread(&reg, sizeof(Canciones), 1, p);
-    fclose(p);
-
+    reg.setEstado(false); // estado por defecto si la lectura falla
+    ArchivoBinario<Canciones>(_nombreArchivo).leer(pos, reg);
     return reg;
 }
 
 int ArchivoCanciones::ObtenerCantidadRegistros() {
-    FILE *p = fopen(_nombreArchivo.c_str(), "rb");
-    if (p == NULL) return 0;
-
-    fseek(p, 0, SEEK_END);
-    int cant = ftell(p) / sizeof(Canciones);
-    fclose(p);
-    return cant;
+    return ArchivoBinario<Canciones>(_nombreArchivo).contar();
 }
 
 int ArchivoCanciones::GenerarIDNuevo() {
-    FILE *p = fopen(_nombreArchivo.c_str(), "rb");
-    if (p == NULL) return 1;
-    fseek(p, 0, SEEK_END);
-    long size = ftell(p);
-    if (size <= 0) {
-        fclose(p);
-        return 1;
-    }
-    fseek(p, -static_cast<long>(sizeof(Canciones)), SEEK_END);
+    ArchivoBinario<Canciones> af(_nombreArchivo);
+    int n = af.contar();
+    if (n <= 0) return 1;
     Canciones ultimo;
-    if (fread(&ultimo, sizeof(Canciones), 1, p) != 1) {
-        fclose(p);
-        return 1;
-    }
-    fclose(p);
+    if (!af.leer(n - 1, ultimo)) return 1;
     return ultimo.getIdCancion() + 1;
 }
 
 int ArchivoCanciones::BuscarPosicion(int id) {
-    FILE *p = fopen(_nombreArchivo.c_str(), "rb");
-    if (p == NULL) return -1;
-
-    Canciones aux;
-    int pos = 0;
-    while(fread(&aux, sizeof(Canciones), 1, p)) {
-        if(aux.getIdCancion() == id && aux.getEstado()) {
-            fclose(p);
-            return pos;
+    vector<Canciones> todos = ArchivoBinario<Canciones>(_nombreArchivo).leerTodos();
+    for (size_t i = 0; i < todos.size(); ++i) {
+        if (todos[i].getIdCancion() == id && todos[i].getEstado()) {
+            return static_cast<int>(i);
         }
-        pos++;
     }
-    fclose(p);
     return -1;
 }
 
 bool ArchivoCanciones::Modificar(int pos, Canciones reg) {
-    FILE *p = fopen(_nombreArchivo.c_str(), "rb+");
-    if (p == NULL) return false;
-
-    fseek(p, pos * sizeof(Canciones), SEEK_SET);
-    bool ok = fwrite(&reg, sizeof(Canciones), 1, p);
-    fclose(p);
-    return ok;
+    return ArchivoBinario<Canciones>(_nombreArchivo).escribir(pos, reg);
 }
 
 Canciones ArchivoCanciones::BuscarPorID(int id) {
+    int pos = BuscarPosicion(id);
+    if (pos != -1) return Leer(pos);
     Canciones reg;
     reg.setEstado(false);
-
-    int pos = BuscarPosicion(id);
-    if (pos != -1) {
-        return Leer(pos);
-    }
     return reg;
 }
 
-// NUEVO: Implementaci�n de la b�squeda de duplicados
 int ArchivoCanciones::BuscarPosicionPorNombreYAlbum(const char* nombre, int idAlbum) {
-    FILE *p = fopen(_nombreArchivo.c_str(), "rb");
-    if (p == NULL) return -1;
-
-    Canciones aux;
-    int pos = 0;
-    while(fread(&aux, sizeof(Canciones), 1, p)) {
-        // Verificamos estado activo, mismo ID de �lbum y mismo nombre
-        if(aux.getEstado() &&
-           aux.getIdAlbum() == idAlbum &&
-           sonIgualesSinMayusculas(aux.getNombre(), nombre)) {
-            fclose(p);
-            return pos;
+    vector<Canciones> todos = ArchivoBinario<Canciones>(_nombreArchivo).leerTodos();
+    for (size_t i = 0; i < todos.size(); ++i) {
+        if (todos[i].getEstado() &&
+            todos[i].getIdAlbum() == idAlbum &&
+            Texto::igualesSinMayusculas(todos[i].getNombre(), nombre)) {
+            return static_cast<int>(i);
         }
-        pos++;
     }
-    fclose(p);
     return -1;
 }
