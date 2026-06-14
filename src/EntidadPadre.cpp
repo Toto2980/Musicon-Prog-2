@@ -1,4 +1,4 @@
-#include "EntidadPadre.h"
+#include "../include/EntidadPadre.h"
 
 EntidadPadre::EntidadPadre() : _id(0) {}
 
