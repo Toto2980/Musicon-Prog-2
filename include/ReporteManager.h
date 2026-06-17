@@ -13,15 +13,11 @@
 #include "ArchivoGeneros.h"
 #include "ArchivoSuscriptores.h"
 #include "DetallePlaylist.h"
-#include "Playlist.h"
+#include "ArchivoPlaylist.h"
 #include "Accesos.h"
 
 /** Responsable de generar reportes y estadísticas de Musicon. */
 class ReporteManager {
-private:
-    /** Función helper para verificar si una cadena contiene una subcadena. Parámetros: texto - Texto principal, busqueda - Subcadena a buscar. Retorna: true si contiene. */
-    bool contieneSubcadenaLocal(const char* texto, const char* busqueda);
-
 public:
     /** Muestra el menú principal de reportes con opciones para diferentes estadísticas. */
     void MostrarMenuReportes();

@@ -59,30 +59,6 @@ class Genero : public EntidadPadre {
 
         /** Muestra los datos del género en la consola (const para no modificar). */
         void Mostrar() const;
-
-        // --- PERSISTENCIA ---
-        /** Guarda el género en el archivo binario (agrega al final).
-         * Retorna: true si se guardó correctamente, false en caso de error.
-         */
-        bool Guardar();
-
-        /** Lee un género desde el archivo binario en la posición especificada.
-         * Parámetros: pos - Posición en el archivo (basado en 0).
-         * Retorna: true si se leyó correctamente, false en caso de error.
-         */
-        bool Leer(int pos);
-
-        /** Modifica un género en el archivo binario en la posición especificada. Parámetros: pos - Posición a modificar. Retorna: true si se modificó correctamente, false en caso de error. */
-        bool Modificar(int pos);
-
-        /** Obtiene la cantidad total de registros (géneros) en el archivo. Retorna: Número de géneros guardados. */
-        int ObtenerCantidadRegistros();
-
-        /** Busca el ID de un género por su nombre (comparación insensible a mayúsculas). Parámetros: nombre - Nombre a buscar. Retorna: ID del género si se encuentra, -1 si no. */
-        int BuscarIDPorNombre(const char* nombre);
-
-        /** Busca la posición en el archivo de un género por su ID. Parámetros: id - ID del género a buscar. Retorna: Posición en el archivo o -1 si no se encuentra. */
-        int BuscarPosicionPorID(int id);
 };
 
 #endif // GENEROS_H_INCLUDED

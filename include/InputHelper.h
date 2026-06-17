@@ -25,6 +25,10 @@ public:
     // Quita espacios al principio y final
     /** Quita espacios al principio y final de una cadena. ParÃ¡metros: str - La cadena original. Retorna: La cadena sin espacios. */
     static std::string trim(const std::string& str);
+	
+	// --- NUEVA HERRAMIENTA CENTRALIZADA ---
+	/** Verifica si una cadena contiene una subcadena ignorando mayúsculas/minúsculas */
+	static bool contieneSubcadena(const std::string& texto, const std::string& busqueda);
 };
 
 #endif // INPUTHELPER_H

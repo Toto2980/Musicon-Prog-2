@@ -6,10 +6,13 @@
 #ifndef GENEROMANAGER_H
 #define GENEROMANAGER_H
 
-#include "Generos.h"
+#include "ArchivoGeneros.h"
 
 /** Gestiona las operaciones CRUD para géneros musicales en el sistema Musicon. */
 class GeneroManager {
+private:
+    ArchivoGeneros _archivoGeneros;
+
 public:
     /** Agrega un nuevo género al sistema. */
     void Agregar();

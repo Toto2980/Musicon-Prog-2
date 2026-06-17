@@ -70,42 +70,6 @@ class Playlist : public EntidadPadre {
         void Cargar();
         /** Muestra la información de la lista en la pantalla. */
         void Mostrar();
-
-        // --- PERSISTENCIA (Active Record) ---
-        // Nota: Idealmente deberíamos mover esto a ArchivoPlaylist en el futuro
-        /** Guarda la lista en un archivo para no perderla.
-         * Retorna: Verdadero si se guardó sin problemas.
-         */
-        bool Guardar();
-        /** Carga una lista desde el archivo en una posición específica.
-         * Parámetros: pos - La posición en la lista de listas guardadas.
-         * Retorna: Verdadero si se cargó correctamente.
-         */
-        bool Leer(int pos);
-        /** Actualiza la información de la lista en el archivo.
-         * Parámetros: pos - La posición a cambiar.
-         * Retorna: Verdadero si se actualizó bien.
-         */
-        bool Modificar(int pos);
-        /** Cuenta cuántas listas hay guardadas en total.
-         * Retorna: El número total de listas.
-         */
-        int ObtenerCantidadRegistros();
-        /** Crea un nuevo número único para una lista.
-         * Retorna: El siguiente número disponible.
-         */
-        int GenerarIDNuevo();
-
-        /** Busca una lista por su número identificador.
-         * Parámetros: id - El ID a buscar.
-         * Retorna: La posición si la encontró, o -1 si no existe.
-         */
-        int BuscarPorID(int id);
-        /** Busca una lista por su nombre.
-         * Parámetros: nombre - El nombre a buscar.
-         * Retorna: La posición si la encontró, o -1 si no existe.
-         */
-        int BuscarPorNombre(const char* nombre);
 };
 
 #endif // PLAYLIST_H

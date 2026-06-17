@@ -7,13 +7,13 @@
 #define ARTISTA_H
 
  #include <cstring>
+#include "EntidadPadre.h"
 
 /** Representa a un artista musical con nombre, estado, ID y nacionalidad. */
-class Artista {
+class Artista : public EntidadPadre {
     private:
         char _nombre[100];
         bool _estado;
-        int _idArtista;
         char _nacionalidad[50];
 
     public:

@@ -6,12 +6,14 @@
 #ifndef PLAYLISTMANAGER_H
 #define PLAYLISTMANAGER_H
 
-#include "Playlist.h"
+#include "ArchivoPlaylist.h"
 #include "DetallePlaylist.h"
 
 /** Gestiona operaciones CRUD de playlists y gestión de canciones en playlists. */
 class PlaylistManager {
 private:
+    ArchivoPlaylist _archivoPlaylist;
+
     /** Método privado para buscar el ID de una canción por su nombre. Parámetros: nombre - Nombre de la canción. Retorna: ID de la canción o -1. */
     int buscarIdCancionPorNombre(const char* nombre);
 

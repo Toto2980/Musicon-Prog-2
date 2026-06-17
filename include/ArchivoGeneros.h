@@ -28,6 +28,9 @@ class ArchivoGeneros {
         /** Busca un género por su ID. Parámetros: id - ID del género. Retorna: El género encontrado. */
         Genero BuscarPorID(int id);
 
+        /** Modifica el género en la posición indicada. Parámetros: pos - Posición, reg - Género con datos nuevos. Retorna: true si OK. */
+        bool Modificar(int pos, Genero reg);
+
         // NUEVO: El Cerebro "Buscar o Crear"
         /** Busca un género por nombre, o lo crea si no existe. Parámetros: nombreGenero - Nombre del género. Retorna: ID del género. */
         int BuscarOCrear(std::string nombreGenero);

@@ -8,13 +8,14 @@
 
 #include <cstring>
 #include "Fecha.h"
+#include "EntidadPadre.h"
 
 /** Representa a un usuario suscriptor del sistema. */
-class Suscriptor {
+class Suscriptor : public EntidadPadre {
     private:
         char _nombre[100];
         bool _estado;
-        int _idSuscriptor;
+		int _tipoSuscriptor; // 1 = Gratis | 2 = Pago
         char _dni[15];
         char _apellido[50];
         char _email[100];
@@ -39,6 +40,11 @@ class Suscriptor {
 
         /** Establece el estado del suscriptor. Parámetros: estado - true si está activo. */
         void setEstado(bool estado) { _estado = estado; }
+
+        /** Establece el tipo de suscriptor. Parámetros: tipo - 1 para gratis, 2 para pago. */
+        void setTipoSuscriptor(int tipo);
+        /** Obtiene el tipo de suscriptor. Retorna: 1 para gratis, 2 para pago. */
+        int getTipoSuscriptor();
 
         /** Establece el ID del suscriptor. Parámetros: id - ID único. */
         void setIdSuscriptor(int id);
