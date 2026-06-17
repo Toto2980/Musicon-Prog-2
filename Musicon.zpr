@@ -19,6 +19,7 @@ path_char=\
 [source]
 path=main.cpp
 cursor=0:0
+open=true
 [source]
 path=src\Accesos.cpp
 cursor=0:0
