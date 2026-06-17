@@ -14,9 +14,9 @@ using namespace std;
  * Constructor por defecto: Inicializa nombre vacío, estado inactivo, ID en 0 y nacionalidad vacía.
  */
 Artista::Artista() {
+    setId(0);
     _nombre[0] = '\0';
     _estado = false;
-    _idArtista = 0;
     strcpy(_nacionalidad, "");
 }
 
@@ -29,7 +29,7 @@ Artista::~Artista() {}
  * Setter para el ID del artista.
  * Parámetros: id - ID único a asignar.
  */
-void Artista::setIdArtista(int id) { _idArtista = id; }
+void Artista::setIdArtista(int id) { setId(id); }
 
 /**
  * Setter para la nacionalidad.
@@ -41,7 +41,7 @@ void Artista::setNacionalidad(const char* nacionalidad) { strncpy(_nacionalidad,
  * Getter para el ID del artista.
  * Retorno: ID único.
  */
-int Artista::getIdArtista() { return _idArtista; }
+int Artista::getIdArtista() { return getId(); }
 
 /**
  * Getter para la nacionalidad.

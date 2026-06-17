@@ -41,14 +41,12 @@ int InputHelper::pedirOpcionDeLista(int cantidadOpciones) {
 
 void InputHelper::pedirCadena(string mensaje, char* buffer, int tamano) {
     cout << mensaje;
-    // Asegurarse de descartar un posible '\n' pendiente antes de leer la línea
-    if (cin.peek() == '\n') cin.get();
     cin.getline(buffer, tamano);
 }
 
 void InputHelper::pausa() {
-    cout << endl;
-    system("pause");
+    cout << "Presione Enter para continuar...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
 // --- IMPLEMENTACIÓN DE TRIM ---
@@ -76,4 +74,12 @@ string InputHelper::trim(const string& str) {
     if (string::npos == first) return string();
     size_t last = str.find_last_not_of(' ');
     return str.substr(first, (last - first + 1));
+}
+
+bool InputHelper::contieneSubcadena(const string& texto, const string& busqueda) {
+    string t = texto;
+    string b = busqueda;
+    for (auto& c : t) c = tolower(static_cast<unsigned char>(c));
+    for (auto& c : b) c = tolower(static_cast<unsigned char>(c));
+    return t.find(b) != string::npos;
 }

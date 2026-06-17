@@ -49,7 +49,6 @@ bool Album::getEstado() { return _estado; }
  * Pide ID, artista, título y año; establece estado activo.
  */
 void Album::Cargar() {
-    cout << "Ingrese ID de Album: "; cin >> _id;
     cout << "Ingrese ID del Artista: "; cin >> _idArtista;
     cin.ignore();
     cout << "Ingrese Titulo del Album: "; cin.getline(_titulo, 99);

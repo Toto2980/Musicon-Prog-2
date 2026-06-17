@@ -87,6 +87,15 @@ int ArchivoGeneros::BuscarIDPorNombre(const char* nombre) {
     return -1;
 }
 
+bool ArchivoGeneros::Modificar(int pos, Genero reg) {
+    FILE *p = fopen(_nombreArchivo.c_str(), "rb+");
+    if (p == NULL) return false;
+    fseek(p, pos * sizeof(Genero), SEEK_SET);
+    bool ok = fwrite(&reg, sizeof(Genero), 1, p);
+    fclose(p);
+    return ok;
+}
+
 Genero ArchivoGeneros::BuscarPorID(int id) {
     Genero reg;
     reg.setEstado(false);

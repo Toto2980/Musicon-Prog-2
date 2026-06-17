@@ -13,22 +13,8 @@
 #include <cstring>
 #include <ctime>
 #include <string>
-#include <cctype>
 
 using namespace std;
-
-/**
- * Función helper local para verificar si un texto contiene una subcadena, ignorando mayúsculas/minúsculas.
- * Parámetros: texto - Texto donde buscar, busqueda - Subcadena a buscar.
- * Retorna: true si encuentra la subcadena.
- */
-static bool contieneSubcadenaLocal(const char* texto, const char* busqueda) {
-    string t = texto;
-    string b = busqueda;
-    for (auto& c : t) c = tolower(c); // Convierte a minúsculas
-    for (auto& c : b) c = tolower(c);
-    return t.find(b) != string::npos; // Busca la subcadena
-}
 
 /*
  * Busca el ID de una canción por su nombre.
@@ -78,15 +64,14 @@ void PlaylistManager::MostrarMenu(int idUsuario) {
  * Parámetros: idUsuario - ID del usuario cuyas playlists mostrar.
  */
 void PlaylistManager::MostrarMisPlaylists(int idUsuario) {
-    Playlist p;
-    int total = p.ObtenerCantidadRegistros();
+    int total = _archivoPlaylist.ObtenerCantidadRegistros();
     bool hay = false;
 
     cout << "--- MIS PLAYLISTS ---" << endl;
-    for (int i = 0; i < total; i++) { // Itera sobre todas las playlists
-        if (!p.Leer(i)) continue; // Salta si no se puede leer
-        if (p.getEstado() && p.getIdSuscriptorCreador() == idUsuario) { // Filtra por usuario y estado
-            p.Mostrar(); // Muestra la playlist
+    for (int i = 0; i < total; i++) {
+        Playlist p = _archivoPlaylist.Leer(i);
+        if (p.getEstado() && p.getIdSuscriptorCreador() == idUsuario) {
+            p.Mostrar();
             hay = true;
         }
     }
@@ -102,110 +87,104 @@ void PlaylistManager::MostrarMisPlaylists(int idUsuario) {
  * Parámetros: idUsuario - ID del usuario creador de la playlist.
  */
 void PlaylistManager::CrearPlaylist(int idUsuario) {
+	
+	ArchivoSuscriptores archSus;
+	
+	int posSus = archSus.BuscarPosicion(idUsuario);
+	
+	if(posSus != -1){
+		
+		Suscriptor sus = archSus.Leer(posSus);
+		
+		if(sus.getTipoSuscriptor() == 1){
+			
+			int totalPlaylists = _archivoPlaylist.ObtenerCantidadRegistros();
 
-    ArchivoSuscriptores archSus;
+			int cantidadUsuario = 0;
 
-    int posSus = archSus.BuscarPosicion(idUsuario);
+			for(int i = 0; i < totalPlaylists; i++){
+				Playlist aux = _archivoPlaylist.Leer(i);
+				if(aux.getEstado() && aux.getIdSuscriptorCreador() == idUsuario){
+					cantidadUsuario++;
+				}
+			}
+			
+			if(cantidadUsuario >= 3){
+				
+				cout << endl;
+				cout << "==================================" << endl;
+				cout << "PLAN GRATUITO" << endl;
+				cout << "==================================" << endl;
+				cout << endl;
+				
+				cout << "Has alcanzado el limite de 3 playlists."
+					<< endl << endl;
+				
+				cout << "1. Suscribirme al plan PAGO" << endl;
+				cout << "2. Omitir" << endl;
+				
+				int op =
+					InputHelper::pedirEnteroRango(
+												  "Opcion: ",
+												  1,
+												  2
+												  );
+				
+				if(op == 1){
+					
+					sus.setTipoSuscriptor(2);
+					
+					archSus.Modificar(
+									  posSus,
+									  sus
+									  );
+					
+					cout << endl;
+					cout << "Ahora sos usuario PAGO."
+						<< endl << endl;
+				}
+				else{
+					
+					cout << endl;
+					cout << "Operacion cancelada."
+						<< endl;
+					
+					return;
+				}
+			}
+		}
+	}
+	
+	Playlist p;
 
-    if(posSus != -1){
+	int id = _archivoPlaylist.GenerarIDNuevo();
 
-        Suscriptor sus = archSus.Leer(posSus);
+	p.setIdPlaylist(id);
 
-        if(sus.getTipoSuscriptor() == 1){
+	p.setIdSuscriptorCreador(idUsuario);
 
-            Playlist aux;
+	p.Cargar();
 
-            int totalPlaylists =
-                aux.ObtenerCantidadRegistros();
+	time_t now = time(0);
 
-            int cantidadUsuario = 0;
+	tm *ltm = localtime(&now);
 
-            for(int i = 0; i < totalPlaylists; i++){
+	p.setFechaCreacion(
+					   Fecha(
+							 ltm->tm_mday,
+							 1 + ltm->tm_mon,
+							 1900 + ltm->tm_year
+							 )
+					   );
 
-                if(!aux.Leer(i)) continue;
+	p.setEstado(true);
 
-                if(aux.getEstado() &&
-                   aux.getIdSuscriptorCreador() == idUsuario){
-
-                    cantidadUsuario++;
-                }
-            }
-
-            if(cantidadUsuario >= 3){
-
-                cout << endl;
-                cout << "==================================" << endl;
-                cout << "PLAN GRATUITO" << endl;
-                cout << "==================================" << endl;
-                cout << endl;
-
-                cout << "Has alcanzado el limite de 3 playlists."
-                     << endl << endl;
-
-                cout << "1. Suscribirme al plan PAGO" << endl;
-                cout << "2. Omitir" << endl;
-
-                int op =
-                InputHelper::pedirEnteroRango(
-                    "Opcion: ",
-                    1,
-                    2
-                );
-
-                if(op == 1){
-
-                    sus.setTipoSuscriptor(2);
-
-                    archSus.Modificar(
-                        posSus,
-                        sus
-                    );
-
-                    cout << endl;
-                    cout << "Ahora sos usuario PAGO."
-                         << endl << endl;
-                }
-                else{
-
-                    cout << endl;
-                    cout << "Operacion cancelada."
-                         << endl;
-
-                    return;
-                }
-            }
-        }
-    }
-
-    Playlist p;
-
-    int id = p.GenerarIDNuevo();
-
-    p.setIdPlaylist(id);
-
-    p.setIdSuscriptorCreador(idUsuario);
-
-    p.Cargar();
-
-    time_t now = time(0);
-
-    tm *ltm = localtime(&now);
-
-    p.setFechaCreacion(
-        Fecha(
-            ltm->tm_mday,
-            1 + ltm->tm_mon,
-            1900 + ltm->tm_year
-        )
-    );
-
-    p.setEstado(true);
-
-    if (p.Guardar())
-        cout << "   [OK] Playlist creada." << endl;
-    else
-        cout << "   [ERROR] No se pudo guardar la playlist." << endl;
+	if (_archivoPlaylist.Guardar(p))
+		cout << "   [OK] Playlist creada." << endl;
+	else
+		cout << "   [ERROR] No se pudo guardar la playlist." << endl;
 }
+
 
 /*
  * Modifica el nombre de una playlist existente del usuario.
@@ -214,71 +193,20 @@ void PlaylistManager::CrearPlaylist(int idUsuario) {
  */
 void PlaylistManager::ModificarPlaylist(int idUsuario) {
     char nombreBuscado[50];
-    InputHelper::pedirCadena("Nombre de la Playlist a modificar: ", nombreBuscado, 50); // Solicita nombre a buscar
+    InputHelper::pedirCadena("Nombre de la Playlist a modificar: ", nombreBuscado, 50);
 
-    Playlist reg;
-    int total = reg.ObtenerCantidadRegistros();
-    int posicionesEncontradas[50]; // Almacena posiciones encontradas
+    int total = _archivoPlaylist.ObtenerCantidadRegistros();
+    int posicionesEncontradas[50];
     int cantidadEncontrados = 0;
 
     cout << endl << "--- SELECCION DE PLAYLIST ---" << endl;
     cout << "0. Cancelar" << endl;
 
-    for (int i = 0; i < total; i++) { // Busca playlists que coincidan
-        if (!reg.Leer(i)) continue;
-        if (reg.getEstado() &&
-            reg.getIdSuscriptorCreador() == idUsuario &&
-            contieneSubcadenaLocal(reg.getNombre(), nombreBuscado)) { // Filtra por usuario y nombre
-
-            if (cantidadEncontrados < 50) {
-                posicionesEncontradas[cantidadEncontrados] = i; // Guarda posición
-                cout << (cantidadEncontrados + 1) << ". " << reg.getNombre()
-                     << " (ID: " << reg.getIdPlaylist() << ")" << endl;
-                cantidadEncontrados++;
-            }
-        }
-    }
-
-    if (cantidadEncontrados == 0) { // Si no se encontraron
-        cout << "No se encontraron playlists tuyas con ese nombre." << endl;
-        InputHelper::pausa();
-        return;
-    }
-
-    int seleccion = InputHelper::pedirOpcionDeLista(cantidadEncontrados); // Selecciona playlist
-    if (seleccion == 0) return;
-
-    int pos = posicionesEncontradas[seleccion - 1]; // Obtiene posición seleccionada
-    reg.Leer(pos);
-
-    cout << endl << "--- EDITANDO: " << reg.getNombre() << " ---" << endl;
-    char nuevoNombre[50];
-    InputHelper::pedirCadena("Nuevo Nombre (Enter para mantener): ", nuevoNombre, 50); // Nuevo nombre
-
-    if (strlen(nuevoNombre) > 0) { // Si se específico nuevo nombre
-        reg.setNombre(nuevoNombre);
-        if (reg.Modificar(pos)) cout << "   [OK] Playlist modificada." << endl; // Modifica
-        else cout << "   [ERROR] No se pudo modificar la playlist." << endl;
-    }
-}
-
-void PlaylistManager::EliminarPlaylist(int idUsuario) {
-    char nombreBuscado[50];
-    InputHelper::pedirCadena("Nombre de la Playlist a eliminar: ", nombreBuscado, 50);
-
-    Playlist reg;
-    int total = reg.ObtenerCantidadRegistros();
-    int posicionesEncontradas[50];
-    int cantidadEncontrados = 0;
-
-    cout << endl << "--- SELECCION PARA ELIMINAR ---" << endl;
-    cout << "0. Cancelar" << endl;
-
     for (int i = 0; i < total; i++) {
-        if (!reg.Leer(i)) continue;
+        Playlist reg = _archivoPlaylist.Leer(i);
         if (reg.getEstado() &&
             reg.getIdSuscriptorCreador() == idUsuario &&
-            contieneSubcadenaLocal(reg.getNombre(), nombreBuscado)) {
+            InputHelper::contieneSubcadena(reg.getNombre(), nombreBuscado)) {
 
             if (cantidadEncontrados < 50) {
                 posicionesEncontradas[cantidadEncontrados] = i;
@@ -299,7 +227,56 @@ void PlaylistManager::EliminarPlaylist(int idUsuario) {
     if (seleccion == 0) return;
 
     int pos = posicionesEncontradas[seleccion - 1];
-    reg.Leer(pos);
+    Playlist reg = _archivoPlaylist.Leer(pos);
+
+    cout << endl << "--- EDITANDO: " << reg.getNombre() << " ---" << endl;
+    char nuevoNombre[50];
+    InputHelper::pedirCadena("Nuevo Nombre (Enter para mantener): ", nuevoNombre, 50);
+
+    if (strlen(nuevoNombre) > 0) {
+        reg.setNombre(nuevoNombre);
+        if (_archivoPlaylist.Modificar(pos, reg)) cout << "   [OK] Playlist modificada." << endl;
+        else cout << "   [ERROR] No se pudo modificar la playlist." << endl;
+    }
+}
+
+void PlaylistManager::EliminarPlaylist(int idUsuario) {
+    char nombreBuscado[50];
+    InputHelper::pedirCadena("Nombre de la Playlist a eliminar: ", nombreBuscado, 50);
+
+    int total = _archivoPlaylist.ObtenerCantidadRegistros();
+    int posicionesEncontradas[50];
+    int cantidadEncontrados = 0;
+
+    cout << endl << "--- SELECCION PARA ELIMINAR ---" << endl;
+    cout << "0. Cancelar" << endl;
+
+    for (int i = 0; i < total; i++) {
+        Playlist reg = _archivoPlaylist.Leer(i);
+        if (reg.getEstado() &&
+            reg.getIdSuscriptorCreador() == idUsuario &&
+            InputHelper::contieneSubcadena(reg.getNombre(), nombreBuscado)) {
+
+            if (cantidadEncontrados < 50) {
+                posicionesEncontradas[cantidadEncontrados] = i;
+                cout << (cantidadEncontrados + 1) << ". " << reg.getNombre()
+                     << " (ID: " << reg.getIdPlaylist() << ")" << endl;
+                cantidadEncontrados++;
+            }
+        }
+    }
+
+    if (cantidadEncontrados == 0) {
+        cout << "No se encontraron playlists tuyas con ese nombre." << endl;
+        InputHelper::pausa();
+        return;
+    }
+
+    int seleccion = InputHelper::pedirOpcionDeLista(cantidadEncontrados);
+    if (seleccion == 0) return;
+
+    int pos = posicionesEncontradas[seleccion - 1];
+    Playlist reg = _archivoPlaylist.Leer(pos);
 
     cout << endl << "Eliminaras: " << reg.getNombre() << endl;
     char confirm;
@@ -309,7 +286,7 @@ void PlaylistManager::EliminarPlaylist(int idUsuario) {
 
     if (confirm == 's' || confirm == 'S') {
         reg.setEstado(false);
-        if (reg.Modificar(pos)) cout << "   [OK] Playlist eliminada." << endl;
+        if (_archivoPlaylist.Modificar(pos, reg)) cout << "   [OK] Playlist eliminada." << endl;
         else cout << "   [ERROR] No se pudo eliminar la playlist." << endl;
     }
 }
@@ -318,8 +295,7 @@ void PlaylistManager::AgregarCancionAPlaylist() {
     char nombrePlaylist[50];
     InputHelper::pedirCadena("Buscar Playlist destino: ", nombrePlaylist, 50);
 
-    Playlist p;
-    int total = p.ObtenerCantidadRegistros();
+    int total = _archivoPlaylist.ObtenerCantidadRegistros();
     int idsEncontrados[50];
     int cantidadEncontrados = 0;
 
@@ -329,8 +305,8 @@ void PlaylistManager::AgregarCancionAPlaylist() {
     ArchivoSuscriptores archSus;
 
     for (int i = 0; i < total; i++) {
-        if (!p.Leer(i)) continue;
-        if (p.getEstado() && contieneSubcadenaLocal(p.getNombre(), nombrePlaylist)) {
+        Playlist p = _archivoPlaylist.Leer(i);
+        if (p.getEstado() && InputHelper::contieneSubcadena(p.getNombre(), nombrePlaylist)) {
             if (cantidadEncontrados < 50) {
                 idsEncontrados[cantidadEncontrados] = p.getIdPlaylist();
 

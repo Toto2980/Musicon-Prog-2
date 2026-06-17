@@ -16,19 +16,6 @@
 
 using namespace std;
 
-/**
- * Función helper para verificar si un texto contiene una subcadena, ignorando mayúsculas/minúsculas.
- * Parámetros: texto - Texto donde buscar, busqueda - Subcadena a buscar.
- * Retorna: true si encuentra la subcadena.
- */
-bool ReporteManager::contieneSubcadenaLocal(const char* texto, const char* busqueda) {
-    string t = texto;
-    string b = busqueda;
-    for (auto& c : t) c = tolower(c); // Convierte a minúsculas
-    for (auto& c : b) c = tolower(c);
-    return t.find(b) != string::npos; // Busca la subcadena
-}
-
 /*
  * Muestra el menú principal de reportes y maneja la navegación entre diferentes tipos de informes.
  * Incluye reportes de reproducciones, rankings, búsquedas y estadísticas.
@@ -297,11 +284,11 @@ void ReporteManager::reporteCancionesPorUsuarioEnListas() {
         return;
     }
 
-    Playlist p;
-    int totalP = p.ObtenerCantidadRegistros();
+    ArchivoPlaylist archP;
+    int totalP = archP.ObtenerCantidadRegistros();
     unordered_map<int,int> creadorPorPlaylist;
     for (int i = 0; i < totalP; i++) {
-        if (!p.Leer(i)) continue;
+        Playlist p = archP.Leer(i);
         if (p.getEstado()) creadorPorPlaylist[p.getIdPlaylist()] = p.getIdSuscriptorCreador();
     }
 
@@ -329,7 +316,7 @@ void ReporteManager::reporteBuscarCancionEnListasSmart() {
 
     for (int i = 0; i < totalC; i++) {
         Canciones c = archC.Leer(i);
-        if (c.getEstado() && contieneSubcadenaLocal(c.getNombre(), busqueda)) {
+        if (c.getEstado() && InputHelper::contieneSubcadena(c.getNombre(), busqueda)) {
             idsCoincidentes.push_back(c.getIdCancion());
             nombrePorCancion[c.getIdCancion()] = c.getNombre();
         }
@@ -340,12 +327,12 @@ void ReporteManager::reporteBuscarCancionEnListasSmart() {
         return;
     }
 
-    Playlist p;
-    int totalP = p.ObtenerCantidadRegistros();
+    ArchivoPlaylist archP;
+    int totalP = archP.ObtenerCantidadRegistros();
     unordered_map<int,string> nombrePorPlaylist;
     unordered_map<int,int> creadorPorPlaylist;
     for (int i = 0; i < totalP; i++) {
-        if (!p.Leer(i)) continue;
+        Playlist p = archP.Leer(i);
         if (p.getEstado()) {
             nombrePorPlaylist[p.getIdPlaylist()] = p.getNombre();
             creadorPorPlaylist[p.getIdPlaylist()] = p.getIdSuscriptorCreador();
