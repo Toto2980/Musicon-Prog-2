@@ -1,7 +1,19 @@
 /**
- * Este archivo implementa la clase PlaylistManager. Gestiona las playlists de usuarios,
- * incluyendo creación, modificación, eliminación y gestión de canciones en playlists.
- * Maneja la relación muchos-a-muchos entre usuarios y canciones.
+ * PATRÓN: Manager (capa de lógica de negocio)
+ * Esta clase orquesta el CRUD de playlists y la relación muchos-a-muchos entre
+ * suscriptores y canciones. No accede directamente al archivo — delega en
+ * _archivoPlaylist (Repository) y usa DetallePlaylist para la tabla de relación.
+ *
+ * Relación muchos-a-muchos (M:N):
+ *   - Una playlist puede tener muchas canciones.
+ *   - Una canción puede estar en muchas playlists.
+ *   - La tabla de relación (DetallePlaylist / Listas_Canciones.dat) guarda los pares
+ *     (idPlaylist, idCancion) — igual que una tabla intermedia en SQL.
+ *
+ * Lógica de negocio extra: control de plan
+ *   - Suscriptores GRATUITOS (tipo=1) tienen máximo 3 playlists.
+ *   - Si llegan al límite se les ofrece cambiar al plan PAGO (tipo=2).
+ *   - Esta regla vive aquí (en el Manager) — no en el Repository, que ignora el negocio.
  */
 
 #include "../include/PlaylistManager.h"
@@ -89,27 +101,29 @@ void PlaylistManager::MostrarMisPlaylists(int idUsuario) {
 void PlaylistManager::CrearPlaylist(int idUsuario) {
 	
 	ArchivoSuscriptores archSus;
-	
+
 	int posSus = archSus.BuscarPosicion(idUsuario);
-	
+
+	// Lógica de negocio: los usuarios GRATUITOS tienen un límite de 3 playlists
 	if(posSus != -1){
-		
+
 		Suscriptor sus = archSus.Leer(posSus);
-		
-		if(sus.getTipoSuscriptor() == 1){
-			
+
+		if(sus.getTipoSuscriptor() == 1){ // 1 = GRATIS
+
 			int totalPlaylists = _archivoPlaylist.ObtenerCantidadRegistros();
 
 			int cantidadUsuario = 0;
 
+			// Cuenta cuántas playlists activas tiene este usuario específico
 			for(int i = 0; i < totalPlaylists; i++){
 				Playlist aux = _archivoPlaylist.Leer(i);
 				if(aux.getEstado() && aux.getIdSuscriptorCreador() == idUsuario){
 					cantidadUsuario++;
 				}
 			}
-			
-			if(cantidadUsuario >= 3){
+
+			if(cantidadUsuario >= 3){ // Límite alcanzado para plan GRATIS
 				
 				cout << endl;
 				cout << "==================================" << endl;
@@ -240,6 +254,13 @@ void PlaylistManager::ModificarPlaylist(int idUsuario) {
     }
 }
 
+/*
+ * Elimina lógicamente una playlist del usuario (estado=false).
+ * Busca playlists del usuario que contengan el texto buscado (búsqueda parcial).
+ * Muestra una lista numerada para que el usuario elija cuál eliminar.
+ * Pide confirmación antes de proceder. No borra del archivo — solo cambia estado.
+ * Parámetros: idUsuario - ID del usuario propietario de la playlist.
+ */
 void PlaylistManager::EliminarPlaylist(int idUsuario) {
     char nombreBuscado[50];
     InputHelper::pedirCadena("Nombre de la Playlist a eliminar: ", nombreBuscado, 50);
@@ -291,6 +312,18 @@ void PlaylistManager::EliminarPlaylist(int idUsuario) {
     }
 }
 
+/*
+ * Agrega una canción a una playlist existente (relación muchos-a-muchos).
+ * La relación se guarda en DetallePlaylist (Listas_Canciones.dat) — NO en la playlist en sí.
+ * Antes de agregar, verifica que la canción no esté ya en esa playlist (evita duplicados).
+ *
+ * Flujo:
+ *   1. El usuario busca la playlist destino por nombre parcial.
+ *   2. Se muestra una lista de coincidencias y el usuario elige una.
+ *   3. El usuario escribe el nombre de la canción a agregar.
+ *   4. Se verifica que la canción exista y no esté ya en la lista.
+ *   5. Se crea un DetallePlaylist con la fecha actual y se guarda.
+ */
 void PlaylistManager::AgregarCancionAPlaylist() {
     char nombrePlaylist[50];
     InputHelper::pedirCadena("Buscar Playlist destino: ", nombrePlaylist, 50);

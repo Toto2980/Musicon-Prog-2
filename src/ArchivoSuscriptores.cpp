@@ -1,3 +1,19 @@
+/**
+ * PATRÓN: Repository
+ * Esta clase encapsula todo el acceso al archivo binario de suscriptores (usuarios).
+ * La capa SuscriptorManager no sabe cómo se guardan los datos — solo pide Guardar/Leer/Buscar.
+ *
+ * CÓMO FUNCIONA UN ARCHIVO BINARIO EN ESTE PROYECTO:
+ *   - Los objetos Suscriptor se escriben uno tras otro en el archivo, como un arreglo en disco.
+ *   - Cada registro ocupa exactamente sizeof(Suscriptor) bytes (todos del mismo tamaño).
+ *   - Para leer el registro número 'pos', saltamos pos * sizeof(Suscriptor) bytes desde el inicio.
+ *   - Para saber cuántos registros hay: tamaño total del archivo / sizeof(Suscriptor).
+ *
+ * ELIMINACIÓN LÓGICA vs FÍSICA:
+ *   - No borramos registros del archivo (eso desplazaría todos los demás y rompería los IDs).
+ *   - En cambio, marcamos estado=false. Así las playlists siguen referenciando al suscriptor.
+ */
+
 #include "../include/ArchivoSuscriptores.h"
 #include "../include/InputHelper.h"
 #include <cstdio>
@@ -6,10 +22,16 @@
 
 using namespace std;
 
+/** Guarda el nombre del archivo en el atributo privado. */
 ArchivoSuscriptores::ArchivoSuscriptores(string nombreArchivo) {
     _nombreArchivo = nombreArchivo;
 }
 
+/**
+ * Agrega un suscriptor al FINAL del archivo.
+ * "ab" = append binary: si el archivo no existe, lo crea; si existe, escribe al final.
+ * fwrite escribe sizeof(Suscriptor) bytes del objeto reg en el archivo.
+ */
 bool ArchivoSuscriptores::Guardar(Suscriptor reg) {
     FILE *p = fopen(_nombreArchivo.c_str(), "ab");
     if (p == NULL) return false;
@@ -18,9 +40,15 @@ bool ArchivoSuscriptores::Guardar(Suscriptor reg) {
     return ok;
 }
 
+/**
+ * Lee el suscriptor en la posición 'pos' del archivo.
+ * "rb" = read binary: solo lectura.
+ * fseek salta exactamente pos * sizeof(Suscriptor) bytes desde el inicio (SEEK_SET).
+ * Si el archivo no existe o la posición es inválida, retorna un suscriptor con estado=false.
+ */
 Suscriptor ArchivoSuscriptores::Leer(int pos) {
     Suscriptor reg;
-    reg.setEstado(false);
+    reg.setEstado(false); // Valor por defecto si la lectura falla
     FILE *p = fopen(_nombreArchivo.c_str(), "rb");
     if (p == NULL) return reg;
     fseek(p, pos * sizeof(Suscriptor), SEEK_SET);
@@ -29,24 +57,35 @@ Suscriptor ArchivoSuscriptores::Leer(int pos) {
     return reg;
 }
 
+/**
+ * Calcula la cantidad total de registros en el archivo.
+ * Técnica: ir al final del archivo (SEEK_END), leer la posición con ftell()
+ * y dividir por el tamaño de cada registro.
+ */
 int ArchivoSuscriptores::ObtenerCantidadRegistros() {
     FILE *p = fopen(_nombreArchivo.c_str(), "rb");
     if (p == NULL) return 0;
-    fseek(p, 0, SEEK_END);
-    int cant = ftell(p) / sizeof(Suscriptor);
+    fseek(p, 0, SEEK_END);       // Va al final del archivo
+    int cant = ftell(p) / sizeof(Suscriptor); // ftell() = bytes totales
     fclose(p);
     return cant;
 }
 
+/**
+ * Genera un ID autoincremental leyendo el último registro guardado.
+ * Si el archivo está vacío, devuelve 1 (primer ID).
+ * El offset negativo fseek(p, -sizeof(Suscriptor), SEEK_END) apunta al último registro.
+ */
 int ArchivoSuscriptores::GenerarIDNuevo() {
     FILE *p = fopen(_nombreArchivo.c_str(), "rb");
-    if (p == NULL) return 1;
+    if (p == NULL) return 1; // Si el archivo no existe, el primer ID es 1
     fseek(p, 0, SEEK_END);
     long size = ftell(p);
     if (size <= 0) {
         fclose(p);
-        return 1;
+        return 1; // Archivo vacío: primer ID es 1
     }
+    // Retrocede al inicio del último registro
     fseek(p, -static_cast<long>(sizeof(Suscriptor)), SEEK_END);
     Suscriptor ultimo;
     if (fread(&ultimo, sizeof(Suscriptor), 1, p) != 1) {
@@ -54,9 +93,14 @@ int ArchivoSuscriptores::GenerarIDNuevo() {
         return 1;
     }
     fclose(p);
-    return ultimo.getIdSuscriptor() + 1;
+    return ultimo.getIdSuscriptor() + 1; // Siguiente ID = último + 1
 }
 
+/**
+ * Lee todos los suscriptores en un arreglo dinámico.
+ * El llamador es responsable de liberar la memoria con delete[].
+ * Se usa en ListarActivos/Inactivos/Todos del SuscriptorManager.
+ */
 Suscriptor* ArchivoSuscriptores::LeerTodos(int &cantidad) {
     cantidad = ObtenerCantidadRegistros();
     if (cantidad <= 0) return nullptr;
@@ -67,16 +111,23 @@ Suscriptor* ArchivoSuscriptores::LeerTodos(int &cantidad) {
         return nullptr;
     }
 
+    // Reserva memoria para todos los registros de una sola vez (más eficiente que leer uno por uno)
     Suscriptor *buffer = new Suscriptor[cantidad];
     int leidos = fread(buffer, sizeof(Suscriptor), cantidad, p);
     fclose(p);
 
     if (leidos != cantidad) {
-        cantidad = leidos;
+        cantidad = leidos; // Ajusta si no se leyeron todos
     }
     return buffer;
 }
 
+/**
+ * Sobrescribe el registro en la posición 'pos' con el nuevo valor.
+ * "rb+" = read+write binary: permite modificar sin borrar el resto del archivo.
+ * fseek ubica el puntero exactamente en el registro a modificar.
+ * Esto es lo que hace posible la "eliminación lógica": modificamos estado=false en su lugar.
+ */
 bool ArchivoSuscriptores::Modificar(int pos, Suscriptor reg) {
     FILE *p = fopen(_nombreArchivo.c_str(), "rb+");
     if (p == NULL) return false;
@@ -86,6 +137,11 @@ bool ArchivoSuscriptores::Modificar(int pos, Suscriptor reg) {
     return ok;
 }
 
+/**
+ * Busca la posición (índice en el archivo) de un suscriptor por su ID.
+ * Recorre todos los registros secuencialmente hasta encontrar el ID y que esté activo.
+ * Retorna: posición si lo encuentra, -1 si no existe o está dado de baja.
+ */
 int ArchivoSuscriptores::BuscarPosicion(int id) {
     FILE *p = fopen(_nombreArchivo.c_str(), "rb");
     if (p == NULL) return -1;
@@ -102,16 +158,18 @@ int ArchivoSuscriptores::BuscarPosicion(int id) {
     return -1;
 }
 
+/**
+ * Busca la posición de un suscriptor por su nombre de usuario (case-insensitive).
+ * Usa InputHelper::trim para ignorar espacios al inicio/fin antes de comparar.
+ * Se usa en el login para encontrar al usuario que quiere entrar al sistema.
+ */
 int ArchivoSuscriptores::BuscarPosicionPorNombre(const char* nombre) {
     FILE *p = fopen(_nombreArchivo.c_str(), "rb");
     if (p == NULL) return -1;
     Suscriptor aux;
     int pos = 0;
-    std::string nombreBuscado = InputHelper::trim(nombre);
+    std::string nombreBuscado = InputHelper::trim(nombre); // Limpia espacios
     while(fread(&aux, sizeof(Suscriptor), 1, p)) {
-        // DEBUG: Descomenta esto para ver qué lee
-        // cout << "Leido: " << aux.getNombre() << " vs Buscado: " << nombreBuscado << endl;
-
         std::string nombreArchivo = InputHelper::trim(aux.getNombre());
         if(InputHelper::sonIgualesSinMayusculas(nombreArchivo, nombreBuscado) && aux.getEstado()) {
             fclose(p);
@@ -123,6 +181,10 @@ int ArchivoSuscriptores::BuscarPosicionPorNombre(const char* nombre) {
     return -1;
 }
 
+/**
+ * Busca la posición de un suscriptor por su DNI exacto (case-sensitive con strcmp).
+ * A diferencia de BuscarPosicionPorNombre, el DNI debe coincidir exactamente.
+ */
 int ArchivoSuscriptores::BuscarPosicionPorDNI(const char* dni) {
     FILE *p = fopen(_nombreArchivo.c_str(), "rb");
     if (p == NULL) return -1;

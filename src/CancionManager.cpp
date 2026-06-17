@@ -1,8 +1,16 @@
 /**
-* Este archivo implementa la clase CancionManager. Maneja la lógica de negocio para canciones,
-* incluyendo CRUD, importación/exportación, backups y registro de accesos. Utiliza archivos binarios
-* para persistencia y coordina con otros archivos para mantener la integridad de datos.
-*/
+ * PATRÓN: Manager (coordinador de capas — el más complejo del proyecto)
+ * Esta clase orquesta toda la lógica relacionada a canciones. Coordina CINCO repositorios:
+ *   _archivoCanciones, _archivoAlbum, _archivoArtistas, _archivoGeneros (+ ArchivoAccesos).
+ *
+ * Métodos clave por complejidad:
+ *   - parsearCSV()     : máquina de estados para CSV con comillas (ver comentario en el método)
+ *   - ImportarDesdeCSV : BuscarOCrear() por entidad relacionada + manejo de conflictos
+ *   - ListarDetallado  : O(N*3) — por cada canción navega álbum→artista y género (3 búsquedas)
+ *   - RegistrarAcceso  : logging de reproducciones con timestamp del sistema
+ *   - HacerBackup      : copia binaria completa del archivo de canciones
+ *   - ExportarACSV     : serialización binario → texto CSV (inverso de ImportarDesdeCSV)
+ */
 
 #include "../include/CancionManager.h"
 #include "../include/Accesos.h"
@@ -19,27 +27,43 @@
 
 using namespace std;
 
+/**
+ * Divide una línea CSV en campos, respetando valores entre comillas.
+ * Problema: un campo puede contener comas dentro de comillas: "Guns N' Roses, Vol. 1"
+ * Solución: si estamos dentro de comillas (enComillas=true), ignoramos las comas.
+ * Al terminar la línea, agrega el último campo (no hay coma final en CSV estándar).
+ *
+ * Ejemplo: 'Rock,"Guns, N' Roses",180' → ["Rock", "Guns, N' Roses", "180"]
+ */
 vector<string> parsearCSV(string linea) {
     vector<string> campos;
     string campo;
     bool enComillas = false;
-    
+
     for (char c : linea) {
         if (c == '"') {
-            enComillas = !enComillas;
+            enComillas = !enComillas; // Abre o cierra el modo "dentro de comillas"
         } else if (c == ',' && !enComillas) {
-            campos.push_back(campo);
+            campos.push_back(campo); // Separador encontrado fuera de comillas: guarda campo
             campo.clear();
         } else {
-            campo += c;
+            campo += c; // Carácter normal: lo agrega al campo actual
         }
     }
-    campos.push_back(campo);
+    campos.push_back(campo); // Agrega el último campo (la línea no termina con coma)
     return campos;
 }
 
 // --- VISUALIZACIÓN HUMANA ---
 
+/**
+ * Lista canciones con nombre de artista, álbum y género resueltos (no solo IDs).
+ * Complejidad O(N*3): por cada canción activa hace 3 búsquedas lineales:
+ *   1. _archivoAlbum.BuscarPorID(c.getIdAlbum())
+ *   2. _archivoArtistas.BuscarPorID(alb.getIdArtista())
+ *   3. _archivoGeneros.BuscarPorID(c.getIdGenero())
+ * Es un "JOIN manual" — en una base de datos SQL esto sería un JOIN con índices.
+ */
 void CancionManager::ListarDetallado() {
     int cantidad = _archivoCanciones.ObtenerCantidadRegistros();
     
@@ -264,13 +288,22 @@ void CancionManager::MostrarMenu() {
     } while (opcion != 0);
 }
 
+/**
+ * Registra que un suscriptor reprodujo una canción (crea un registro de Accesos).
+ * Busca la canción por nombre, captura la hora actual del sistema y guarda el acceso.
+ * Este registro alimenta todos los reportes de reproducciones del ReporteManager.
+ *
+ * time(0) → segundos desde el epoch Unix (01/01/1970).
+ * localtime() → convierte ese número a una estructura con dia/mes/año/hora/minutos.
+ * tm_mon va de 0 a 11, por eso sumamos 1. tm_year es años desde 1900, por eso sumamos 1900.
+ */
 void CancionManager::RegistrarAcceso(int idSuscriptor) {
     char nomC[100];
     InputHelper::pedirCadena("Cancion a escuchar: ", nomC, 100);
-    
+
     int total = _archivoCanciones.ObtenerCantidadRegistros();
     int idC = -1;
-    
+
     for (int i = 0; i < total; i++) {
         Canciones c = _archivoCanciones.Leer(i);
         if (InputHelper::sonIgualesSinMayusculas(c.getNombre(), nomC) && c.getEstado()) {
@@ -278,28 +311,36 @@ void CancionManager::RegistrarAcceso(int idSuscriptor) {
             break;
         }
     }
-    
+
     if (idC == -1) {
         cout << "No existe." << endl;
         return;
     }
-    
+
     Accesos a;
     a.setIdSuscriptor(idSuscriptor);
     a.setIdCancion(idC);
-    
+
+    // Obtiene la hora actual del sistema operativo
     time_t now = time(0);
     tm *ltm = localtime(&now);
+    // Constructor de Fecha: (minutos, hora, dia, mes, anio)
     a.setFechaHora(Fecha(ltm->tm_min, ltm->tm_hour, ltm->tm_mday, 1 + ltm->tm_mon, 1900 + ltm->tm_year));
     a.Guardar();
-    
+
     cout << "Reproduciendo..." << endl;
 }
 
+/**
+ * Crea un backup del archivo binario de canciones en "canciones.bak".
+ * Lee todos los registros uno a uno y los escribe en el archivo de backup.
+ * Guarda TODOS los registros (activos e inactivos) para que el backup sea completo.
+ * Útil para recuperar datos si el archivo principal se corrompe.
+ */
 void CancionManager::HacerBackup() {
     cout << "Haciendo backup..." << endl;
-    FILE *d = fopen("canciones.bak", "wb");
-    
+    FILE *d = fopen("canciones.bak", "wb"); // "wb" = write binary: crea o reemplaza el archivo
+
     if(d) {
         int total = _archivoCanciones.ObtenerCantidadRegistros();
         for(int i = 0; i < total; i++) {
@@ -313,46 +354,64 @@ void CancionManager::HacerBackup() {
     }
 }
 
+/**
+ * Exporta todas las canciones activas a un archivo CSV legible por Excel.
+ * Recorre todas las canciones y resuelve los IDs de artista, álbum y género
+ * para escribir los nombres en lugar de los números (más legible para humanos).
+ * Los campos con texto van entre comillas para soportar comas dentro del texto.
+ */
 void CancionManager::ExportarACSV() {
     ofstream salida("ListadoCanciones.csv");
     if (!salida.is_open()) {
         cout << "No se pudo crear el archivo CSV." << endl;
         return;
     }
-    
+
     salida << "ID,Nombre,Artista,Album,Genero,DuracionSegundos\n";
     int total = _archivoCanciones.ObtenerCantidadRegistros();
-    
+
     for(int i = 0; i < total; i++) {
         Canciones c = _archivoCanciones.Leer(i);
-        if (!c.getEstado()) continue;
-        
+        if (!c.getEstado()) continue; // Salta los eliminados lógicamente
+
+        // Resuelve el álbum y el artista a través de los IDs encadenados
         Album alb = _archivoAlbum.BuscarPorID(c.getIdAlbum());
         string nombreAlbum = (alb.getEstado()) ? alb.getTitulo() : "";
         string nombreArtista = "";
-        
+
         if (alb.getEstado()) {
             Artista art = _archivoArtistas.BuscarPorID(alb.getIdArtista());
             if (art.getEstado()) nombreArtista = art.getNombre();
         }
-        
+
         Genero gen = _archivoGeneros.BuscarPorID(c.getIdGenero());
         string nombreGenero = (gen.getEstado()) ? gen.getNombre() : "";
-        
+
         salida << c.getIdCancion() << ","
-               << "\"" << c.getNombre() << "\"," 
-               << "\"" << nombreArtista << "\"," 
-               << "\"" << nombreAlbum << "\"," 
-               << "\"" << nombreGenero << "\"," 
+               << "\"" << c.getNombre() << "\","
+               << "\"" << nombreArtista << "\","
+               << "\"" << nombreAlbum << "\","
+               << "\"" << nombreGenero << "\","
                << c.getDuracionSegundos() << "\n";
     }
-    
+
     salida.close();
     cout << "Exportacion finalizada." << endl;
 }
 
 // --- IMPORTACIÓN MASIVA INTELIGENTE ---
 
+/**
+ * Importa canciones desde un archivo CSV externo.
+ * Para cada fila del CSV:
+ *   1. Parsea los campos con parsearCSV().
+ *   2. Resuelve o crea el artista, álbum y género con BuscarOCrear().
+ *   3. Detecta si la canción ya existe en el mismo álbum (conflicto).
+ *   4. En caso de conflicto, ofrece opciones: reemplazar, saltar, o aplicar a todos.
+ *
+ * Las banderas 'aplicarATodosReemplazar' y 'aplicarATodosSaltar' permiten que
+ * el usuario tome una decisión global sin responder conflicto por conflicto.
+ */
 void CancionManager::ImportarDesdeCSV() {
     string rutaArchivo;
     cout << "Ingrese nombre del archivo (ej: En_una_Nota.csv): ";

@@ -1,7 +1,26 @@
 /**
- * Este archivo implementa la clase ReporteManager. Genera diversos reportes y estadísticas
- * del sistema Musicon, incluyendo reproducciones, rankings y búsquedas inteligentes.
- * Utiliza mapas desordenados para optimizar el procesamiento de datos y evitar algoritmos O(N²).
+ * PATRÓN: Manager de Reportes (capa de análisis de datos)
+ * Esta clase lee múltiples repositorios y cruza información para generar estadísticas.
+ * No modifica nada — es de solo lectura.
+ *
+ * Técnica clave: pre-indexación con unordered_map para evitar O(N²).
+ *
+ *   SIN pre-indexación (lento, O(N²)):
+ *     for cada acceso:           // N iteraciones
+ *       for cada suscriptor:     // N búsqueda lineal por cada acceso
+ *         if acceso.id == suscriptor.id → contador++
+ *
+ *   CON pre-indexación (rápido, O(N)):
+ *     Fase 1 — construir índice:
+ *       unordered_map<int,int> indice;  // ID suscriptor → posición en vector
+ *       for cada suscriptor: indice[id] = posicion   // O(1) inserción
+ *
+ *     Fase 2 — contar:
+ *       for cada acceso:
+ *         int pos = indice[acceso.idSuscriptor];  // O(1) lookup en vez de O(N)
+ *         contador[pos]++
+ *
+ * Con millones de accesos: la diferencia es HORAS (O(N²)) vs SEGUNDOS (O(N)).
  */
 
 #include "../include/ReporteManager.h"
@@ -178,6 +197,14 @@ void ReporteManager::reporteReproduccionesPorGenero() {
     }
 }
 
+/*
+ * Genera un reporte de reproducciones por canción para un año específico.
+ * Usa el mismo patrón de unordered_map que el reporte por suscriptor:
+ *   1. Carga todas las canciones activas en un mapa (ID → índice en el vector contador).
+ *   2. Recorre todos los accesos del año y busca el ID de canción en el mapa en O(1).
+ *   3. Muestra solo las canciones con al menos una reproducción.
+ * Parámetros: Solicita el año al usuario.
+ */
 void ReporteManager::reporteReproduccionesPorCancion() {
     int anio = InputHelper::pedirEntero("Anio: ");
 
@@ -186,7 +213,7 @@ void ReporteManager::reporteReproduccionesPorCancion() {
     vector<int> ids;
     vector<string> nombres;
     vector<int> contador;
-    unordered_map<int,int> indicePorCancion;
+    unordered_map<int,int> indicePorCancion; // Mapa ID canción → índice en el vector contador
 
     for (int i = 0; i < totalCan; i++) {
         Canciones c = archC.Leer(i);
@@ -203,7 +230,7 @@ void ReporteManager::reporteReproduccionesPorCancion() {
     for (int i = 0; i < totalAcc; i++) {
         a.Leer(i);
         if (a.getFechaHora().getAnio() != anio) continue;
-        auto it = indicePorCancion.find(a.getIdCancion());
+        auto it = indicePorCancion.find(a.getIdCancion()); // Búsqueda O(1) en el mapa
         if (it != indicePorCancion.end()) contador[it->second]++;
     }
 
@@ -212,6 +239,11 @@ void ReporteManager::reporteReproduccionesPorCancion() {
     }
 }
 
+/*
+ * Lista todas las canciones activas de un género dado.
+ * Busca el ID del género por nombre y luego filtra las canciones por idGenero.
+ * Es una búsqueda simple sin mapas porque solo se usa para mostrar, no para contar.
+ */
 void ReporteManager::reporteListarCancionesPorGenero() {
     char nom[50];
     InputHelper::pedirCadena("Genero: ", nom, 50);
@@ -231,6 +263,15 @@ void ReporteManager::reporteListarCancionesPorGenero() {
     }
 }
 
+/*
+ * Cuenta cuántas canciones tiene cada artista.
+ * La cadena Artista → Album → Canción requiere dos mapas:
+ *   - artistaPorAlbum: mapa de idAlbum → idArtista (construido una sola vez).
+ *   - indicePorArtista: mapa de idArtista → índice en el vector contador.
+ * Al recorrer las canciones, resolvemos el artista en dos pasos O(1):
+ *   canción.idAlbum → artistaPorAlbum[idAlbum] = idArtista → indicePorArtista[idArtista].
+ * Esto evita el O(N²) de buscar el álbum en el archivo por cada canción.
+ */
 void ReporteManager::reporteCantidadCancionesPorArtista() {
     ArchivoArtistas archArt;
     int totalArt = archArt.ObtenerCantidadRegistros();
@@ -275,6 +316,15 @@ void ReporteManager::reporteCantidadCancionesPorArtista() {
     }
 }
 
+/*
+ * Cuenta cuántas canciones tiene un usuario en total a través de todas sus playlists.
+ * Pasos:
+ *   1. Verifica que el usuario exista.
+ *   2. Carga todas las playlists en un mapa (idPlaylist → idCreador).
+ *   3. Recorre el archivo DetallePlaylist (relación playlist-canción).
+ *   4. Por cada detalle activo, busca en el mapa si la playlist pertenece al usuario.
+ * Parámetros: Solicita el ID del usuario al usuario por consola.
+ */
 void ReporteManager::reporteCancionesPorUsuarioEnListas() {
     int idUser = InputHelper::pedirEntero("ID Usuario a consultar: ");
 
@@ -305,6 +355,17 @@ void ReporteManager::reporteCancionesPorUsuarioEnListas() {
     cout << "El usuario ID " << idUser << " tiene un total de " << contadorCanciones << " canciones en sus listas." << endl;
 }
 
+/*
+ * Búsqueda inteligente de una canción en todas las playlists del sistema.
+ * Permite búsqueda PARCIAL por nombre (ej: "love" encuentra "Love Story" y "I Love Rock").
+ * Pasos:
+ *   1. Busca todas las canciones que contengan la subcadena buscada.
+ *   2. Carga todas las playlists en mapas (nombre y creador, indexados por ID).
+ *   3. Recorre DetallePlaylist para saber en qué playlists aparece cada canción coincidente.
+ *   4. Muestra para cada canción encontrada: en qué playlists está y quién las creó.
+ *
+ * Se usan unordered_map para evitar buscar en el archivo por cada detalle (O(1) vs O(N)).
+ */
 void ReporteManager::reporteBuscarCancionEnListasSmart() {
     char busqueda[100];
     InputHelper::pedirCadena("Ingrese nombre (o parte) de la cancion: ", busqueda, 100);
@@ -367,6 +428,17 @@ void ReporteManager::reporteBuscarCancionEnListasSmart() {
     }
 }
 
+/*
+ * Genera el TOP 5 de canciones más escuchadas de todos los tiempos.
+ * Usa std::sort con una lambda que compara por cantidad de reproducciones (mayor a menor).
+ * La lambda [&] captura los vectores por referencia para poder compararlos.
+ *
+ * Algoritmo:
+ *   1. Carga todas las canciones en vectores de ids, nombres y contadores.
+ *   2. Recorre todos los accesos (sin filtro de año) e incrementa el contador.
+ *   3. Crea un vector de índices y lo ordena según los contadores.
+ *   4. Muestra los primeros 5 (o menos si hay menos de 5 canciones).
+ */
 void ReporteManager::reporteRankingCanciones() {
     system("cls");
     cout << "--- RANKING DE CANCIONES MAS ESCUCHADAS ---" << endl;
