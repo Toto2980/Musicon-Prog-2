@@ -40,12 +40,14 @@
 		<Unit filename="include/ArchivoArtistas.h" />
 		<Unit filename="include/ArchivoCanciones.h" />
 		<Unit filename="include/ArchivoGeneros.h" />
+		<Unit filename="include/ArchivoPlaylist.h" />
 		<Unit filename="include/ArchivoSuscriptores.h" />
 		<Unit filename="include/Artista.h" />
 		<Unit filename="include/ArtistaManager.h" />
 		<Unit filename="include/CancionManager.h" />
 		<Unit filename="include/Canciones.h" />
 		<Unit filename="include/DetallePlaylist.h" />
+		<Unit filename="include/EntidadPadre.h" />
 		<Unit filename="include/Fecha.h" />
 		<Unit filename="include/GeneroManager.h" />
 		<Unit filename="include/Generos.h" />
@@ -54,10 +56,6 @@
 		<Unit filename="include/Playlist.h" />
 		<Unit filename="include/PlaylistManager.h" />
 		<Unit filename="include/ReporteManager.h" />
-		<Unit filename="include/StringUtils.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="include/StringUtils.h" />
 		<Unit filename="include/Suscriptor.h" />
 		<Unit filename="include/SuscriptorManager.h" />
 		<Unit filename="include/musicon.h" />
@@ -68,12 +66,14 @@
 		<Unit filename="src/ArchivoArtistas.cpp" />
 		<Unit filename="src/ArchivoCanciones.cpp" />
 		<Unit filename="src/ArchivoGeneros.cpp" />
+		<Unit filename="src/ArchivoPlaylist.cpp" />
 		<Unit filename="src/ArchivoSuscriptores.cpp" />
 		<Unit filename="src/Artista.cpp" />
 		<Unit filename="src/ArtistaManager.cpp" />
 		<Unit filename="src/CancionManager.cpp" />
 		<Unit filename="src/Canciones.cpp" />
 		<Unit filename="src/DetallePlaylist.cpp" />
+		<Unit filename="src/EntidadPadre.cpp" />
 		<Unit filename="src/Fecha.cpp" />
 		<Unit filename="src/GeneroManager.cpp" />
 		<Unit filename="src/Generos.cpp" />
