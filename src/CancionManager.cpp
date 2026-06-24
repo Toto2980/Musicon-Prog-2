@@ -244,8 +244,9 @@ void CancionManager::Eliminar() {
         reg.Mostrar();
         
         cout << "Confirmar eliminacion? (s/n): ";
-        char op; 
+        char op;
         cin >> op;
+    
         
         if(op == 's' || op == 'S') {
             reg.setEstado(false);
@@ -275,15 +276,17 @@ void CancionManager::MostrarMenu() {
              << "2. Agregar Nueva Cancion\n"
              << "3. Eliminar Cancion\n"
              << "4. Modificar Cancion\n"
+             << "5. Importar desde CSV\n"
              << "0. Volver\n";
              
-        opcion = InputHelper::pedirEnteroRango("Opcion: ", 0, 4);
+        opcion = InputHelper::pedirEnteroRango("Opcion: ", 0, 5);
         
         switch (opcion) {
             case 1: ListarDetallado(); break;
             case 2: Agregar(); break;
             case 3: Eliminar(); break;
             case 4: Modificar(); break;
+            case 5: ImportarDesdeCSV(); break;
         }
     } while (opcion != 0);
 }

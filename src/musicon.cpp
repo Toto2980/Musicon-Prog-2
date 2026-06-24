@@ -1,8 +1,8 @@
 /**
-* Este archivo contiene la implementación de la clase musicon, que actúa como el controlador principal
-* de la aplicación Musicon. Su función principal es manejar la interfaz de usuario a través de menús,
-* delegando toda la lógica de negocio a los managers especializados (CancionManager, PlaylistManager, etc.).
-* No contiene lógica de negocio directa, solo navegación de menús y llamadas a los managers.
+* Este archivo contiene la implementaciï¿½n de la clase musicon, que actï¿½a como el controlador principal
+* de la aplicaciï¿½n Musicon. Su funciï¿½n principal es manejar la interfaz de usuario a travï¿½s de menï¿½s,
+* delegando toda la lï¿½gica de negocio a los managers especializados (CancionManager, PlaylistManager, etc.).
+* No contiene lï¿½gica de negocio directa, solo navegaciï¿½n de menï¿½s y llamadas a los managers.
 */
 
 #include "../include/musicon.h"
@@ -27,7 +27,7 @@ using namespace std;
 
 /**
 * Constructor de la clase musicon.
-* Inicializa el ID del usuario logueado a 0 (ningún usuario) y el nombre a "Visitante".
+* Inicializa el ID del usuario logueado a 0 (ningï¿½n usuario) y el nombre a "Visitante".
 */
 musicon::musicon() {
 	_idUsuarioLogueado = 0;
@@ -36,15 +36,15 @@ musicon::musicon() {
 
 /*
 
-* Método principal que inicia el sistema.
-* Llama al menú de bienvenida para comenzar la interacción con el usuario.
+* Mï¿½todo principal que inicia el sistema.
+* Llama al menï¿½ de bienvenida para comenzar la interacciï¿½n con el usuario.
 */
 void musicon::iniciarSistema() {
 	menuBienvenida();
 }
 
 /*
-* Muestra el menú de bienvenida donde el usuario puede elegir iniciar sesión, registrarse o salir.
+* Muestra el menï¿½ de bienvenida donde el usuario puede elegir iniciar sesiï¿½n, registrarse o salir.
 * Este es el punto de entrada para usuarios no autenticados.
 */
 void musicon::menuBienvenida() {
@@ -60,13 +60,13 @@ void musicon::menuBienvenida() {
 		cout << "0. SALIR DEL SISTEMA" << endl;
 		cout << "===========================================" << endl;
 		
-		opcion = InputHelper::pedirEnteroRango("Ingrese opcion: ", 0, 2); // Pide una opción válida entre 0 y 2
+		opcion = InputHelper::pedirEnteroRango("Ingrese opcion: ", 0, 2); // Pide una opciï¿½n vï¿½lida entre 0 y 2
 		
 		switch (opcion) {
-		case 1: login(); break; // Llama al método de login
+		case 1: login(); break; // Llama al mï¿½todo de login
 		case 2: {
 			SuscriptorManager manager; // Crea una instancia del manager de suscriptores
-			manager.Agregar(); // Llama al método para agregar un nuevo suscriptor (registro)
+			manager.Agregar(); // Llama al mï¿½todo para agregar un nuevo suscriptor (registro)
 			break;
 		}
 		case 0: cout << "Nos vemos!" << endl; break; // Mensaje de despedida
@@ -75,7 +75,7 @@ void musicon::menuBienvenida() {
 }
 
 /*
-* Método para manejar el inicio de sesión de un usuario.
+* Mï¿½todo para manejar el inicio de sesiï¿½n de un usuario.
 * Pide el nombre de usuario, busca en el archivo de suscriptores y, si existe, establece el usuario como logueado.
 */
 void musicon::login() {
@@ -172,8 +172,8 @@ void musicon::login() {
 }
 
 /*
-* Muestra el menú principal para usuarios logueados.
-* Ofrece opciones para gestionar cargas, usuarios, informes y configuración.
+* Muestra el menï¿½ principal para usuarios logueados.
+* Ofrece opciones para gestionar cargas, usuarios, informes y configuraciï¿½n.
 */
 void musicon::mostrarMenuPrincipal() {
 	
@@ -333,9 +333,9 @@ void musicon::menuCanciones() {
 		cout << "3. Eliminar Cancion" << endl;
 		cout << "4. Modificar Cancion" << endl;
 		cout << "0. Volver" << endl;
-		
+
 		opcion = InputHelper::pedirEnteroRango("Opcion: ", 0, 4);
-		
+
 		switch (opcion) {
 		case 1: manager.ListarDetallado(); break;
 		case 2: manager.Agregar(); break;
@@ -372,7 +372,7 @@ void musicon::menuPlaylists() {
 }
 
 /*
-* Muestra el menú de gestión de suscriptores, delegando a SuscriptorManager.
+* Muestra el menï¿½ de gestiï¿½n de suscriptores, delegando a SuscriptorManager.
 */
 void musicon::menuSuscriptores() {
 	
@@ -435,7 +435,7 @@ void musicon::menuSuscriptores() {
 }
 
 /*
-* Muestra el menú de configuración, donde se gestionan artistas, géneros, backups y exportaciones.
+* Muestra el menï¿½ de configuraciï¿½n, donde se gestionan artistas, gï¿½neros, backups y exportaciones.
 */
 void musicon::menuConfiguracion() {
 	int op = -1;
@@ -449,25 +449,25 @@ void musicon::menuConfiguracion() {
 		cout << "5. IMPORTAR CANCIONES DESDE CSV" << endl;
 		cout << "0. Volver" << endl;
 		
-		op = InputHelper::pedirEnteroRango("Opcion: ", 0, 5); // Pide opción entre 0 y 5
+		op = InputHelper::pedirEnteroRango("Opcion: ", 0, 5); // Pide opciï¿½n entre 0 y 5
 		
 		switch(op) {
-		case 1: menuArtistas(); break; // Menú de artistas
-		case 2: menuGeneros(); break; // Menú de géneros
+		case 1: menuArtistas(); break; // Menï¿½ de artistas
+		case 2: menuGeneros(); break; // Menï¿½ de gï¿½neros
 		case 3: {
 			cout << "Haciendo backup..." << endl; // Mensaje de proceso
 			CancionManager manager; // Instancia del manager
-			manager.HacerBackup(); // Llama al método de backup
+			manager.HacerBackup(); // Llama al mï¿½todo de backup
 			break;
 		}
 		case 4: {
 			CancionManager manager; // Instancia del manager
-			manager.ExportarACSV(); // Llama al método de exportación
+			manager.ExportarACSV(); // Llama al mï¿½todo de exportaciï¿½n
 			break;
 		}
 		case 5: {
 			CancionManager manager; // Instancia del manager
-			manager.ImportarDesdeCSV(); // Llama al método de importación
+			manager.ImportarDesdeCSV(); // Llama al mï¿½todo de importaciï¿½n
 			break;
 		}
 		}
@@ -530,18 +530,22 @@ void musicon::mostrarMenuReportes() {
 void musicon::registrarAcceso() {
 	char nomC[100];
 	InputHelper::pedirCadena("Cancion a escuchar: ", nomC, 100);
-	
+
+	// Trim del nombre ingresado para tolerar espacios accidentales
+	std::string nomBuscado = InputHelper::trim(nomC);
+
 	ArchivoCanciones arch;
 	int total = arch.ObtenerCantidadRegistros();
 	int idC = -1;
 	for (int i = 0; i < total; i++) {
 		Canciones c = arch.Leer(i);
-		if (InputHelper::sonIgualesSinMayusculas(c.getNombre(), nomC) && c.getEstado()) {
+		std::string nomGuardado = InputHelper::trim(c.getNombre());
+		if (InputHelper::sonIgualesSinMayusculas(nomGuardado.c_str(), nomBuscado.c_str()) && c.getEstado()) {
 			idC = c.getIdCancion();
 			break;
 		}
 	}
-	
+
 	if (idC == -1) {
 		cout << "No existe." << endl;
 		return;
