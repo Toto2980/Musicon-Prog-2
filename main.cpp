@@ -1,17 +1,21 @@
 /*
  * Archivo: main.cpp
- * Descripci髇: Punto de entrada de la aplicaci髇 Musicon.
- * Este archivo contiene la funci髇 main que inicializa la aplicaci髇
- * y comienza la ejecuci髇 del sistema.
+ * Descripci贸n: Punto de entrada de la aplicaci贸n Musicon.
+ * Este archivo contiene la funci贸n main que inicializa la aplicaci贸n
+ * y comienza la ejecuci贸n del sistema.
  */
 
-#include "musicon.h"
+#include "include/musicon.h"
 #include <iostream>
+#include <locale.h>
+
 
 using namespace std;
 
 int main() {
-    // Crear instancia de la aplicaci髇 Musicon
+
+    setlocale(LC_ALL, "");
+    // Crear instancia de la aplicaci贸n Musicon
     musicon app;
 
     // Iniciar el sistema
