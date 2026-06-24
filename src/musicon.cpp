@@ -548,9 +548,10 @@ void musicon::registrarAcceso() {
 
 	if (idC == -1) {
 		cout << "No existe." << endl;
+		InputHelper::pausa();
 		return;
 	}
-	
+
 	Accesos a;
 	a.setIdSuscriptor(_idUsuarioLogueado);
 	a.setIdCancion(idC);
@@ -559,4 +560,5 @@ void musicon::registrarAcceso() {
 	a.setFechaHora(Fecha(ltm->tm_min, ltm->tm_hour, ltm->tm_mday, 1 + ltm->tm_mon, 1900 + ltm->tm_year));
 	a.Guardar();
 	cout << "Reproduciendo..." << endl;
+	InputHelper::pausa();
 }
