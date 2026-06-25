@@ -1,11 +1,11 @@
 /**
- * PATRÓN: Manager (capa de lógica de negocio)
- * Esta clase orquesta el CRUD de géneros musicales.
+ * PATRON: Manager (capa de logica de negocio)
+ * Esta clase orquesta el CRUD de generos musicales.
  * No accede directamente al archivo — delega en _archivoGeneros (Repository).
  *
- * Los géneros se usan como categoría de las canciones.
- * Al eliminar un género, solo se lo marca como inactivo (eliminación lógica).
- * Las canciones que tenían ese género conservan su idGenero — no se rompen.
+ * Los generos se usan como categoria de las canciones.
+ * Al eliminar un genero, solo se lo marca como inactivo (eliminacion logica).
+ * Las canciones que tenian ese genero conservan su idGenero — no se rompen.
  */
 
 #include "../include/GeneroManager.h"
@@ -16,8 +16,8 @@
 using namespace std;
 
 /**
- * Da de alta un nuevo género musical.
- * Genera un ID automático, pide el nombre al usuario y guarda con estado=true.
+ * Da de alta un nuevo genero musical.
+ * Genera un ID automatico, pide el nombre al usuario y guarda con estado=true.
  */
 void GeneroManager::Agregar() {
     Genero g;
@@ -39,7 +39,7 @@ void GeneroManager::Agregar() {
 }
 
 /**
- * Modifica el nombre de un género existente.
+ * Modifica el nombre de un genero existente.
  * Busca por nombre actual (case-insensitive), muestra los datos actuales
  * y permite ingresar un nuevo nombre (Enter para no cambiar).
  */
@@ -47,14 +47,14 @@ void GeneroManager::Modificar() {
     char nombre[50];
     InputHelper::pedirCadena("Ingrese nombre del genero a modificar: ", nombre, 50);
 
-    // Busca el ID por nombre para luego obtener su posición en el archivo
+    // Busca el ID por nombre para luego obtener su posicion en el archivo
     int id = _archivoGeneros.BuscarIDPorNombre(nombre);
     if (id == -1) {
         cout << "Genero no encontrado." << endl;
         return;
     }
 
-    // Con el ID, busca la posición exacta del registro en el archivo
+    // Con el ID, busca la posicion exacta del registro en el archivo
     int pos = _archivoGeneros.BuscarPosicion(id);
     Genero reg = _archivoGeneros.Leer(pos);
 
@@ -64,7 +64,7 @@ void GeneroManager::Modificar() {
     char buffer[50];
     InputHelper::pedirCadena("Nuevo Nombre (Enter para mantener): ", buffer, 50);
 
-    // Solo actualiza si el usuario ingresó algo
+    // Solo actualiza si el usuario ingreso algo
     if (strlen(buffer) > 0) reg.setNombre(buffer);
 
     if (_archivoGeneros.Modificar(pos, reg)) {
@@ -75,8 +75,8 @@ void GeneroManager::Modificar() {
 }
 
 /**
- * Da de baja lógicamente un género (estado=false).
- * Busca por nombre, muestra los datos y pide confirmación.
+ * Da de baja logicamente un genero (estado=false).
+ * Busca por nombre, muestra los datos y pide confirmacion.
  * No borra del archivo — solo cambia su estado a inactivo.
  */
 void GeneroManager::Eliminar() {
@@ -99,7 +99,7 @@ void GeneroManager::Eliminar() {
     cin.ignore(10000, '\n');
 
     if (op == 's' || op == 'S') {
-        // Eliminación lógica: marcamos inactivo y sobrescribimos el registro
+        // Eliminacion logica: marcamos inactivo y sobrescribimos el registro
         reg.setEstado(false);
         if (_archivoGeneros.Modificar(pos, reg)) cout << "Genero eliminado." << endl;
         else cout << "Error al eliminar." << endl;
@@ -107,8 +107,8 @@ void GeneroManager::Eliminar() {
 }
 
 /**
- * Lista todos los géneros activos (estado=true).
- * Recorre todos los registros y muestra solo los que están activos.
+ * Lista todos los generos activos (estado=true).
+ * Recorre todos los registros y muestra solo los que estan activos.
  */
 void GeneroManager::Listar() {
     int total = _archivoGeneros.ObtenerCantidadRegistros();

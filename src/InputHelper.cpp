@@ -1,14 +1,14 @@
 /**
  * Esta clase centraliza todas las funciones de entrada del usuario y utilidades de texto.
- * Al concentrar las validaciones aquí, el resto del código queda más limpio
+ * Al concentrar las validaciones aqui, el resto del codigo queda mas limpio
  * y los errores de entrada se manejan en un solo lugar.
  *
  * FUNCIONES DISPONIBLES:
  *   - pedirEntero: lee un entero, reintenta si el usuario escribe texto.
  *   - pedirEnteroRango: igual que pedirEntero pero fuerza un rango [min, max].
- *   - pedirCadena: lee una línea completa con getline (soporta espacios).
+ *   - pedirCadena: lee una linea completa con getline (soporta espacios).
  *   - pausa: espera que el usuario presione Enter antes de continuar.
- *   - sonIgualesSinMayusculas: compara strings ignorando mayúsculas/minúsculas.
+ *   - sonIgualesSinMayusculas: compara strings ignorando mayusculas/minusculas.
  *   - trim: elimina espacios al inicio y al final de un string.
  *   - contieneSubcadena: verifica si un texto contiene una subcadena (case-insensitive).
  */
@@ -23,7 +23,7 @@
 using namespace std;
 
 /**
- * Lee un entero del teclado. Si el usuario escribe texto no numérico,
+ * Lee un entero del teclado. Si el usuario escribe texto no numerico,
  * limpia el buffer de cin y vuelve a pedir (si reintentar=true).
  * Si reintentar=false, devuelve -1 ante un error de entrada.
  */
@@ -32,11 +32,11 @@ int InputHelper::pedirEntero(string mensaje, bool reintentar) {
     while (true) {
         cout << mensaje;
         if (cin >> numero) {
-            // Descarta el salto de línea que queda en el buffer después de cin >>
+            // Descarta el salto de linea que queda en el buffer despues de cin >>
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             return numero;
         } else {
-            // cin falló (entrada inválida): limpia el estado de error y el buffer
+            // cin fallo (entrada invalida): limpia el estado de error y el buffer
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             if (reintentar) cout << "[ERROR] Ingrese un numero valido." << endl;
@@ -46,8 +46,8 @@ int InputHelper::pedirEntero(string mensaje, bool reintentar) {
 }
 
 /**
- * Lee un entero y repite hasta que el valor esté dentro de [min, max].
- * Útil para menús: el usuario no puede escribir una opción inválida.
+ * Lee un entero y repite hasta que el valor este dentro de [min, max].
+ * Util para menus: el usuario no puede escribir una opcion invalida.
  */
 int InputHelper::pedirEnteroRango(string mensaje, int min, int max) {
     int numero;
@@ -69,9 +69,9 @@ int InputHelper::pedirOpcionDeLista(int cantidadOpciones) {
 }
 
 /**
- * Lee una línea completa del teclado con espacios usando cin.getline.
+ * Lee una linea completa del teclado con espacios usando cin.getline.
  * A diferencia de cin >>, getline puede leer nombres como "Foo Fighters".
- * 'tamano' indica el tamaño máximo del buffer incluyendo el terminador '\0'.
+ * 'tamano' indica el tamano maximo del buffer incluyendo el terminador '\0'.
  */
 void InputHelper::pedirCadena(string mensaje, char* buffer, int tamano) {
     cout << mensaje;
@@ -79,7 +79,7 @@ void InputHelper::pedirCadena(string mensaje, char* buffer, int tamano) {
 }
 
 /**
- * Pausa la ejecución hasta que el usuario presione Enter.
+ * Pausa la ejecucion hasta que el usuario presione Enter.
  * Limpia cualquier contenido residual en el buffer antes de esperar.
  */
 void InputHelper::pausa() {
@@ -88,10 +88,10 @@ void InputHelper::pausa() {
 }
 
 /**
- * Compara dos cadenas de C ignorando diferencias de mayúsculas/minúsculas.
- * Usa tolower() en cada carácter para normalizar antes de comparar.
+ * Compara dos cadenas de C ignorando diferencias de mayusculas/minusculas.
+ * Usa tolower() en cada caracter para normalizar antes de comparar.
  * El cast a unsigned char es obligatorio: tolower espera un valor positivo.
- * Retorna true solo si las cadenas son idénticas (misma longitud y mismos caracteres).
+ * Retorna true solo si las cadenas son identicas (misma longitud y mismos caracteres).
  */
 bool InputHelper::sonIgualesSinMayusculas(const char* texto1, const char* texto2) {
     if (texto1 == nullptr || texto2 == nullptr) return texto1 == texto2;
@@ -109,32 +109,32 @@ bool InputHelper::sonIgualesSinMayusculas(const char* texto1, const char* texto2
     return *texto1 == *texto2;
 }
 
-/** Sobrecarga para strings de C++ — convierte a char* y reutiliza la lógica anterior. */
+/** Sobrecarga para strings de C++ — convierte a char* y reutiliza la logica anterior. */
 bool InputHelper::sonIgualesSinMayusculas(const string& texto1, const string& texto2) {
     return sonIgualesSinMayusculas(texto1.c_str(), texto2.c_str());
 }
 
 /**
  * Elimina los espacios al inicio y al final de un string (trim).
- * Útil para limpiar entradas del usuario donde puede haber espacios accidentales.
+ * Util para limpiar entradas del usuario donde puede haber espacios accidentales.
  * Ejemplo: "  Rock " → "Rock".
  */
 string InputHelper::trim(const string& str) {
     size_t first = str.find_first_not_of(' ');
-    if (string::npos == first) return string(); // Solo espacios → devuelve vacío
+    if (string::npos == first) return string(); // Solo espacios → devuelve vacio
     size_t last = str.find_last_not_of(' ');
     return str.substr(first, (last - first + 1));
 }
 
 /**
- * Verifica si 'texto' contiene 'busqueda' ignorando mayúsculas/minúsculas.
- * Convierte ambos strings a minúsculas y usa string::find para la búsqueda.
- * Se usa en los buscadores de playlists y canciones (búsqueda parcial por nombre).
+ * Verifica si 'texto' contiene 'busqueda' ignorando mayusculas/minusculas.
+ * Convierte ambos strings a minusculas y usa string::find para la busqueda.
+ * Se usa en los buscadores de playlists y canciones (busqueda parcial por nombre).
  */
 bool InputHelper::contieneSubcadena(const string& texto, const string& busqueda) {
     string t = texto;
     string b = busqueda;
-    // Convierte a minúsculas para comparación case-insensitive
+    // Convierte a minusculas para comparacion case-insensitive
     for (auto& c : t) c = tolower(static_cast<unsigned char>(c));
     for (auto& c : b) c = tolower(static_cast<unsigned char>(c));
     return t.find(b) != string::npos;

@@ -10,7 +10,7 @@ using namespace std;
  */
 
 /**
- * Prepara una nueva hora vacía.
+ * Prepara una nueva hora vacia.
  * Establece la hora y minutos a cero, como si fuera medianoche.
  */
 HoraYMinutos::HoraYMinutos(){
@@ -19,8 +19,8 @@ HoraYMinutos::HoraYMinutos(){
 }
 
 /**
- * Crea una hora específica con hora y minutos dados.
- * Parámetros: hora (0-23, donde 0 es medianoche), minutos (0-59).
+ * Crea una hora especifica con hora y minutos dados.
+ * Parametros: hora (0-23, donde 0 es medianoche), minutos (0-59).
  */
 HoraYMinutos::HoraYMinutos(int hora, int minutos)
 {
@@ -29,16 +29,16 @@ HoraYMinutos::HoraYMinutos(int hora, int minutos)
 }
 
 /**
- * Dice cuál es la hora actual guardada.
- * Retorna: El número de la hora (ej. 14 para las 2 PM).
+ * Dice cual es la hora actual guardada.
+ * Retorna: El numero de la hora (ej. 14 para las 2 PM).
  */
 int HoraYMinutos::getHora(){
     return _hora;
 }
 
 /**
- * Dice cuáles son los minutos actuales guardados.
- * Retorna: El número de minutos (ej. 30 para media hora).
+ * Dice cuales son los minutos actuales guardados.
+ * Retorna: El numero de minutos (ej. 30 para media hora).
  */
 int HoraYMinutos::getMinutos(){
     return _minutos;
@@ -46,7 +46,7 @@ int HoraYMinutos::getMinutos(){
 
 /**
  * Cambia la hora a un nuevo valor.
- * Parámetros: hora - La nueva hora a guardar.
+ * Parametros: hora - La nueva hora a guardar.
  */
 void HoraYMinutos::setHora(int hora) {
     _hora = hora;
@@ -54,14 +54,14 @@ void HoraYMinutos::setHora(int hora) {
 
 /**
  * Cambia los minutos a un nuevo valor.
- * Parámetros: minutos - Los nuevos minutos a guardar.
+ * Parametros: minutos - Los nuevos minutos a guardar.
  */
 void HoraYMinutos::setMinutos(int minutos) {
     _minutos = minutos;
 }
 
 /**
- * Convierte la hora y minutos a un texto fácil de leer.
+ * Convierte la hora y minutos a un texto facil de leer.
  * Retorna: Un texto como "14:30" para las 2:30 PM.
  */
 std::string HoraYMinutos::toString() {

@@ -1,19 +1,19 @@
 /**
- * PATRÓN: Manager (capa de lógica de negocio)
- * Esta clase orquesta el CRUD de playlists y la relación muchos-a-muchos entre
+ * PATRON: Manager (capa de logica de negocio)
+ * Esta clase orquesta el CRUD de playlists y la relacion muchos-a-muchos entre
  * suscriptores y canciones. No accede directamente al archivo — delega en
- * _archivoPlaylist (Repository) y usa DetallePlaylist para la tabla de relación.
+ * _archivoPlaylist (Repository) y usa DetallePlaylist para la tabla de relacion.
  *
- * Relación muchos-a-muchos (M:N):
+ * Relacion muchos-a-muchos (M:N):
  *   - Una playlist puede tener muchas canciones.
- *   - Una canción puede estar en muchas playlists.
- *   - La tabla de relación (DetallePlaylist / Listas_Canciones.dat) guarda los pares
+ *   - Una cancion puede estar en muchas playlists.
+ *   - La tabla de relacion (DetallePlaylist / Listas_Canciones.dat) guarda los pares
  *     (idPlaylist, idCancion) — igual que una tabla intermedia en SQL.
  *
- * Lógica de negocio extra: control de plan
- *   - Suscriptores GRATUITOS (tipo=1) tienen máximo 3 playlists.
- *   - Si llegan al límite se les ofrece cambiar al plan PAGO (tipo=2).
- *   - Esta regla vive aquí (en el Manager) — no en el Repository, que ignora el negocio.
+ * Logica de negocio extra: control de plan
+ *   - Suscriptores GRATUITOS (tipo=1) tienen maximo 3 playlists.
+ *   - Si llegan al limite se les ofrece cambiar al plan PAGO (tipo=2).
+ *   - Esta regla vive aqui (en el Manager) — no en el Repository, que ignora el negocio.
  */
 
 #include "../include/PlaylistManager.h"
@@ -29,9 +29,9 @@
 using namespace std;
 
 /*
- * Busca el ID de una canción por su nombre.
- * Parámetros: nombre - Nombre de la canción a buscar.
- * Retorno: ID de la canción si existe y está activa, -1 si no se encuentra.
+ * Busca el ID de una cancion por su nombre.
+ * Parametros: nombre - Nombre de la cancion a buscar.
+ * Retorno: ID de la cancion si existe y esta activa, -1 si no se encuentra.
  */
 int PlaylistManager::buscarIdCancionPorNombre(const char* nombre) {
     ArchivoCanciones arch;
@@ -46,8 +46,8 @@ int PlaylistManager::buscarIdCancionPorNombre(const char* nombre) {
 }
 
 /*
- * Muestra el menú de gestión de playlists para un usuario específico.
- * Parámetros: idUsuario - ID del usuario que gestiona las playlists.
+ * Muestra el menu de gestion de playlists para un usuario especifico.
+ * Parametros: idUsuario - ID del usuario que gestiona las playlists.
  */
 void PlaylistManager::MostrarMenu(int idUsuario) {
     int opcion;
@@ -72,8 +72,8 @@ void PlaylistManager::MostrarMenu(int idUsuario) {
 }
 
 /*
- * Muestra todas las playlists creadas por un usuario específico.
- * Parámetros: idUsuario - ID del usuario cuyas playlists mostrar.
+ * Muestra todas las playlists creadas por un usuario especifico.
+ * Parametros: idUsuario - ID del usuario cuyas playlists mostrar.
  */
 void PlaylistManager::MostrarMisPlaylists(int idUsuario) {
     int total = _archivoPlaylist.ObtenerCantidadRegistros();
@@ -94,9 +94,9 @@ void PlaylistManager::MostrarMisPlaylists(int idUsuario) {
 }
 
 /*
- * Crea una nueva playlist para un usuario específico.
- * Genera ID único, solicita datos y establece fecha de creación actual.
- * Parámetros: idUsuario - ID del usuario creador de la playlist.
+ * Crea una nueva playlist para un usuario especifico.
+ * Genera ID unico, solicita datos y establece fecha de creacion actual.
+ * Parametros: idUsuario - ID del usuario creador de la playlist.
  */
 void PlaylistManager::CrearPlaylist(int idUsuario) {
 	
@@ -104,7 +104,7 @@ void PlaylistManager::CrearPlaylist(int idUsuario) {
 
 	int posSus = archSus.BuscarPosicion(idUsuario);
 
-	// Lógica de negocio: los usuarios GRATUITOS tienen un límite de 3 playlists
+	// Logica de negocio: los usuarios GRATUITOS tienen un limite de 3 playlists
 	if(posSus != -1){
 
 		Suscriptor sus = archSus.Leer(posSus);
@@ -115,7 +115,7 @@ void PlaylistManager::CrearPlaylist(int idUsuario) {
 
 			int cantidadUsuario = 0;
 
-			// Cuenta cuántas playlists activas tiene este usuario específico
+			// Cuenta cuantas playlists activas tiene este usuario especifico
 			for(int i = 0; i < totalPlaylists; i++){
 				Playlist aux = _archivoPlaylist.Leer(i);
 				if(aux.getEstado() && aux.getIdSuscriptorCreador() == idUsuario){
@@ -123,7 +123,7 @@ void PlaylistManager::CrearPlaylist(int idUsuario) {
 				}
 			}
 
-			if(cantidadUsuario >= 3){ // Límite alcanzado para plan GRATIS
+			if(cantidadUsuario >= 3){ // Limite alcanzado para plan GRATIS
 				
 				cout << endl;
 				cout << "==================================" << endl;
@@ -202,8 +202,8 @@ void PlaylistManager::CrearPlaylist(int idUsuario) {
 
 /*
  * Modifica el nombre de una playlist existente del usuario.
- * Busca playlists por nombre parcial y permite selección si hay múltiples.
- * Parámetros: idUsuario - ID del usuario propietario de la playlist.
+ * Busca playlists por nombre parcial y permite seleccion si hay multiples.
+ * Parametros: idUsuario - ID del usuario propietario de la playlist.
  */
 void PlaylistManager::ModificarPlaylist(int idUsuario) {
     char nombreBuscado[50];
@@ -237,7 +237,7 @@ void PlaylistManager::ModificarPlaylist(int idUsuario) {
         return;
     }
 
-    int seleccion = InputHelper::pedirOpcionDeLista(cantidadEncontrados);
+    int seleccion = InputHelper::pedirEnteroRango("Seleccione una opcion: ", 0, cantidadEncontrados);
     if (seleccion == 0) return;
 
     int pos = posicionesEncontradas[seleccion - 1];
@@ -255,11 +255,11 @@ void PlaylistManager::ModificarPlaylist(int idUsuario) {
 }
 
 /*
- * Elimina lógicamente una playlist del usuario (estado=false).
- * Busca playlists del usuario que contengan el texto buscado (búsqueda parcial).
- * Muestra una lista numerada para que el usuario elija cuál eliminar.
- * Pide confirmación antes de proceder. No borra del archivo — solo cambia estado.
- * Parámetros: idUsuario - ID del usuario propietario de la playlist.
+ * Elimina logicamente una playlist del usuario (estado=false).
+ * Busca playlists del usuario que contengan el texto buscado (busqueda parcial).
+ * Muestra una lista numerada para que el usuario elija cual eliminar.
+ * Pide confirmacion antes de proceder. No borra del archivo — solo cambia estado.
+ * Parametros: idUsuario - ID del usuario propietario de la playlist.
  */
 void PlaylistManager::EliminarPlaylist(int idUsuario) {
     char nombreBuscado[50];
@@ -293,7 +293,7 @@ void PlaylistManager::EliminarPlaylist(int idUsuario) {
         return;
     }
 
-    int seleccion = InputHelper::pedirOpcionDeLista(cantidadEncontrados);
+    int seleccion = InputHelper::pedirEnteroRango("Seleccione una opcion: ", 0, cantidadEncontrados);
     if (seleccion == 0) return;
 
     int pos = posicionesEncontradas[seleccion - 1];
@@ -313,15 +313,15 @@ void PlaylistManager::EliminarPlaylist(int idUsuario) {
 }
 
 /*
- * Agrega una canción a una playlist existente (relación muchos-a-muchos).
- * La relación se guarda en DetallePlaylist (Listas_Canciones.dat) — NO en la playlist en sí.
- * Antes de agregar, verifica que la canción no esté ya en esa playlist (evita duplicados).
+ * Agrega una cancion a una playlist existente (relacion muchos-a-muchos).
+ * La relacion se guarda en DetallePlaylist (Listas_Canciones.dat) — NO en la playlist en si.
+ * Antes de agregar, verifica que la cancion no este ya en esa playlist (evita duplicados).
  *
  * Flujo:
  *   1. El usuario busca la playlist destino por nombre parcial.
  *   2. Se muestra una lista de coincidencias y el usuario elige una.
- *   3. El usuario escribe el nombre de la canción a agregar.
- *   4. Se verifica que la canción exista y no esté ya en la lista.
+ *   3. El usuario escribe el nombre de la cancion a agregar.
+ *   4. Se verifica que la cancion exista y no este ya en la lista.
  *   5. Se crea un DetallePlaylist con la fecha actual y se guarda.
  */
 void PlaylistManager::AgregarCancionAPlaylist() {
@@ -364,7 +364,7 @@ void PlaylistManager::AgregarCancionAPlaylist() {
         return;
     }
 
-    int seleccion = InputHelper::pedirOpcionDeLista(cantidadEncontrados);
+    int seleccion = InputHelper::pedirEnteroRango("Seleccione una opcion: ", 0, cantidadEncontrados);
     if (seleccion == 0) return;
 
     int idListaDestino = idsEncontrados[seleccion - 1];

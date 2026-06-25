@@ -6,12 +6,12 @@
 using namespace std;
 
 /**
- * Este archivo implementa la clase Playlist, con métodos para crear, guardar y buscar playlists.
- * Maneja la persistencia de datos en archivos y la interacción con el usuario.
+ * Este archivo implementa la clase Playlist, con metodos para crear, guardar y buscar playlists.
+ * Maneja la persistencia de datos en archivos y la interaccion con el usuario.
  */
 
 /**
- * Prepara una nueva lista de canciones vacía con valores iniciales.
+ * Prepara una nueva lista de canciones vacia con valores iniciales.
  */
 Playlist::Playlist() {
     setId(0);
@@ -23,63 +23,63 @@ Playlist::Playlist() {
 
 /**
 
- * Asigna el número único que identifica esta lista.
- * Parámetros: id - El número identificador.
+ * Asigna el numero unico que identifica esta lista.
+ * Parametros: id - El numero identificador.
  */
 void Playlist::setIdPlaylist(int id) { setId(id); }
 
 /**
- * Asigna el título que el usuario le dio a la lista.
- * Parámetros: n - El nombre de la playlist.
+ * Asigna el titulo que el usuario le dio a la lista.
+ * Parametros: n - El nombre de la playlist.
  */
 void Playlist::setNombre(const char* n) {
     strcpy(_nombre, n);
 }
 
 /**
- * Asigna quién es el usuario que creó esta lista.
- * Parámetros: id - El ID del creador.
+ * Asigna quien es el usuario que creo esta lista.
+ * Parametros: id - El ID del creador.
  */
 void Playlist::setIdSuscriptorCreador(int id) { _idSuscriptorCreador = id; }
 
 /**
- * Asigna cuándo se hizo esta lista por primera vez.
- * Parámetros: f - La fecha de creación.
+ * Asigna cuando se hizo esta lista por primera vez.
+ * Parametros: f - La fecha de creacion.
  */
 void Playlist::setFechaCreacion(Fecha f) { _fechaCreacion = f; } // <--- NUEVO
 
 /**
  * Marca si esta lista sigue disponible o fue eliminada.
- * Parámetros: estado - Estado activo/inactivo.
+ * Parametros: estado - Estado activo/inactivo.
  */
 void Playlist::setEstado(bool estado) { _estado = estado; }
 
 /**
- * Dice cuál es el número de esta lista.
- * Retorna: El ID único.
+ * Dice cual es el numero de esta lista.
+ * Retorna: El ID unico.
  */
 int Playlist::getIdPlaylist() { return getId(); }
 
 /**
- * Dice cuál es el título de esta lista.
+ * Dice cual es el titulo de esta lista.
  * Retorna: El nombre de la playlist.
  */
 const char* Playlist::getNombre() { return _nombre; }
 
 /**
- * Dice quién es el dueño de esta lista.
+ * Dice quien es el dueno de esta lista.
  * Retorna: El ID del creador.
  */
 int Playlist::getIdSuscriptorCreador() { return _idSuscriptorCreador; }
 
 /**
- * Dice cuándo se creó esta lista.
- * Retorna: La fecha de creación.
+ * Dice cuando se creo esta lista.
+ * Retorna: La fecha de creacion.
  */
 Fecha Playlist::getFechaCreacion() { return _fechaCreacion; } // <--- NUEVO
 
 /**
- * Dice si esta lista está disponible.
+ * Dice si esta lista esta disponible.
  * Retorna: El estado.
  */
 bool Playlist::getEstado() { return _estado; }
@@ -92,8 +92,8 @@ void Playlist::Cargar() {
     InputHelper::pedirCadena("Nombre de la Playlist: ", buffer, 50);
     setNombre(buffer);
 
-    // La fecha se setea automáticamente desde fuera (musicon.cpp) al crearla,
-    // por lo que no la pedimos aquí al usuario.
+    // La fecha se setea automaticamente desde fuera (musicon.cpp) al crearla,
+    // por lo que no la pedimos aqui al usuario.
 
     _estado = true;
 }

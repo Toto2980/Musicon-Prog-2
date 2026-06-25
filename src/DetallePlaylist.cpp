@@ -6,12 +6,12 @@ using namespace std;
 
 /**
  * Este archivo implementa la clase DetallePlaylist, que conecta canciones con playlists.
- * Maneja la relación entre una playlist y las canciones que contiene, con fechas de agregado.
+ * Maneja la relacion entre una playlist y las canciones que contiene, con fechas de agregado.
  */
 
 /**
- * Crea un nuevo detalle de playlist vacío.
- * Prepara un espacio para conectar una canción con una playlist, con estado activo por defecto.
+ * Crea un nuevo detalle de playlist vacio.
+ * Prepara un espacio para conectar una cancion con una playlist, con estado activo por defecto.
  */
 DetallePlaylist::DetallePlaylist() {
     _idPlaylist = 0;
@@ -20,55 +20,55 @@ DetallePlaylist::DetallePlaylist() {
 }
 
 /**
- * Asigna el ID de la playlist a la que pertenece esta conexión.
- * Parámetros: id - El número único de la playlist.
+ * Asigna el ID de la playlist a la que pertenece esta conexion.
+ * Parametros: id - El numero unico de la playlist.
  */
 void DetallePlaylist::setIdPlaylist(int id) { _idPlaylist = id; }
 
 /**
- * Asigna el ID de la canción que se agrega a la playlist.
- * Parámetros: id - El número único de la canción.
+ * Asigna el ID de la cancion que se agrega a la playlist.
+ * Parametros: id - El numero unico de la cancion.
  */
 void DetallePlaylist::setIdCancion(int id) { _idCancion = id; }
 
 /**
- * Asigna la fecha en que se agregó la canción a la playlist.
- * Parámetros: f - La fecha y hora del momento de agregar.
+ * Asigna la fecha en que se agrego la cancion a la playlist.
+ * Parametros: f - La fecha y hora del momento de agregar.
  */
 void DetallePlaylist::setFechaAgregado(Fecha f) { _fechaAgregado = f; }
 
 /**
- * Marca si esta conexión está activa o no.
- * Parámetros: e - Verdadero si la canción sigue en la playlist, falso si fue removida.
+ * Marca si esta conexion esta activa o no.
+ * Parametros: e - Verdadero si la cancion sigue en la playlist, falso si fue removida.
  */
 void DetallePlaylist::setEstado(bool e) { _estado = e; }
 
 /**
- * Dice a cuál playlist pertenece.
+ * Dice a cual playlist pertenece.
  * Retorna: El ID de la playlist.
  */
 int DetallePlaylist::getIdPlaylist() { return _idPlaylist; }
 
 /**
- * Dice cuál canción está conectada.
- * Retorna: El ID de la canción.
+ * Dice cual cancion esta conectada.
+ * Retorna: El ID de la cancion.
  */
 int DetallePlaylist::getIdCancion() { return _idCancion; }
 
 /**
- * Dice cuándo se agregó la canción.
+ * Dice cuando se agrego la cancion.
  * Retorna: La fecha y hora de agregado.
  */
 Fecha DetallePlaylist::getFechaAgregado() { return _fechaAgregado; }
 
 /**
- * Dice si la conexión sigue activa.
- * Retorna: Verdadero si la canción está en la playlist.
+ * Dice si la conexion sigue activa.
+ * Retorna: Verdadero si la cancion esta en la playlist.
  */
 bool DetallePlaylist::getEstado() { return _estado; }
 
 /**
- * Pide al usuario que ingrese los datos para conectar una canción con una playlist.
+ * Pide al usuario que ingrese los datos para conectar una cancion con una playlist.
  * Solicita IDs y fecha desde el teclado.
  */
 void DetallePlaylist::Cargar() {
@@ -82,7 +82,7 @@ void DetallePlaylist::Cargar() {
 }
 
 /**
- * Muestra en pantalla la información de esta conexión, si está activa.
+ * Muestra en pantalla la informacion de esta conexion, si esta activa.
  * Imprime IDs y fecha de agregado.
  */
 void DetallePlaylist::Mostrar() {
@@ -98,8 +98,8 @@ void DetallePlaylist::Mostrar() {
 // GUARDAR Y CARGAR DATOS
 
 /**
- * Guarda esta conexión en un archivo para recordarla.
- * Retorna: Verdadero si se guardó sin problemas.
+ * Guarda esta conexion en un archivo para recordarla.
+ * Retorna: Verdadero si se guardo sin problemas.
  */
 bool DetallePlaylist::Guardar() {
     FILE *p = fopen("Listas_Canciones.dat", "ab");
@@ -110,9 +110,9 @@ bool DetallePlaylist::Guardar() {
 }
 
 /**
- * Carga una conexión desde el archivo en una posición específica.
- * Parámetros: pos - La posición en la lista.
- * Retorna: Verdadero si se cargó correctamente.
+ * Carga una conexion desde el archivo en una posicion especifica.
+ * Parametros: pos - La posicion en la lista.
+ * Retorna: Verdadero si se cargo correctamente.
  */
 bool DetallePlaylist::Leer(int pos) {
     FILE *p = fopen("Listas_Canciones.dat", "rb");
@@ -124,8 +124,8 @@ bool DetallePlaylist::Leer(int pos) {
 }
 
 /**
- * Cuenta cuántas conexiones hay guardadas en total.
- * Retorna: El número total de conexiones.
+ * Cuenta cuantas conexiones hay guardadas en total.
+ * Retorna: El numero total de conexiones.
  */
 int DetallePlaylist::ObtenerCantidadRegistros() {
     FILE *p = fopen("Listas_Canciones.dat", "rb");
@@ -139,9 +139,9 @@ int DetallePlaylist::ObtenerCantidadRegistros() {
 // ACCIONES ESPECIALES
 
 /**
- * Verifica si una canción específica ya está en una playlist dada.
- * Parámetros: idPlaylist - El ID de la playlist a revisar, idCancion - El ID de la canción a buscar.
- * Retorna: La posición si existe, o -1 si no está.
+ * Verifica si una cancion especifica ya esta en una playlist dada.
+ * Parametros: idPlaylist - El ID de la playlist a revisar, idCancion - El ID de la cancion a buscar.
+ * Retorna: La posicion si existe, o -1 si no esta.
  */
 int DetallePlaylist::BuscarCancionEnPlaylist(int idPlaylist, int idCancion) {
     FILE *p = fopen("Listas_Canciones.dat", "rb");

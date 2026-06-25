@@ -1,16 +1,16 @@
 /**
- * PATRÓN: Repository
- * Esta clase encapsula todo el acceso al archivo binario de álbumes.
- * La capa CancionManager no sabe cómo se guardan los álbumes — solo llama a BuscarOCrear.
+ * PATRON: Repository
+ * Esta clase encapsula todo el acceso al archivo binario de albumes.
+ * La capa CancionManager no sabe como se guardan los albumes — solo llama a BuscarOCrear.
  *
- * RELACIÓN ARTISTA → ALBUM → CANCION:
- *   - Un álbum pertenece a un artista (_idArtista).
- *   - Una canción pertenece a un álbum (_idAlbum).
- *   - Estos son IDs que actúan como "claves foráneas" (igual que en SQL).
- *   - No almacenamos el nombre del artista en el álbum — solo su ID.
- *     Así, si el artista cambia de nombre, no hay que actualizar todos sus álbumes.
+ * RELACION ARTISTA → ALBUM → CANCION:
+ *   - Un album pertenece a un artista (_idArtista).
+ *   - Una cancion pertenece a un album (_idAlbum).
+ *   - Estos son IDs que actuan como "claves foraneas" (igual que en SQL).
+ *   - No almacenamos el nombre del artista en el album — solo su ID.
+ *     Asi, si el artista cambia de nombre, no hay que actualizar todos sus albumes.
  *
- * BuscarOCrear combina búsqueda y creación para simplificar la importación CSV.
+ * BuscarOCrear combina busqueda y creacion para simplificar la importacion CSV.
  */
 
 #include "../include/ArchivoAlbum.h"
@@ -22,11 +22,11 @@
 
 using namespace std;
 
-/** Guarda el nombre del archivo binario que usará esta instancia. */
+/** Guarda el nombre del archivo binario que usara esta instancia. */
 ArchivoAlbum::ArchivoAlbum(string nombreArchivo) { _nombreArchivo = nombreArchivo; }
 
 /**
- * Agrega un álbum al FINAL del archivo.
+ * Agrega un album al FINAL del archivo.
  * Modo "ab" (append binary): crea el archivo si no existe.
  */
 bool ArchivoAlbum::Guardar(Album reg) {
@@ -38,7 +38,7 @@ bool ArchivoAlbum::Guardar(Album reg) {
 }
 
 /**
- * Lee el álbum en la posición 'pos' del archivo.
+ * Lee el album en la posicion 'pos' del archivo.
  * Calcula el byte de inicio: pos * sizeof(Album) desde el principio del archivo.
  * Si falla, retorna un Album con estado=false (centinela de error).
  */
@@ -54,8 +54,8 @@ Album ArchivoAlbum::Leer(int pos) {
 }
 
 /**
- * Calcula la cantidad total de álbumes guardados.
- * Técnica: ir al final del archivo (SEEK_END) y dividir los bytes por sizeof(Album).
+ * Calcula la cantidad total de albumes guardados.
+ * Tecnica: ir al final del archivo (SEEK_END) y dividir los bytes por sizeof(Album).
  */
 int ArchivoAlbum::ObtenerCantidadRegistros() {
     FILE *p = fopen(_nombreArchivo.c_str(), "rb");
@@ -67,7 +67,7 @@ int ArchivoAlbum::ObtenerCantidadRegistros() {
 }
 
 /**
- * Genera un ID único leyendo el último registro y sumando 1.
+ * Genera un ID unico leyendo el ultimo registro y sumando 1.
  * El cast a long es necesario porque sizeof devuelve size_t (unsigned) y fseek espera long (signed).
  */
 int ArchivoAlbum::GenerarIDNuevo() {
@@ -90,7 +90,7 @@ int ArchivoAlbum::GenerarIDNuevo() {
 }
 
 /**
- * Busca la posición de un álbum por su ID (solo activos).
+ * Busca la posicion de un album por su ID (solo activos).
  * Recorre secuencialmente todo el archivo. Retorna -1 si no lo encuentra.
  */
 int ArchivoAlbum::BuscarPosicion(int id) {
@@ -110,7 +110,7 @@ int ArchivoAlbum::BuscarPosicion(int id) {
 }
 
 /**
- * Busca el ID de un álbum por su título (sin distinción de mayúsculas/minúsculas).
+ * Busca el ID de un album por su titulo (sin distincion de mayusculas/minusculas).
  * Se usa para verificar si ya existe antes de crear uno nuevo.
  * Retorna el ID si lo encuentra activo, -1 si no existe.
  */
@@ -138,16 +138,16 @@ Album ArchivoAlbum::BuscarPorID(int id) {
 }
 
 /**
- * MÉTODO INTELIGENTE: Busca un álbum por título Y artista. Si no existe, lo crea.
- * La búsqueda considera AMBOS criterios porque el mismo título puede pertenecer
- * a artistas distintos (ej: dos artistas tienen un álbum llamado "Vol. 1").
- * Siempre devuelve un ID válido, simplificando la importación CSV.
+ * METODO INTELIGENTE: Busca un album por titulo Y artista. Si no existe, lo crea.
+ * La busqueda considera AMBOS criterios porque el mismo titulo puede pertenecer
+ * a artistas distintos (ej: dos artistas tienen un album llamado "Vol. 1").
+ * Siempre devuelve un ID valido, simplificando la importacion CSV.
  */
 int ArchivoAlbum::BuscarOCrear(string tituloAlbum, int idArtista) {
     string tituloLimpio = InputHelper::trim(tituloAlbum);
     if (tituloLimpio.empty()) return 0; // ID 0 = "Sin Album" por defecto
 
-    // 1. Buscar coincidencia exacta de título Y artista (ambos deben coincidir)
+    // 1. Buscar coincidencia exacta de titulo Y artista (ambos deben coincidir)
     FILE *p = fopen(_nombreArchivo.c_str(), "rb");
     if (p != NULL) {
         Album aux;
@@ -162,13 +162,13 @@ int ArchivoAlbum::BuscarOCrear(string tituloAlbum, int idArtista) {
         fclose(p);
     }
 
-    // 2. Si no existe, crear uno nuevo con año 0 (desconocido)
+    // 2. Si no existe, crear uno nuevo con ano 0 (desconocido)
     Album nuevo;
     int nuevoId = GenerarIDNuevo();
     nuevo.setIdAlbum(nuevoId);
     nuevo.setTitulo(tituloLimpio.c_str());
     nuevo.setIdArtista(idArtista);
-    nuevo.setAnioPublicacion(0); // Año desconocido al importar desde CSV
+    nuevo.setAnioPublicacion(0); // Ano desconocido al importar desde CSV
     nuevo.setEstado(true);
 
     Guardar(nuevo);

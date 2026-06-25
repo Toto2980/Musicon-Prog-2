@@ -448,9 +448,9 @@ void musicon::menuConfiguracion() {
 		cout << "4. Exportar Canciones a Excel (.csv)" << endl;
 		cout << "5. IMPORTAR CANCIONES DESDE CSV" << endl;
 		cout << "0. Volver" << endl;
-		
+
 		op = InputHelper::pedirEnteroRango("Opcion: ", 0, 5); // Pide opci�n entre 0 y 5
-		
+
 		switch(op) {
 		case 1: menuArtistas(); break; // Men� de artistas
 		case 2: menuGeneros(); break; // Men� de g�neros
@@ -528,6 +528,12 @@ void musicon::mostrarMenuReportes() {
 }
 
 void musicon::registrarAcceso() {
+	if (_idUsuarioLogueado <= 0) {
+		cout << "Solo los suscriptores pueden escuchar canciones." << endl;
+		InputHelper::pausa();
+		return;
+	}
+
 	char nomC[100];
 	InputHelper::pedirCadena("Cancion a escuchar: ", nomC, 100);
 

@@ -1,6 +1,6 @@
 /**
- * Este archivo implementa la clase Canciones con métodos para gestionar datos de canciones.
- * Incluye validaciones básicas y uso de InputHelper para entradas de usuario seguras.
+ * Este archivo implementa la clase Canciones con metodos para gestionar datos de canciones.
+ * Incluye validaciones basicas y uso de InputHelper para entradas de usuario seguras.
  */
 
 #include "../include/Canciones.h"
@@ -12,8 +12,8 @@ using namespace std;
 
 /**
  * Inicializa todos los atributos con valores neutros.
- * El ID se deja en 0 (se asignará automáticamente), nombre vacío, IDs de album/género en 0,
- * duración en 0 y estado inactivo.
+ * El ID se deja en 0 (se asignara automaticamente), nombre vacio, IDs de album/genero en 0,
+ * duracion en 0 y estado inactivo.
  */
 Canciones::Canciones() {
     setId(0);
@@ -25,19 +25,19 @@ Canciones::Canciones() {
 }
 
 /**
- * No hay recursos dinámicos que liberar.
+ * No hay recursos dinamicos que liberar.
  */
 
 /**
- * Asigna el ID único de la canción.
- * Parámetros: id - El ID único a asignar.
+ * Asigna el ID unico de la cancion.
+ * Parametros: id - El ID unico a asignar.
  */
 void Canciones::setIdCancion(int id) { setId(id); }
 
 /**
- * Asigna el nombre de la canción con límite de 99 caracteres.
- * Usa strncpy para evitar desbordamientos y asegura terminación nula.
- * Parámetros: nombre - Cadena con el nombre.
+ * Asigna el nombre de la cancion con limite de 99 caracteres.
+ * Usa strncpy para evitar desbordamientos y asegura terminacion nula.
+ * Parametros: nombre - Cadena con el nombre.
  */
 void Canciones::setNombre(const char* nombre) {
     strncpy(_nombre, nombre, 99);
@@ -45,21 +45,21 @@ void Canciones::setNombre(const char* nombre) {
 }
 
 /**
- * Asigna el ID del álbum al que pertenece la canción.
- * Parámetros: idAl - ID del álbum.
+ * Asigna el ID del album al que pertenece la cancion.
+ * Parametros: idAl - ID del album.
  */
 void Canciones::setIdAlbum(int idAl) { _idAlbum = idAl; }
 
 /**
- * Asigna el ID del género musical.
- * Parámetros: idGe - ID del género.
+ * Asigna el ID del genero musical.
+ * Parametros: idGe - ID del genero.
  */
 void Canciones::setIdGenero(int idGe) { _idGenero = idGe; }
 
 /**
- * Asigna la duración en segundos (solo acepta valores >= 0).
+ * Asigna la duracion en segundos (solo acepta valores >= 0).
  * Si es negativa, se establece en 0.
- * Parámetros: duracion - Duración en segundos.
+ * Parametros: duracion - Duracion en segundos.
  */
 void Canciones::setDuracionSegundos(int duracion) {
     if (duracion >= 0) _duracionSegundos = duracion;
@@ -68,37 +68,37 @@ void Canciones::setDuracionSegundos(int duracion) {
 
 /**
  * Asigna el estado activo o inactivo.
- * Parámetros: e - true para activo, false para inactivo (eliminación lógica).
+ * Parametros: e - true para activo, false para inactivo (eliminacion logica).
  */
 void Canciones::setEstado(bool e) { _estado = e; }
 
 /**
- * Dice el ID único de la canción.
- * Retorna: El ID único asignado.
+ * Dice el ID unico de la cancion.
+ * Retorna: El ID unico asignado.
  */
 int Canciones::getIdCancion() { return getId(); }
 
 /**
- * Dice el nombre de la canción.
+ * Dice el nombre de la cancion.
  * Retorna: Puntero constante a la cadena del nombre.
  */
 const char* Canciones::getNombre() { return _nombre; }
 
 /**
- * Dice el ID del álbum.
- * Retorna: ID del álbum.
+ * Dice el ID del album.
+ * Retorna: ID del album.
  */
 int Canciones::getIdAlbum() { return _idAlbum; }
 
 /**
- * Dice el ID del género.
- * Retorna: ID del género.
+ * Dice el ID del genero.
+ * Retorna: ID del genero.
  */
 int Canciones::getIdGenero() { return _idGenero; }
 
 /**
- * Dice la duración en segundos.
- * Retorna: Duración en segundos.
+ * Dice la duracion en segundos.
+ * Retorna: Duracion en segundos.
  */
 int Canciones::getDuracionSegundos() { return _duracionSegundos; }
 
@@ -109,12 +109,12 @@ int Canciones::getDuracionSegundos() { return _duracionSegundos; }
 bool Canciones::getEstado() { return _estado; }
 
 /**
- * Solicita al usuario los datos de la canción.
- * No pide ID (se genera automáticamente fuera de esta clase).
+ * Solicita al usuario los datos de la cancion.
+ * No pide ID (se genera automaticamente fuera de esta clase).
  * Usa InputHelper para entradas seguras y establece el estado como activo.
  */
 void Canciones::Cargar() {
-    // Ya no pedimos el ID aqué, el ID se gestiona fuera automáticamente
+    // Ya no pedimos el ID aque, el ID se gestiona fuera automaticamente
     // Usamos InputHelper para inputs seguros
     char buffer[100];
     InputHelper::pedirCadena("Nombre de la cancion: ", buffer, 100);
@@ -128,11 +128,11 @@ void Canciones::Cargar() {
 }
 
 /**
- * Imprime los datos de la canción en la consola si está activa.
- * Formatea la duración en minutos y segundos para mejor legibilidad.
+ * Imprime los datos de la cancion en la consola si esta activa.
+ * Formatea la duracion en minutos y segundos para mejor legibilidad.
  */
 void Canciones::Mostrar() {
-    // Solo mostramos si está activo
+    // Solo mostramos si esta activo
     if (_estado) {
         cout << "-----------------------------------" << endl;
         cout << "ID Cancion     : " << getIdCancion() << endl;

@@ -1,5 +1,5 @@
 /**
- * Este archivo implementa la clase Artista con métodos de inicialización, setters/getters,
+ * Este archivo implementa la clase Artista con metodos de inicializacion, setters/getters,
  * carga y muestra de datos del artista.
  */
 
@@ -11,7 +11,7 @@
 using namespace std;
 
 /**
- * Constructor por defecto: Inicializa nombre vacío, estado inactivo, ID en 0 y nacionalidad vacía.
+ * Constructor por defecto: Inicializa nombre vacio, estado inactivo, ID en 0 y nacionalidad vacia.
  */
 Artista::Artista() {
     setId(0);
@@ -21,25 +21,25 @@ Artista::Artista() {
 }
 
 /**
- * Destructor: No hay recursos dinámicos, pero se define para consistencia.
+ * Destructor: No hay recursos dinamicos, pero se define para consistencia.
  */
 Artista::~Artista() {}
 
 /**
  * Setter para el ID del artista.
- * Parámetros: id - ID único a asignar.
+ * Parametros: id - ID unico a asignar.
  */
 void Artista::setIdArtista(int id) { setId(id); }
 
 /**
  * Setter para la nacionalidad.
- * Parámetros: nacionalidad - Cadena con la nacionalidad (copia segura con límite).
+ * Parametros: nacionalidad - Cadena con la nacionalidad (copia segura con limite).
  */
 void Artista::setNacionalidad(const char* nacionalidad) { strncpy(_nacionalidad, nacionalidad, 49); _nacionalidad[49] = '\0'; }
 
 /**
  * Getter para el ID del artista.
- * Retorno: ID único.
+ * Retorno: ID unico.
  */
 int Artista::getIdArtista() { return getId(); }
 
@@ -50,8 +50,8 @@ int Artista::getIdArtista() { return getId(); }
 const char* Artista::getNacionalidad() { return _nacionalidad; }
 
 /**
- * Método Cargar: Solicita nombre y nacionalidad al usuario y activa el registro.
- * No pide ID porque se genera automáticamente.
+ * Metodo Cargar: Solicita nombre y nacionalidad al usuario y activa el registro.
+ * No pide ID porque se genera automaticamente.
  */
 void Artista::Cargar() {
     char buffer[100];
@@ -66,7 +66,7 @@ void Artista::Cargar() {
 }
 
 /**
- * Método Mostrar: Imprime ID, nombre y nacionalidad si el artista está activo.
+ * Metodo Mostrar: Imprime ID, nombre y nacionalidad si el artista esta activo.
  * Formato compacto para listados.
  */
 void Artista::Mostrar() {

@@ -1,15 +1,15 @@
 /**
- * PATRÓN: Repository
- * Esta clase encapsula todo el acceso al archivo binario de géneros musicales.
- * La capa GeneroManager no sabe cómo se guardan los datos — solo pide Guardar/Leer/Buscar.
+ * PATRON: Repository
+ * Esta clase encapsula todo el acceso al archivo binario de generos musicales.
+ * La capa GeneroManager no sabe como se guardan los datos — solo pide Guardar/Leer/Buscar.
  *
- * CÓMO FUNCIONA EL ARCHIVO BINARIO:
+ * COMO FUNCIONA EL ARCHIVO BINARIO:
  *   - Cada Genero ocupa exactamente sizeof(Genero) bytes en disco.
- *   - La posición del registro 'pos' en el archivo = pos * sizeof(Genero) bytes desde el inicio.
- *   - La cantidad de registros = tamaño del archivo (ftell en SEEK_END) / sizeof(Genero).
+ *   - La posicion del registro 'pos' en el archivo = pos * sizeof(Genero) bytes desde el inicio.
+ *   - La cantidad de registros = tamano del archivo (ftell en SEEK_END) / sizeof(Genero).
  *
- * BuscarOCrear es el método "inteligente": si el género ya existe lo devuelve,
- * si no existe lo crea automáticamente. Muy útil durante la importación CSV.
+ * BuscarOCrear es el metodo "inteligente": si el genero ya existe lo devuelve,
+ * si no existe lo crea automaticamente. Muy util durante la importacion CSV.
  */
 
 #include "../include/ArchivoGeneros.h"
@@ -21,11 +21,11 @@
 
 using namespace std;
 
-/** Guarda el nombre del archivo binario que usará esta instancia. */
+/** Guarda el nombre del archivo binario que usara esta instancia. */
 ArchivoGeneros::ArchivoGeneros(string nombreArchivo) { _nombreArchivo = nombreArchivo; }
 
 /**
- * Agrega un género al FINAL del archivo.
+ * Agrega un genero al FINAL del archivo.
  * Modo "ab" (append binary): crea el archivo si no existe.
  */
 bool ArchivoGeneros::Guardar(Genero reg) {
@@ -37,7 +37,7 @@ bool ArchivoGeneros::Guardar(Genero reg) {
 }
 
 /**
- * Lee el género en la posición 'pos' del archivo.
+ * Lee el genero en la posicion 'pos' del archivo.
  * fseek posiciona el puntero en el byte exacto del registro.
  * Si falla, retorna un Genero con estado=false (centinela de error).
  */
@@ -54,7 +54,7 @@ Genero ArchivoGeneros::Leer(int pos) {
 
 /**
  * Calcula la cantidad total de registros.
- * Técnica: ir al final con SEEK_END, leer bytes con ftell(), dividir por sizeof(Genero).
+ * Tecnica: ir al final con SEEK_END, leer bytes con ftell(), dividir por sizeof(Genero).
  */
 int ArchivoGeneros::ObtenerCantidadRegistros() {
     FILE *p = fopen(_nombreArchivo.c_str(), "rb");
@@ -66,8 +66,8 @@ int ArchivoGeneros::ObtenerCantidadRegistros() {
 }
 
 /**
- * Genera un ID único leyendo el último registro y sumando 1.
- * Si el archivo no existe o está vacío, devuelve 1 (primer ID).
+ * Genera un ID unico leyendo el ultimo registro y sumando 1.
+ * Si el archivo no existe o esta vacio, devuelve 1 (primer ID).
  * El cast a long es necesario porque sizeof devuelve size_t (sin signo).
  */
 int ArchivoGeneros::GenerarIDNuevo() {
@@ -90,9 +90,9 @@ int ArchivoGeneros::GenerarIDNuevo() {
 }
 
 /**
- * Busca la posición de un género por su ID (solo activos).
+ * Busca la posicion de un genero por su ID (solo activos).
  * Recorre el archivo de principio a fin hasta encontrar el ID.
- * Retorna -1 si no existe o está dado de baja.
+ * Retorna -1 si no existe o esta dado de baja.
  */
 int ArchivoGeneros::BuscarPosicion(int id) {
     FILE *p = fopen(_nombreArchivo.c_str(), "rb");
@@ -111,9 +111,9 @@ int ArchivoGeneros::BuscarPosicion(int id) {
 }
 
 /**
- * Busca el ID de un género por su nombre (sin distinción de mayúsculas/minúsculas).
+ * Busca el ID de un genero por su nombre (sin distincion de mayusculas/minusculas).
  * Retorna el ID si lo encuentra activo, -1 si no existe.
- * Se usa antes de crear un género nuevo para evitar duplicados.
+ * Se usa antes de crear un genero nuevo para evitar duplicados.
  */
 int ArchivoGeneros::BuscarIDPorNombre(const char* nombre) {
     FILE *p = fopen(_nombreArchivo.c_str(), "rb");
@@ -130,8 +130,8 @@ int ArchivoGeneros::BuscarIDPorNombre(const char* nombre) {
 }
 
 /**
- * Sobrescribe el registro en la posición 'pos' con el nuevo valor.
- * Modo "rb+" = lectura+escritura sin truncar. Permite modificación puntual.
+ * Sobrescribe el registro en la posicion 'pos' con el nuevo valor.
+ * Modo "rb+" = lectura+escritura sin truncar. Permite modificacion puntual.
  */
 bool ArchivoGeneros::Modificar(int pos, Genero reg) {
     FILE *p = fopen(_nombreArchivo.c_str(), "rb+");
@@ -152,8 +152,8 @@ Genero ArchivoGeneros::BuscarPorID(int id) {
 }
 
 /**
- * MÉTODO INTELIGENTE: Busca un género por nombre. Si no existe, lo crea automáticamente.
- * Siempre devuelve un ID válido, lo que simplifica mucho la importación CSV.
+ * METODO INTELIGENTE: Busca un genero por nombre. Si no existe, lo crea automaticamente.
+ * Siempre devuelve un ID valido, lo que simplifica mucho la importacion CSV.
  * Pasos: 1) limpiar nombre, 2) buscar si existe, 3) si no, crear y guardar.
  */
 int ArchivoGeneros::BuscarOCrear(string nombreGenero) {

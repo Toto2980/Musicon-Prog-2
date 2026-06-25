@@ -1,9 +1,9 @@
 /**
  * Este archivo implementa la clase Suscriptor, que representa a un usuario del sistema.
  * Un suscriptor puede ser de tipo GRATIS (1) o PAGO (2).
- * La diferencia de plan impacta en cuántas playlists puede crear (ver PlaylistManager).
+ * La diferencia de plan impacta en cuantas playlists puede crear (ver PlaylistManager).
  *
- * Hereda de EntidadPadre para obtener el campo _id y los métodos getId/setId.
+ * Hereda de EntidadPadre para obtener el campo _id y los metodos getId/setId.
  * Los campos adicionales (DNI, apellido, email, etc.) son propios de Suscriptor.
  */
 
@@ -17,7 +17,7 @@ using namespace std;
 /**
  * Constructor: inicializa todos los campos con valores neutros.
  * - _tipoSuscriptor = 1 (GRATIS) por defecto.
- * - _nombre empieza vacío, los demás con valores placeholder "S/N" o "0".
+ * - _nombre empieza vacio, los demas con valores placeholder "S/N" o "0".
  */
 Suscriptor::Suscriptor() {
     setId(0);
@@ -31,7 +31,7 @@ Suscriptor::Suscriptor() {
     _tipoSuscriptor = 1; // Plan GRATIS por defecto
 }
 
-/** Destructor: no hay recursos dinámicos que liberar. */
+/** Destructor: no hay recursos dinamicos que liberar. */
 Suscriptor::~Suscriptor() { }
 
 /** Asigna el ID del suscriptor usando el setter de EntidadPadre. */
@@ -39,19 +39,19 @@ void Suscriptor::setIdSuscriptor(int id) {
     setId(id);
 }
 
-/** Asigna el DNI con copia segura (máximo 14 caracteres + terminador nulo). */
+/** Asigna el DNI con copia segura (maximo 14 caracteres + terminador nulo). */
 void Suscriptor::setDni(const char* dni) {
     strncpy(_dni, dni, 14);
     _dni[14] = '\0';
 }
 
-/** Asigna el apellido con copia segura (máximo 49 caracteres + terminador nulo). */
+/** Asigna el apellido con copia segura (maximo 49 caracteres + terminador nulo). */
 void Suscriptor::setApellido(const char* apellido) {
     strncpy(_apellido, apellido, 49);
     _apellido[49] = '\0';
 }
 
-/** Asigna el email con copia segura (máximo 99 caracteres + terminador nulo). */
+/** Asigna el email con copia segura (maximo 99 caracteres + terminador nulo). */
 void Suscriptor::setEmail(const char* email) {
     strncpy(_email, email, 99);
     _email[99] = '\0';
@@ -62,7 +62,7 @@ void Suscriptor::setFechaNacimiento(Fecha fecha) {
     _fechaNacimiento = fecha;
 }
 
-/** Asigna el tipo de suscripción: 1=GRATIS, 2=PAGO. */
+/** Asigna el tipo de suscripcion: 1=GRATIS, 2=PAGO. */
 void Suscriptor::setTipoSuscriptor(int tipo) {
     _tipoSuscriptor = tipo;
 }
@@ -92,7 +92,7 @@ Fecha Suscriptor::getFechaNacimiento() {
     return _fechaNacimiento;
 }
 
-/** Devuelve el tipo de suscripción (1=GRATIS, 2=PAGO). */
+/** Devuelve el tipo de suscripcion (1=GRATIS, 2=PAGO). */
 int Suscriptor::getTipoSuscriptor() {
     return _tipoSuscriptor;
 }
@@ -100,8 +100,8 @@ int Suscriptor::getTipoSuscriptor() {
 /**
  * Solicita al usuario los datos del suscriptor por consola.
  * NO pide el nombre de usuario (ya fue pedido antes en SuscriptorManager::Agregar
- * para poder verificar unicidad antes de llamar a este método).
- * Sí pide: apellido, DNI, email, tipo de suscripción y fecha de nacimiento.
+ * para poder verificar unicidad antes de llamar a este metodo).
+ * Si pide: apellido, DNI, email, tipo de suscripcion y fecha de nacimiento.
  */
 void Suscriptor::Cargar() {
     char buffer[100];

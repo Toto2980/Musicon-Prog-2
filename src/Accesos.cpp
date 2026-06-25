@@ -5,13 +5,13 @@
 using namespace std;
 
 /**
- * Este archivo implementa la clase Accesos, que registra cuándo un usuario reproduce una canción.
+ * Este archivo implementa la clase Accesos, que registra cuando un usuario reproduce una cancion.
  * Guarda y carga datos de accesos desde archivos para llevar un historial.
  */
 
 /**
- * Prepara un nuevo registro de acceso vacío.
- * Inicializa el ID del usuario y de la canción a cero, y la fecha a valores predeterminados.
+ * Prepara un nuevo registro de acceso vacio.
+ * Inicializa el ID del usuario y de la cancion a cero, y la fecha a valores predeterminados.
  */
 Accesos::Accesos() {
     _idSuscriptor = 0;
@@ -26,39 +26,39 @@ Accesos::Accesos() {
 // CAMBIAR VALORES
 
 /**
- * Asigna el ID del usuario que accedió a la canción.
- * Parámetros: id - El número único del usuario.
+ * Asigna el ID del usuario que accedio a la cancion.
+ * Parametros: id - El numero unico del usuario.
  */
 void Accesos::setIdSuscriptor(int id) { _idSuscriptor = id; }
 
 /**
- * Asigna el ID de la canción que fue reproducida.
- * Parámetros: id - El número único de la canción.
+ * Asigna el ID de la cancion que fue reproducida.
+ * Parametros: id - El numero unico de la cancion.
  */
 void Accesos::setIdCancion(int id) { _idCancion = id; }
 
 /**
- * Asigna la fecha y hora exacta cuando ocurrió el acceso.
- * Parámetros: fecha - La fecha y hora del evento.
+ * Asigna la fecha y hora exacta cuando ocurrio el acceso.
+ * Parametros: fecha - La fecha y hora del evento.
  */
 void Accesos::setFechaHora(Fecha fecha) { _fechaHora = fecha; }
 
 // OBTENER VALORES
 
 /**
- * Dice cuál usuario accedió.
+ * Dice cual usuario accedio.
  * Retorna: El ID del usuario.
  */
 int Accesos::getIdSuscriptor() { return _idSuscriptor; }
 
 /**
- * Dice cuál canción fue reproducida.
- * Retorna: El ID de la canción.
+ * Dice cual cancion fue reproducida.
+ * Retorna: El ID de la cancion.
  */
 int Accesos::getIdCancion() { return _idCancion; }
 
 /**
- * Dice cuándo ocurrió el acceso.
+ * Dice cuando ocurrio el acceso.
  * Retorna: La fecha y hora del evento.
  */
 Fecha Accesos::getFechaHora() { return _fechaHora; }
@@ -66,8 +66,8 @@ Fecha Accesos::getFechaHora() { return _fechaHora; }
 // GUARDAR Y CARGAR DATOS
 
 /**
- * Guarda este registro de acceso en un archivo para recordar lo que pasó.
- * Retorna: Verdadero si se guardó correctamente, falso si hubo un problema.
+ * Guarda este registro de acceso en un archivo para recordar lo que paso.
+ * Retorna: Verdadero si se guardo correctamente, falso si hubo un problema.
  */
 bool Accesos::Guardar() {
     FILE *p = fopen("accesos.dat", "ab");
@@ -78,9 +78,9 @@ bool Accesos::Guardar() {
 }
 
 /**
- * Carga un registro de acceso desde el archivo en una posición específica.
- * Parámetros: pos - La posición en la lista de registros.
- * Retorna: Verdadero si se cargó correctamente.
+ * Carga un registro de acceso desde el archivo en una posicion especifica.
+ * Parametros: pos - La posicion en la lista de registros.
+ * Retorna: Verdadero si se cargo correctamente.
  */
 bool Accesos::Leer(int pos) {
     FILE *p = fopen("accesos.dat", "rb");
@@ -92,8 +92,8 @@ bool Accesos::Leer(int pos) {
 }
 
 /**
- * Cuenta cuántos registros de acceso hay guardados en total.
- * Retorna: El número total de accesos registrados.
+ * Cuenta cuantos registros de acceso hay guardados en total.
+ * Retorna: El numero total de accesos registrados.
  */
 int Accesos::ObtenerCantidadRegistros() {
     FILE *p = fopen("accesos.dat", "rb");

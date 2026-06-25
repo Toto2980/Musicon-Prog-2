@@ -1,16 +1,16 @@
 /**
- * Esta clase implementa Fecha, que combina día/mes/año con un objeto HoraYMinutos.
+ * Esta clase implementa Fecha, que combina dia/mes/ano con un objeto HoraYMinutos.
  * Se usa en todo el sistema para registrar momentos exactos:
- *   - Accesos: cuándo se reprodujo una canción.
- *   - Playlists: cuándo se creó la lista.
- *   - DetallePlaylist: cuándo se agregó una canción a la lista.
+ *   - Accesos: cuando se reprodujo una cancion.
+ *   - Playlists: cuando se creo la lista.
+ *   - DetallePlaylist: cuando se agrego una cancion a la lista.
  *
- * NOTA DE DISEÑO:
+ * NOTA DE DISENO:
  *   - Fecha tiene TRES constructores:
- *     1. Fecha() — sin parámetros: crea una fecha vacía (0/0/0 00:00).
+ *     1. Fecha() — sin parametros: crea una fecha vacia (0/0/0 00:00).
  *     2. Fecha(minutos, hora, dia, mes, anio) — para timestamps completos (accesos).
  *     3. Fecha(dia, mes, anio) — para fechas simples sin hora (playlists, nacimientos).
- *   - Tener varios constructores con diferente cantidad de parámetros se llama SOBRECARGA.
+ *   - Tener varios constructores con diferente cantidad de parametros se llama SOBRECARGA.
  */
 
 #include "../include/Fecha.h"
@@ -21,7 +21,7 @@
 
 using namespace std;
 
-/** Constructor vacío: crea una fecha con todos los campos en cero. */
+/** Constructor vacio: crea una fecha con todos los campos en cero. */
 Fecha::Fecha() {
     _dia = 0;
     _mes = 0;
@@ -31,8 +31,8 @@ Fecha::Fecha() {
 
 /**
  * Constructor completo con fecha y hora.
- * Se usa en Accesos para registrar el momento exacto de reproducción.
- * Parámetros: minutos, hora, dia, mes, anio.
+ * Se usa en Accesos para registrar el momento exacto de reproduccion.
+ * Parametros: minutos, hora, dia, mes, anio.
  */
 Fecha::Fecha(int minutos, int hora, int dia, int mes, int anio) {
     _dia = dia;
@@ -43,8 +43,8 @@ Fecha::Fecha(int minutos, int hora, int dia, int mes, int anio) {
 
 /**
  * Constructor de solo fecha (sin hora).
- * Se usa para fechas de creación de playlists y fechas de nacimiento.
- * Parámetros: dia, mes, anio (la hora queda en 0:00).
+ * Se usa para fechas de creacion de playlists y fechas de nacimiento.
+ * Parametros: dia, mes, anio (la hora queda en 0:00).
  */
 Fecha::Fecha(int dia, int mes, int anio) {
     _dia = dia;
@@ -67,7 +67,7 @@ void Fecha::setHorario(HoraYMinutos horario) { _objetoHora = horario; }
 
 /**
  * Solicita todos los componentes de la fecha al usuario por consola.
- * Usa pedirEnteroRango para forzar valores válidos (ej: mes entre 1 y 12).
+ * Usa pedirEnteroRango para forzar valores validos (ej: mes entre 1 y 12).
  */
 void Fecha::Cargar() {
     _dia = InputHelper::pedirEnteroRango("Dia: ", 1, 31);
@@ -79,15 +79,15 @@ void Fecha::Cargar() {
     _objetoHora = HoraYMinutos(hora, minutos);
 }
 
-/** Imprime la fecha usando el método toString(). */
+/** Imprime la fecha usando el metodo toString(). */
 void Fecha::Mostrar() {
     cout << toString();
 }
 
 /**
  * Convierte la fecha a un string con formato "DD/MM/AAAA HH:MM".
- * Usa setw(2) y setfill('0') para agregar cero a la izquierda si el día o mes es menor a 10.
- * Ejemplo: día 5 de enero de 2024 a las 9:07 → "05/01/2024 09:07".
+ * Usa setw(2) y setfill('0') para agregar cero a la izquierda si el dia o mes es menor a 10.
+ * Ejemplo: dia 5 de enero de 2024 a las 9:07 → "05/01/2024 09:07".
  */
 std::string Fecha::toString() {
     ostringstream salida;

@@ -1,5 +1,5 @@
 /**
- * Este archivo implementa la clase ArtistaManager. Maneja el CRUD básico para artistas,
+ * Este archivo implementa la clase ArtistaManager. Maneja el CRUD basico para artistas,
  * incluyendo agregar, modificar, eliminar y listar artistas del sistema.
  */
 
@@ -11,11 +11,11 @@
 using namespace std;
 
 /**
- * Agrega un nuevo artista al sistema. Genera ID único y solicita datos al usuario.
+ * Agrega un nuevo artista al sistema. Genera ID unico y solicita datos al usuario.
  */
 void ArtistaManager::Agregar() {
     Artista nuevo;
-    int id = _archivoArtistas.GenerarIDNuevo(); // Genera ID único
+    int id = _archivoArtistas.GenerarIDNuevo(); // Genera ID unico
     nuevo.setIdArtista(id);
     nuevo.Cargar(); // Solicita datos al usuario
     nuevo.setEstado(true);
@@ -65,7 +65,7 @@ void ArtistaManager::Modificar() {
 }
 
 /**
- * Elimina un artista lógicamente (marca como inactivo). Busca por nombre y confirma antes de eliminar.
+ * Elimina un artista logicamente (marca como inactivo). Busca por nombre y confirma antes de eliminar.
  */
 void ArtistaManager::Eliminar() {
     char nombre[100];
@@ -77,12 +77,12 @@ void ArtistaManager::Eliminar() {
         return;
     }
 
-    int pos = _archivoArtistas.BuscarPosicion(id); // Busca posición
+    int pos = _archivoArtistas.BuscarPosicion(id); // Busca posicion
     Artista reg = _archivoArtistas.Leer(pos); // Lee el registro
     reg.Mostrar(); // Muestra datos
 
     char op;
-    cout << "Seguro desea eliminarlo? (s/n): "; // Confirma eliminación
+    cout << "Seguro desea eliminarlo? (s/n): "; // Confirma eliminacion
     cin >> op;
     cin.ignore(10000, '\n');
 

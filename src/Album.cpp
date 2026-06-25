@@ -1,6 +1,6 @@
 /**
- * Este archivo implementa la clase Album con métodos para gestionar datos de álbumes.
- * Incluye inicialización, validaciones, métodos de carga/muestra y persistencia en archivo binario.
+ * Este archivo implementa la clase Album con metodos para gestionar datos de albumes.
+ * Incluye inicializacion, validaciones, metodos de carga/muestra y persistencia en archivo binario.
  */
 
 #include "../include/Album.h"
@@ -24,7 +24,7 @@ Album::Album() {
 }
 
 /**
- * Establece los valores de los atributos con validaciones básicas.
+ * Establece los valores de los atributos con validaciones basicas.
  */
 void Album::setIdAlbum(int id) { setId(id); }
 void Album::setTitulo(const char* titulo) { strncpy(_titulo, titulo, 99); _titulo[99] = '\0'; }
@@ -45,8 +45,8 @@ int Album::getAnioPublicacion() { return _anioPublicacion; }
 bool Album::getEstado() { return _estado; }
 
 /**
- * Método Cargar: Solicita al usuario los datos del álbum.
- * Pide ID, artista, título y año; establece estado activo.
+ * Metodo Cargar: Solicita al usuario los datos del album.
+ * Pide ID, artista, titulo y ano; establece estado activo.
  */
 void Album::Cargar() {
     cout << "Ingrese ID del Artista: "; cin >> _idArtista;
@@ -57,7 +57,7 @@ void Album::Cargar() {
 }
 
 /**
- * Método Mostrar: Imprime los datos del álbum si está activo.
+ * Metodo Mostrar: Imprime los datos del album si esta activo.
  */
 void Album::Mostrar() {
     if (_estado == true) {
@@ -69,8 +69,8 @@ void Album::Mostrar() {
 // --- PERSISTENCIA ---
 
 /**
- * Guardar: Agrega el álbum al final del archivo binario "albumes.dat".
- * Retorno: true si se escribió correctamente, false si error al abrir o escribir.
+ * Guardar: Agrega el album al final del archivo binario "albumes.dat".
+ * Retorno: true si se escribio correctamente, false si error al abrir o escribir.
  */
 bool Album::Guardar() {
     FILE *p = fopen("albumes.dat", "ab");
@@ -81,9 +81,9 @@ bool Album::Guardar() {
 }
 
 /**
- * Leer: Lee un álbum desde la posición especificada en el archivo.
- * Parámetros: pos - Posición (basado en 0, multiplica por sizeof(Album)).
- * Retorno: true si se leyó correctamente.
+ * Leer: Lee un album desde la posicion especificada en el archivo.
+ * Parametros: pos - Posicion (basado en 0, multiplica por sizeof(Album)).
+ * Retorno: true si se leyo correctamente.
  */
 bool Album::Leer(int pos) {
     FILE *p = fopen("albumes.dat", "rb");
@@ -95,9 +95,9 @@ bool Album::Leer(int pos) {
 }
 
 /**
- * Modificar: Sobrescribe el álbum en la posición especificada.
- * Parámetros: pos - Posición a modificar.
- * Retorno: true si se modificó correctamente.
+ * Modificar: Sobrescribe el album en la posicion especificada.
+ * Parametros: pos - Posicion a modificar.
+ * Retorno: true si se modifico correctamente.
  */
 bool Album::Modificar(int pos) {
     FILE *p = fopen("albumes.dat", "rb+");
@@ -109,8 +109,8 @@ bool Album::Modificar(int pos) {
 }
 
 /**
- * ObtenerCantidadRegistros: Calcula el número de álbumes en el archivo.
- * Usa fseek a SEEK_END y divide por el tamaño del registro.
+ * ObtenerCantidadRegistros: Calcula el numero de albumes en el archivo.
+ * Usa fseek a SEEK_END y divide por el tamano del registro.
  * Retorno: Cantidad de registros.
  */
 int Album::ObtenerCantidadRegistros() {
@@ -123,8 +123,8 @@ int Album::ObtenerCantidadRegistros() {
 }
 
 /**
- * BuscarIDPorTitulo: Busca el ID de un álbum por título (insensible a mayúsculas).
- * Parámetros: titulo - Título a buscar.
+ * BuscarIDPorTitulo: Busca el ID de un album por titulo (insensible a mayusculas).
+ * Parametros: titulo - Titulo a buscar.
  * Retorno: ID si encontrado y activo, -1 si no.
  */
 int Album::BuscarIDPorTitulo(const char* titulo) {
@@ -142,9 +142,9 @@ int Album::BuscarIDPorTitulo(const char* titulo) {
 }
 
 /**
- * BuscarPosicionPorID: Busca la posición de un álbum por su ID.
- * Parámetros: id - ID a buscar.
- * Retorno: Posición si encontrado y activo, -1 si no.
+ * BuscarPosicionPorID: Busca la posicion de un album por su ID.
+ * Parametros: id - ID a buscar.
+ * Retorno: Posicion si encontrado y activo, -1 si no.
  */
 int Album::BuscarPosicionPorID(int id) {
     FILE *p = fopen("albumes.dat", "rb");

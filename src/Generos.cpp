@@ -1,6 +1,6 @@
 /**
- * Este archivo implementa la clase Genero con métodos para gestionar géneros musicales.
- * Incluye constructor con parámetros, setters/getters, métodos de carga/muestra y persistencia en archivo binario.
+ * Este archivo implementa la clase Genero con metodos para gestionar generos musicales.
+ * Incluye constructor con parametros, setters/getters, metodos de carga/muestra y persistencia en archivo binario.
  */
 
 #include "../include/Generos.h"
@@ -10,8 +10,8 @@
 using namespace std;
 
 /**
- * Constructor con parámetros opcionales: Inicializa ID, nombre y estado.
- * Parámetros: id - ID único, nombre - Nombre del género, estado - Activo/inactivo.
+ * Constructor con parametros opcionales: Inicializa ID, nombre y estado.
+ * Parametros: id - ID unico, nombre - Nombre del genero, estado - Activo/inactivo.
  */
 Genero::Genero(int id, const char* nombre, bool estado) {
     setId(id);
@@ -34,7 +34,7 @@ const char* Genero::getNombre() { return _nombre; }
 bool Genero::getEstado() { return _estado; }
 
 /**
- * Método Cargar: Solicita al usuario ID y nombre del género.
+ * Metodo Cargar: Solicita al usuario ID y nombre del genero.
  * Establece estado activo.
  */
 void Genero::Cargar() {
@@ -43,7 +43,7 @@ void Genero::Cargar() {
 }
 
 /**
- * Método Mostrar: Imprime ID, nombre y estado del género (const para no modificar).
+ * Metodo Mostrar: Imprime ID, nombre y estado del genero (const para no modificar).
  */
 void Genero::Mostrar() const {
     cout << "ID: " << getIdGeneros() << " | " << _nombre << " (" << (_estado ? "Activo" : "Inactivo") << ")" << endl;
