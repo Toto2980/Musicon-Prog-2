@@ -1,6 +1,6 @@
 /**
  * Este archivo define la clase CancionManager, que maneja todas las operaciones relacionadas con canciones
- * en la aplicación Musicon. Incluye CRUD de canciones, importación/exportación, backups y registro de accesos.
+ * en la aplicacion Musicon. Incluye CRUD de canciones, importacion/exportacion, backups y registro de accesos.
  */
 
 #ifndef CANCIONMANAGER_H
@@ -11,37 +11,37 @@
 #include "ArchivoArtistas.h"
 #include "ArchivoGeneros.h"
 
-/** Gestiona todas las operaciones relacionadas con canciones en Musicon, incluyendo CRUD, importación y registro de accesos. */
+/** Gestiona todas las operaciones relacionadas con canciones en Musicon, incluyendo CRUD, importacion y registro de accesos. */
 class CancionManager {
     private:
         ArchivoCanciones _archivoCanciones; // Archivo para operaciones con canciones
-        ArchivoAlbum _archivoAlbum; // Archivo para operaciones con álbumes
+        ArchivoAlbum _archivoAlbum; // Archivo para operaciones con albumes
         ArchivoArtistas _archivoArtistas; // Archivo para operaciones con artistas
-        ArchivoGeneros _archivoGeneros; // Archivo para operaciones con géneros
+        ArchivoGeneros _archivoGeneros; // Archivo para operaciones con generos
 
-        /** Método privado para crear un álbum rápidamente si no existe. Parámetros: tituloAlbum - El título del álbum a crear. Retorna: El ID del álbum creado o encontrado. */
+        /** Metodo privado para crear un album rapidamente si no existe. Parametros: tituloAlbum - El titulo del album a crear. Retorna: El ID del album creado o encontrado. */
         int crearAlbumRapido(const char* tituloAlbum);
 
     public:
-        /** Agrega una nueva canción al sistema, creando artista/álbum/género si no existen. */
+        /** Agrega una nueva cancion al sistema, creando artista/album/genero si no existen. */
         void Agregar();
 
-        /** Lista todas las canciones con detalles (artista, álbum, género). */
+        /** Lista todas las canciones con detalles (artista, album, genero). */
         void ListarDetallado();
 
-        /** Modifica una canción existente. */
+        /** Modifica una cancion existente. */
         void Modificar();
 
-        /** Elimina una canción (marcándola como inactiva). */
+        /** Elimina una cancion (marcandola como inactiva). */
         void Eliminar();
 
-        /** Lista todas las canciones de forma básica. */
+        /** Lista todas las canciones de forma basica. */
         void Listar();
 
-        /** Muestra el menú interno de gestión de canciones. */
+        /** Muestra el menu interno de gestion de canciones. */
         void MostrarMenu();
 
-        /** Registra un acceso a una canción por un suscriptor. Parámetros: idSuscriptor - ID del suscriptor que accede. */
+        /** Registra un acceso a una cancion por un suscriptor. Parametros: idSuscriptor - ID del suscriptor que accede. */
         void RegistrarAcceso(int idSuscriptor);
 
         /** Crea un backup de las canciones en un archivo .bak. */

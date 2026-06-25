@@ -1,5 +1,5 @@
 /**
- * Este archivo define la clase Fecha, que combina una fecha (día, mes, año) con una hora.
+ * Este archivo define la clase Fecha, que combina una fecha (dia, mes, ano) con una hora.
  * Utiliza la clase HoraYMinutos para representar la parte horaria.
  */
 
@@ -9,7 +9,7 @@
 #include <string>
 #include "HoraYMinutos.h"
 
-/** Representa una fecha completa con día, mes, año y hora. */
+/** Representa una fecha completa con dia, mes, ano y hora. */
 class Fecha {
     private:
         int _dia;
@@ -21,27 +21,27 @@ class Fecha {
         /** Constructor por defecto. */
         Fecha();
 
-        /** Constructor con hora incluida. Parámetros: minutos, hora, dia, mes, anio. */
+        /** Constructor con hora incluida. Parametros: minutos, hora, dia, mes, anio. */
         Fecha(int minutos, int hora, int dia, int mes, int anio);
-        /** Constructor sin hora específica. Parámetros: dia, mes, anio. */
+        /** Constructor sin hora especifica. Parametros: dia, mes, anio. */
         Fecha(int dia, int mes, int anio);
 
-        /** Obtiene el día. Retorna: Día de la fecha. */
+        /** Obtiene el dia. Retorna: Dia de la fecha. */
         int getDia();
         /** Obtiene el mes. Retorna: Mes de la fecha. */
         int getMes();
-        /** Obtiene el año. Retorna: Año de la fecha. */
+        /** Obtiene el ano. Retorna: Ano de la fecha. */
         int getAnio();
         /** Obtiene la hora y minutos. Retorna: Objeto HoraYMinutos. */
         HoraYMinutos getHorario();
 
-        /** Establece el día. Parámetros: dia - Nuevo día. */
+        /** Establece el dia. Parametros: dia - Nuevo dia. */
         void setDia(int dia);
-        /** Establece el mes. Parámetros: mes - Nuevo mes. */
+        /** Establece el mes. Parametros: mes - Nuevo mes. */
         void setMes(int mes);
-        /** Establece el año. Parámetros: anio - Nuevo año. */
+        /** Establece el ano. Parametros: anio - Nuevo ano. */
         void setAnio(int anio);
-        /** Establece el horario. Parámetros: horario - Nueva hora y minutos. */
+        /** Establece el horario. Parametros: horario - Nueva hora y minutos. */
         void setHorario(HoraYMinutos horario);
 
         /** Carga la fecha y hora desde teclado. */

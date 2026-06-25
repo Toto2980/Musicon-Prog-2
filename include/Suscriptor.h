@@ -28,7 +28,7 @@ class Suscriptor : public EntidadPadre {
         /** Destructor de la clase Suscriptor. */
         ~Suscriptor();
 
-        /** Establece el nombre del suscriptor. Parámetros: nombre - Nombre a guardar. */
+        /** Establece el nombre del suscriptor. Parametros: nombre - Nombre a guardar. */
         void setNombre(const char* nombre) {
             if (nombre == nullptr) {
                 _nombre[0] = '\0';
@@ -38,30 +38,30 @@ class Suscriptor : public EntidadPadre {
             _nombre[sizeof(_nombre) - 1] = '\0';
         }
 
-        /** Establece el estado del suscriptor. Parámetros: estado - true si está activo. */
+        /** Establece el estado del suscriptor. Parametros: estado - true si esta activo. */
         void setEstado(bool estado) { _estado = estado; }
 
-        /** Establece el tipo de suscriptor. Parámetros: tipo - 1 para gratis, 2 para pago. */
+        /** Establece el tipo de suscriptor. Parametros: tipo - 1 para gratis, 2 para pago. */
         void setTipoSuscriptor(int tipo);
         /** Obtiene el tipo de suscriptor. Retorna: 1 para gratis, 2 para pago. */
         int getTipoSuscriptor();
 
-        /** Establece el ID del suscriptor. Parámetros: id - ID único. */
+        /** Establece el ID del suscriptor. Parametros: id - ID unico. */
         void setIdSuscriptor(int id);
-        /** Establece el DNI del suscriptor. Parámetros: dni - Cadena con el DNI. */
+        /** Establece el DNI del suscriptor. Parametros: dni - Cadena con el DNI. */
         void setDni(const char* dni);
-        /** Establece el apellido del suscriptor. Parámetros: apellido - Cadena con el apellido. */
+        /** Establece el apellido del suscriptor. Parametros: apellido - Cadena con el apellido. */
         void setApellido(const char* apellido);
-        /** Establece el email del suscriptor. Parámetros: email - Cadena con el email. */
+        /** Establece el email del suscriptor. Parametros: email - Cadena con el email. */
         void setEmail(const char* email);
-        /** Establece la fecha de nacimiento del suscriptor. Parámetros: fecha - Objeto Fecha con la fecha. */
+        /** Establece la fecha de nacimiento del suscriptor. Parametros: fecha - Objeto Fecha con la fecha. */
         void setFechaNacimiento(Fecha fecha);
 
         /** Obtiene el nombre del suscriptor. Retorna: Nombre del suscriptor. */
         const char* getNombre() { return _nombre; }
-        /** Obtiene el estado del suscriptor. Retorna: true si está activo. */
+        /** Obtiene el estado del suscriptor. Retorna: true si esta activo. */
         bool getEstado() { return _estado; }
-        /** Obtiene el ID del suscriptor. Retorna: ID único. */
+        /** Obtiene el ID del suscriptor. Retorna: ID unico. */
         int getIdSuscriptor();
         /** Obtiene el DNI del suscriptor. Retorna: Puntero a la cadena del DNI. */
         const char* getDni();

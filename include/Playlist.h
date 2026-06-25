@@ -2,20 +2,20 @@
 #define PLAYLIST_H
 
 
-#include "Fecha.h" // Necesario para la fecha de creación
+#include "Fecha.h" // Necesario para la fecha de creacion
 #include "EntidadPadre.h"
 
 /**
  * Este archivo define la clase Playlist, que representa listas de canciones creadas por usuarios.
- * Incluye métodos para guardar, cargar y buscar playlists en archivos.
+ * Incluye metodos para guardar, cargar y buscar playlists en archivos.
  */
 
 /** Representa una playlist de canciones creada por un suscriptor. */
 class Playlist : public EntidadPadre {
     private:
         char _nombre[50]; /**< Nombre de la playlist */
-        int _idSuscriptorCreador; /**< ID del suscriptor que la creó */
-        Fecha _fechaCreacion; /**< Fecha de creación */
+        int _idSuscriptorCreador; /**< ID del suscriptor que la creo */
+        Fecha _fechaCreacion; /**< Fecha de creacion */
         bool _estado; /**< Estado activo/inactivo */
 
     public:
@@ -24,51 +24,51 @@ class Playlist : public EntidadPadre {
 
         // --- SETTERS ---
         /** Establece el ID.
-         * Parámetros: id - ID único.
+         * Parametros: id - ID unico.
          */
         void setIdPlaylist(int id);
         /** Establece el nombre.
-         * Parámetros: n - Nombre de la playlist.
+         * Parametros: n - Nombre de la playlist.
          */
         void setNombre(const char* n);
         /** Establece el ID del creador.
-         * Parámetros: id - ID del suscriptor creador.
+         * Parametros: id - ID del suscriptor creador.
          */
         void setIdSuscriptorCreador(int id);
-        /** Establece la fecha de creación.
-         * Parámetros: f - Fecha de creación.
+        /** Establece la fecha de creacion.
+         * Parametros: f - Fecha de creacion.
          */
         void setFechaCreacion(Fecha f);
         /** Establece el estado.
-         * Parámetros: estado - true para activo.
+         * Parametros: estado - true para activo.
          */
         void setEstado(bool estado);
 
         // --- GETTERS ---
-        /** Dice cuál es el número único de la lista.
+        /** Dice cual es el numero unico de la lista.
          * Retorna: El ID que la identifica.
          */
         int getIdPlaylist();
-        /** Dice cuál es el nombre de la lista.
-         * Retorna: El título que el usuario le puso.
+        /** Dice cual es el nombre de la lista.
+         * Retorna: El titulo que el usuario le puso.
          */
         const char* getNombre();
-        /** Dice quién creó la lista.
+        /** Dice quien creo la lista.
          * Retorna: El ID del usuario que la hizo.
          */
         int getIdSuscriptorCreador();
-        /** Dice cuándo se creó la lista.
-         * Retorna: La fecha y hora de creación.
+        /** Dice cuando se creo la lista.
+         * Retorna: La fecha y hora de creacion.
          */
         Fecha getFechaCreacion();
-        /** Dice si la lista está disponible para usar.
+        /** Dice si la lista esta disponible para usar.
          * Retorna: Verdadero si se puede acceder a ella.
          */
         bool getEstado();
 
         /** Pide al usuario que escriba el nombre de la lista. */
         void Cargar();
-        /** Muestra la información de la lista en la pantalla. */
+        /** Muestra la informacion de la lista en la pantalla. */
         void Mostrar();
 };
 

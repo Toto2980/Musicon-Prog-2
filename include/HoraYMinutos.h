@@ -17,7 +17,7 @@ class HoraYMinutos
     public:
         /** Constructor por defecto (hora=0, minutos=0). */
         HoraYMinutos();
-        /** Constructor con hora y minutos especificados. Parámetros: hora - Hora (0-23), minutos - Minutos (0-59). */
+        /** Constructor con hora y minutos especificados. Parametros: hora - Hora (0-23), minutos - Minutos (0-59). */
         HoraYMinutos(int hora, int minutos);
 
         /** Obtiene la hora. Retorna: Hora (0-23). */
@@ -26,9 +26,9 @@ class HoraYMinutos
         int getMinutos();
 
         // --- SETTERS ---
-        /** Establece la hora. Parámetros: hora - Hora (0-23). */
+        /** Establece la hora. Parametros: hora - Hora (0-23). */
         void setHora(int hora);
-        /** Establece los minutos. Parámetros: minutos - Minutos (0-59). */
+        /** Establece los minutos. Parametros: minutos - Minutos (0-59). */
         void setMinutos(int minutos);
 
         /** Convierte a string en formato HH:MM. Retorna: String en formato HH:MM. */

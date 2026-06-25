@@ -9,31 +9,31 @@
 #include "ArchivoPlaylist.h"
 #include "DetallePlaylist.h"
 
-/** Gestiona operaciones CRUD de playlists y gestión de canciones en playlists. */
+/** Gestiona operaciones CRUD de playlists y gestion de canciones en playlists. */
 class PlaylistManager {
 private:
     ArchivoPlaylist _archivoPlaylist;
 
-    /** Método privado para buscar el ID de una canción por su nombre. Parámetros: nombre - Nombre de la canción. Retorna: ID de la canción o -1. */
+    /** Metodo privado para buscar el ID de una cancion por su nombre. Parametros: nombre - Nombre de la cancion. Retorna: ID de la cancion o -1. */
     int buscarIdCancionPorNombre(const char* nombre);
 
 public:
-    /** Muestra el menú de gestión de playlists para un usuario específico. Parámetros: idUsuario - ID del usuario logueado. */
+    /** Muestra el menu de gestion de playlists para un usuario especifico. Parametros: idUsuario - ID del usuario logueado. */
     void MostrarMenu(int idUsuario);
 
-    /** Muestra todas las playlists de un usuario. Parámetros: idUsuario - ID del usuario. */
+    /** Muestra todas las playlists de un usuario. Parametros: idUsuario - ID del usuario. */
     void MostrarMisPlaylists(int idUsuario);
 
-    /** Crea una nueva playlist para un usuario. Parámetros: idUsuario - ID del creador. */
+    /** Crea una nueva playlist para un usuario. Parametros: idUsuario - ID del creador. */
     void CrearPlaylist(int idUsuario);
 
-    /** Modifica una playlist existente de un usuario. Parámetros: idUsuario - ID del propietario. */
+    /** Modifica una playlist existente de un usuario. Parametros: idUsuario - ID del propietario. */
     void ModificarPlaylist(int idUsuario);
 
-    /** Elimina una playlist de un usuario. Parámetros: idUsuario - ID del propietario. */
+    /** Elimina una playlist de un usuario. Parametros: idUsuario - ID del propietario. */
     void EliminarPlaylist(int idUsuario);
 
-    /** Agrega una canción a una playlist existente. */
+    /** Agrega una cancion a una playlist existente. */
     void AgregarCancionAPlaylist();
 };
 

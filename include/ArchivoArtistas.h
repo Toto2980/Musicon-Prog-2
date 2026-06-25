@@ -1,49 +1,57 @@
 #ifndef ARCHIVOARTISTAS_H
 #define ARCHIVOARTISTAS_H
 
-#include "Artista.h" // Necesario para usar objetos de tipo Artista
+/*
+ * PATRON: Repository
+ * Esta clase encapsula TODO el acceso al archivo binario "artistas.dat".
+ * La capa Manager no sabe si los datos estan en un .dat, una BD o la nube.
+ * Solo llama a Guardar/Leer/Modificar/Buscar. Eso es separacion de capas.
+ *
+ * POR QUE _nombreArchivo es std::string y no char[]:
+ *   std::string es para uso en memoria (no se serializa a disco).
+ *   Los char[] fijos son para campos dentro de Artista (que SI van a fwrite).
+ *   Aqui _nombreArchivo solo vive en RAM como dato interno de la clase.
+ */
+
+#include "Artista.h"
 #include <string>
 
-/** Clase para manejar la persistencia de artistas en archivo binario. */
 class ArchivoArtistas {
     private:
-        std::string _nombreArchivo;
+        std::string _nombreArchivo; // Nombre del .dat (ej: "artistas.dat")
 
     public:
-        // Constructor con valor por defecto
-        /** Constructor de ArchivoArtistas. Parámetros: nombreArchivo - Nombre del archivo, por defecto "artistas.dat". */
+        // Default: "artistas.dat". Se puede cambiar para testing o backup.
         ArchivoArtistas(std::string nombreArchivo = "artistas.dat");
 
-        // --- ABML Básico ---
-        /** Guarda un artista en el archivo. Parámetros: reg - Artista a guardar. Retorna: true si guardado, false en caso de error. */
+        // --- CRUD BINARIO ---
+        // Modo "ab": append binary -- agrega al final, crea el archivo si no existe.
         bool Guardar(Artista reg);
-        /** Lee un artista desde el archivo en la posición especificada. Parámetros: pos - Posición en el archivo. Retorna: El artista leído. */
+
+        // Modo "rb": lee por posicion. pos=2 -> salta 2*sizeof(Artista) bytes.
         Artista Leer(int pos);
-        /** Modifica un artista en el archivo en la posición especificada. Parámetros: pos - Posición a modificar, reg - Nuevo artista. Retorna: true si modificado, false error. */
+
+        // Modo "rb+": lectura+escritura SIN truncar. Sobreescribe un registro existente.
+        // Este es el modo clave para la eliminacion logica (estado=false).
         bool Modificar(int pos, Artista reg);
-        /** Genera un nuevo ID único para un artista. Retorna: Nuevo ID. */
+
+        // ID autoincremental: lee el ultimo registro y retorna su ID + 1.
         int GenerarIDNuevo();
-        /** Obtiene la cantidad de registros en el archivo. Retorna: Cantidad de artistas. */
+
+        // Formula: ftell(SEEK_END) / sizeof(Artista) = cantidad de registros.
         int ObtenerCantidadRegistros();
 
-        // --- Búsquedas ---
-        /** Busca la posición de un artista por su ID. Parámetros: id - ID del artista. Retorna: Posición, -1 si no encontrado. */
+        // --- BUSQUEDAS (todas O(N) -- busqueda lineal sin indice) ---
         int BuscarPosicion(int id);
-        /** Busca la posición de un artista por su nombre. Parámetros: nombre - Nombre del artista. Retorna: Posición, -1 si no encontrado. */
-        int BuscarPosicionPorNombre(const char* nombre);
+        int BuscarPosicionPorNombre(const char* nombre); // case-insensitive
+        int BuscarIDPorNombre(const char* nombre);       // devuelve el ID, no la posicion
 
-        // Devuelve el ID del artista si existe, o -1 si no.
-        /** Busca el ID de un artista por su nombre. Parámetros: nombre - Nombre del artista. Retorna: ID del artista, -1 si no existe. */
-        int BuscarIDPorNombre(const char* nombre);
-
-        // Devuelve el objeto Artista completo dado un ID (útil para reportes)
-        /** Busca un artista por su ID. Parámetros: id - ID del artista. Retorna: El artista encontrado. */
+        // Util para reportes: dado un ID, devuelve el objeto Artista completo.
         Artista BuscarPorID(int id);
 
-        // --- Lógica Avanzada (Importación) ---
-        // Busca un artista por nombre. Si no existe, lo crea automáticamente.
-        // Devuelve siempre un ID válido.
-        /** Busca un artista por nombre, o lo crea si no existe. Parámetros: nombreArtista - Nombre del artista. Retorna: ID del artista. */
+        // --- PATRON "BUSCAR O CREAR" (usado en importacion CSV) ---
+        // Busca el artista por nombre. Si no existe, lo crea automaticamente.
+        // Siempre devuelve un ID valido. Evita duplicados en la importacion.
         int BuscarOCrear(std::string nombreArtista);
 };
 

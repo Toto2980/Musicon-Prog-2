@@ -1,28 +1,34 @@
-/**
- * Este archivo define la clase Artista, que representa a un artista musical en el sistema Musicon.
- * Guarda directamente su nombre, estado, ID y nacionalidad.
+/*
+ * ENTIDAD: Artista
+ * Hereda de EntidadPadre (hereda _id como primer campo protegido).
+ *
+ * POR QUE char[] y no std::string:
+ *   fwrite(&artista, sizeof(Artista), 1, p) escribe el bloque de memoria del objeto.
+ *   std::string es un puntero interno -- fwrite escribiria la direccion, no el texto.
+ *   char[] de tamano fijo garantiza que sizeof(Artista) sea constante y predecible.
+ *
+ * LAYOUT EN MEMORIA (orden de campos):
+ *   [_id: 4 bytes] [_nombre: 100 bytes] [_estado: 1 byte] [_nacionalidad: 50 bytes]
+ *   Total fijo = sizeof(Artista). Este tamano constante hace posible fseek aritmetico.
  */
 
 #ifndef ARTISTA_H
 #define ARTISTA_H
 
- #include <cstring>
+#include <cstring>
 #include "EntidadPadre.h"
 
-/** Representa a un artista musical con nombre, estado, ID y nacionalidad. */
 class Artista : public EntidadPadre {
     private:
-        char _nombre[100];
-        bool _estado;
-        char _nacionalidad[50];
+        char _nombre[100];       // Fijo: 100 bytes siempre, aunque el nombre sea corto
+        bool _estado;            // Eliminacion logica: false = borrado, true = activo
+        char _nacionalidad[50];  // Fijo: 50 bytes siempre
 
     public:
-        /** Constructor por defecto de la clase Artista. */
         Artista();
-        /** Destructor de la clase Artista. */
         ~Artista();
 
-        /** Establece el nombre del artista. Parámetros: nombre - Nombre a guardar. */
+        // setNombre valida nullptr y garantiza null-terminator al final del buffer
         void setNombre(const char* nombre) {
             if (nombre == nullptr) {
                 _nombre[0] = '\0';
@@ -32,31 +38,19 @@ class Artista : public EntidadPadre {
             _nombre[sizeof(_nombre) - 1] = '\0';
         }
 
-        /** Establece el estado del artista. Parámetros: estado - true si está activo. */
         void setEstado(bool estado) { _estado = estado; }
-
-        /** Establece el ID del artista. Parámetros: id - El ID único. */
         void setIdArtista(int id);
-
-        /** Establece la nacionalidad del artista. Parámetros: nacionalidad - Cadena con la nacionalidad. */
         void setNacionalidad(const char* nacionalidad);
 
-        /** Obtiene el nombre del artista. Retorna: Nombre del artista. */
         const char* getNombre() { return _nombre; }
-
-        /** Obtiene el estado del artista. Retorna: true si está activo. */
         bool getEstado() { return _estado; }
-
-        /** Obtiene el ID del artista. Retorna: El ID único. */
         int getIdArtista();
-
-        /** Obtiene la nacionalidad del artista. Retorna: Puntero a la cadena de nacionalidad. */
         const char* getNacionalidad();
 
-        /** Solicita al usuario los datos del artista. */
+        // Cargar(): pide datos al usuario por teclado (consola)
         void Cargar();
 
-        /** Muestra los datos del artista en la consola. */
+        // Mostrar(): imprime el registro en pantalla (para listados)
         void Mostrar();
 };
 

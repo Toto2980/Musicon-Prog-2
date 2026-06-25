@@ -4,32 +4,32 @@
 #include "Album.h"
 #include <string>
 
-/** Clase para manejar la persistencia de álbumes en archivo binario. */
+/** Clase para manejar la persistencia de albumes en archivo binario. */
 class ArchivoAlbum {
     private:
         std::string _nombreArchivo;
 
     public:
-        /** Constructor de ArchivoAlbum. Parámetros: nombreArchivo - Nombre del archivo binario, por defecto "albumes.dat". */
+        /** Constructor de ArchivoAlbum. Parametros: nombreArchivo - Nombre del archivo binario, por defecto "albumes.dat". */
         ArchivoAlbum(std::string nombreArchivo = "albumes.dat");
 
-        /** Guarda un registro de álbum en el archivo. Parámetros: reg - El álbum a guardar. Retorna: true si se guardó, false en caso de error. */
+        /** Guarda un registro de album en el archivo. Parametros: reg - El album a guardar. Retorna: true si se guardo, false en caso de error. */
         bool Guardar(Album reg);
-        /** Lee un álbum desde el archivo en la posición especificada. Parámetros: pos - Posición en el archivo. Retorna: El álbum leído. */
+        /** Lee un album desde el archivo en la posicion especificada. Parametros: pos - Posicion en el archivo. Retorna: El album leido. */
         Album Leer(int pos);
-        /** Busca la posición de un álbum por su ID. Parámetros: id - ID del álbum. Retorna: Posición en el archivo, -1 si no encontrado. */
+        /** Busca la posicion de un album por su ID. Parametros: id - ID del album. Retorna: Posicion en el archivo, -1 si no encontrado. */
         int BuscarPosicion(int id);
-        /** Busca el ID de un álbum por su título. Parámetros: titulo - Título del álbum. Retorna: ID del álbum, -1 si no encontrado. */
+        /** Busca el ID de un album por su titulo. Parametros: titulo - Titulo del album. Retorna: ID del album, -1 si no encontrado. */
         int BuscarIDPorTitulo(const char* titulo);
-        /** Genera un nuevo ID único para un álbum. Retorna: Nuevo ID. */
+        /** Genera un nuevo ID unico para un album. Retorna: Nuevo ID. */
         int GenerarIDNuevo();
-        /** Obtiene la cantidad de registros en el archivo. Retorna: Cantidad de álbumes. */
+        /** Obtiene la cantidad de registros en el archivo. Retorna: Cantidad de albumes. */
         int ObtenerCantidadRegistros();
-        /** Busca un álbum por su ID. Parámetros: id - ID del álbum. Retorna: El álbum encontrado. */
+        /** Busca un album por su ID. Parametros: id - ID del album. Retorna: El album encontrado. */
         Album BuscarPorID(int id);
 
-        // NUEVO: Busca por Titulo Y Artista (para evitar homónimos)
-        /** Busca un álbum por título y artista, o lo crea si no existe. Parámetros: tituloAlbum - Título del álbum, idArtista - ID del artista. Retorna: ID del álbum. */
+        // NUEVO: Busca por Titulo Y Artista (para evitar homonimos)
+        /** Busca un album por titulo y artista, o lo crea si no existe. Parametros: tituloAlbum - Titulo del album, idArtista - ID del artista. Retorna: ID del album. */
         int BuscarOCrear(std::string tituloAlbum, int idArtista);
 };
 

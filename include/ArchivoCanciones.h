@@ -12,28 +12,28 @@ class ArchivoCanciones {
         std::string _nombreArchivo;
 
     public:
-        /** Constructor de ArchivoCanciones. Parámetros: nombreArchivo - Nombre del archivo, por defecto "canciones.dat". */
+        /** Constructor de ArchivoCanciones. Parametros: nombreArchivo - Nombre del archivo, por defecto "canciones.dat". */
         ArchivoCanciones(std::string nombreArchivo = "canciones.dat");
 
-        /** Guarda una canción en el archivo. Parámetros: reg - Canción a guardar. Retorna: true si guardada, false error. */
+        /** Guarda una cancion en el archivo. Parametros: reg - Cancion a guardar. Retorna: true si guardada, false error. */
         bool Guardar(Canciones reg);
-        /** Lee una canción desde el archivo en la posición especificada. Parámetros: pos - Posición. Retorna: La canción leída. */
+        /** Lee una cancion desde el archivo en la posicion especificada. Parametros: pos - Posicion. Retorna: La cancion leida. */
         Canciones Leer(int pos);
-        /** Genera un nuevo ID único para una canción. Retorna: Nuevo ID. */
+        /** Genera un nuevo ID unico para una cancion. Retorna: Nuevo ID. */
         int GenerarIDNuevo();
-        /** Busca la posición de una canción por su ID. Parámetros: id - ID de la canción. Retorna: Posición, -1 si no encontrado. */
+        /** Busca la posicion de una cancion por su ID. Parametros: id - ID de la cancion. Retorna: Posicion, -1 si no encontrado. */
         int BuscarPosicion(int id);
-        /** Modifica una canción en el archivo. Parámetros: pos - Posición a modificar, reg - Nueva canción. Retorna: true si modificada, false error. */
+        /** Modifica una cancion en el archivo. Parametros: pos - Posicion a modificar, reg - Nueva cancion. Retorna: true si modificada, false error. */
         bool Modificar(int pos, Canciones reg);
         /** Obtiene la cantidad de registros en el archivo. Retorna: Cantidad de canciones. */
         int ObtenerCantidadRegistros();
 
-        /** Busca una canción por su ID. Parámetros: id - ID de la canción. Retorna: La canción encontrada. */
+        /** Busca una cancion por su ID. Parametros: id - ID de la cancion. Retorna: La cancion encontrada. */
         Canciones BuscarPorID(int id);
 
-        // Busca la posición física de una canción por su nombre y su álbum.
+        // Busca la posicion fisica de una cancion por su nombre y su album.
         // Sirve para detectar duplicados antes de guardar.
-        /** Busca la posición de una canción por nombre y álbum. Parámetros: nombre - Nombre de la canción, idAlbum - ID del álbum. Retorna: Posición, -1 si no encontrado. */
+        /** Busca la posicion de una cancion por nombre y album. Parametros: nombre - Nombre de la cancion, idAlbum - ID del album. Retorna: Posicion, -1 si no encontrado. */
         int BuscarPosicionPorNombreYAlbum(const char* nombre, int idAlbum);
 };
 

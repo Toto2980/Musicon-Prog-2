@@ -1,18 +1,18 @@
-/** Este archivo implementa la clase Album, que representa un álbum musical en el sistema Musicon.
- * Contiene atributos como título, artista, año de publicación y estado. Incluye métodos
- * para persistencia en archivo binario (guardar, leer, modificar) y búsquedas. */
+/** Este archivo implementa la clase Album, que representa un album musical en el sistema Musicon.
+ * Contiene atributos como titulo, artista, ano de publicacion y estado. Incluye metodos
+ * para persistencia en archivo binario (guardar, leer, modificar) y busquedas. */
 
 #ifndef ALBUM_H
 #define ALBUM_H
 
 #include "EntidadPadre.h"
 
-/** Clase que representa un álbum musical con atributos como ID, título, artista, año de publicación y estado. Incluye métodos para persistencia en archivo binario. */
+/** Clase que representa un album musical con atributos como ID, titulo, artista, ano de publicacion y estado. Incluye metodos para persistencia en archivo binario. */
 class Album : public EntidadPadre {
     private:
-        char _titulo[100]; // Título del álbum
-        int _idArtista; // ID del artista (clave foránea)
-        int _anioPublicacion; // Año de lanzamiento
+        char _titulo[100]; // Titulo del album
+        int _idArtista; // ID del artista (clave foranea)
+        int _anioPublicacion; // Ano de lanzamiento
         bool _estado; // Estado activo/inactivo
 
     public:
@@ -20,61 +20,61 @@ class Album : public EntidadPadre {
         Album();
 
         // --- SETTERS ---
-        /** Establece el ID del álbum. Parámetros: id - ID único del álbum. */
+        /** Establece el ID del album. Parametros: id - ID unico del album. */
         void setIdAlbum(int id);
 
-        /** Establece el título del álbum. Parámetros: titulo - Cadena con el título. */
+        /** Establece el titulo del album. Parametros: titulo - Cadena con el titulo. */
         void setTitulo(const char* titulo);
 
-        /** Establece el ID del artista. Parámetros: idAr - ID del artista. */
+        /** Establece el ID del artista. Parametros: idAr - ID del artista. */
         void setIdArtista(int idAr);
 
-        /** Establece el año de publicación. Parámetros: anio - Año de lanzamiento. */
+        /** Establece el ano de publicacion. Parametros: anio - Ano de lanzamiento. */
         void setAnioPublicacion(int anio);
 
-        /** Establece el estado activo/inactivo. Parámetros: e - true para activo, false para inactivo. */
+        /** Establece el estado activo/inactivo. Parametros: e - true para activo, false para inactivo. */
         void setEstado(bool e);
 
         // --- GETTERS ---
-        /** Obtiene el ID del álbum. Retorna: ID único del álbum. */
+        /** Obtiene el ID del album. Retorna: ID unico del album. */
         int getIdAlbum();
 
-        /** Obtiene el título del álbum. Retorna: Puntero a la cadena del título. */
+        /** Obtiene el titulo del album. Retorna: Puntero a la cadena del titulo. */
         const char* getTitulo();
 
         /** Obtiene el ID del artista. Retorna: ID del artista. */
         int getIdArtista();
 
-        /** Obtiene el año de publicación. Retorna: Año de lanzamiento. */
+        /** Obtiene el ano de publicacion. Retorna: Ano de lanzamiento. */
         int getAnioPublicacion();
 
         /** Obtiene el estado activo/inactivo. Retorna: true si activo, false si inactivo. */
         bool getEstado();
 
         // --- E/S (Interfaz con usuario) ---
-        /** Carga los datos del álbum desde la entrada del usuario. */
+        /** Carga los datos del album desde la entrada del usuario. */
         void Cargar();
 
-        /** Muestra los datos del álbum en la consola. */
+        /** Muestra los datos del album en la consola. */
         void Mostrar();
 
         // --- PERSISTENCIA ---
-        /** Guarda el álbum en el archivo binario (agrega al final). Retorna: true si se guardó correctamente, false en caso de error. */
+        /** Guarda el album en el archivo binario (agrega al final). Retorna: true si se guardo correctamente, false en caso de error. */
         bool Guardar();
 
-        /** Lee un álbum desde el archivo binario en la posición especificada. Parámetros: pos - Posición en el archivo (basado en 0). Retorna: true si se leyó correctamente, false en caso de error. */
+        /** Lee un album desde el archivo binario en la posicion especificada. Parametros: pos - Posicion en el archivo (basado en 0). Retorna: true si se leyo correctamente, false en caso de error. */
         bool Leer(int pos);
 
-        /** Modifica un álbum en el archivo binario en la posición especificada. Parámetros: pos - Posición a modificar. Retorna: true si se modificó correctamente, false en caso de error. */
+        /** Modifica un album en el archivo binario en la posicion especificada. Parametros: pos - Posicion a modificar. Retorna: true si se modifico correctamente, false en caso de error. */
         bool Modificar(int pos);
 
-        /** Obtiene la cantidad total de registros (álbumes) en el archivo. Retorna: Número de álbumes guardados. */
+        /** Obtiene la cantidad total de registros (albumes) en el archivo. Retorna: Numero de albumes guardados. */
         int ObtenerCantidadRegistros();
 
-        /** Busca el ID de un álbum por su título (comparación insensible a mayúsculas). Parámetros: titulo - Título a buscar. Retorna: ID del álbum si se encuentra, -1 si no. */
+        /** Busca el ID de un album por su titulo (comparacion insensible a mayusculas). Parametros: titulo - Titulo a buscar. Retorna: ID del album si se encuentra, -1 si no. */
         int BuscarIDPorTitulo(const char* titulo);
 
-        /** Busca la posición en el archivo de un álbum por su ID. Parámetros: id - ID del álbum a buscar. Retorna: Posición en el archivo (basado en 0), -1 si no se encuentra. */
+        /** Busca la posicion en el archivo de un album por su ID. Parametros: id - ID del album a buscar. Retorna: Posicion en el archivo (basado en 0), -1 si no se encuentra. */
         int BuscarPosicionPorID(int id);
 };
 

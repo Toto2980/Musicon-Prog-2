@@ -1,6 +1,6 @@
 /**
  * Este archivo define la clase ArtistaManager, que maneja todas las operaciones CRUD para artistas
- * en la aplicación Musicon. Utiliza el archivo de artistas para persistencia.
+ * en la aplicacion Musicon. Utiliza el archivo de artistas para persistencia.
  */
 
 #ifndef ARTISTAMANAGER_H
@@ -20,7 +20,7 @@ public:
     /** Modifica un artista existente. */
     void Modificar();
 
-    /** Elimina un artista (marcándolo como inactivo). */
+    /** Elimina un artista (marcandolo como inactivo). */
     void Eliminar();
 
     /** Lista todos los artistas activos. */
